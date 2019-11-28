@@ -6,13 +6,14 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "btpower.h"
+#include "btpaircfg.h"
+
 #include <string.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC   10
+#define TIMEOUT_IN_SEC   2
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -36,13 +37,25 @@
 #if !defined(TEST)
 static 
 #endif
-size_t BtPowerSerialize(void *p, char *obuf, size_t length)
+size_t BtPaircfgSerialize(void *p, char *obuf, size_t length)
 {
-    BtPower_t *obj = (BtPower_t *)p;
+    BtPaircfg_t *obj = (BtPaircfg_t *)p;
+    uint8_t mode = obj->request.mode;
+    const char *pin = obj->request.pin;
+
     size_t n = 0;
-    if (12 < length) {
-        strncat(obuf, "AT+BTPOWER=", 11);
-        strncat(obuf, obj->request.mode == 1 ? "1" : "0", 1);
+    if (20 < length) {
+        char c;
+        if ((0 == mode) || (1 == mode) || (2 == mode))
+            c = mode + '0';
+
+        strncat(obuf, "AT+BTPAIRCFG=", 13);
+        obuf[14] = c;
+        obuf[15] = '\0';
+        if ( pin && (1 == mode)) {
+            strncat(obuf, ",", 1);
+            strncat(obuf, pin, 4);
+        }
         n = strlen(obuf);
     }
         
@@ -52,9 +65,9 @@ size_t BtPowerSerialize(void *p, char *obuf, size_t length)
 #if !defined(TEST)
 static 
 #endif
-size_t BtPowerParse(void *p, const char *ibuf, size_t length)
+size_t BtPaircfgParse(void *p, const char *ibuf, size_t length)
 {
-    BtPower_t *obj = (BtPower_t *)p;
+    BtPaircfg_t *obj = (BtPaircfg_t *)p;
     AT_CommandStatus_t status = AT_CMD_INVALID;
     size_t n = AT_CommandStatusParse(ibuf, length, &status);
 
@@ -71,31 +84,32 @@ size_t BtPowerParse(void *p, const char *ibuf, size_t length)
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-void BtPowerObjectInit(BtPower_t *this)
+void BtPaircfgObjectInit(BtPaircfg_t *this)
 {
     memset(this, 0, sizeof(*this));
     this->atcmd.obj = this;
-    this->atcmd.serialize = BtPowerSerialize;
-    this->atcmd.parse = BtPowerParse;
+    this->atcmd.serialize = BtPaircfgSerialize;
+    this->atcmd.parse = BtPaircfgParse;
     this->atcmd.timeout = TIMEOUT_IN_SEC;
 }
 
-void BtPowerSetupRequest(BtPower_t *this, uint8_t mode)
+void BtPaircfgSetupRequest(BtPaircfg_t *this, uint8_t mode, const char *pin)
 {
     this->request.mode = mode;
+    this->request.pin  = pin;
 }
 
-AT_Command_t *BtPowerGetAtCommand(BtPower_t *this)
+AT_Command_t *BtPaircfgGetAtCommand(BtPaircfg_t *this)
 {
     return &this->atcmd;
 }
 
-BtPower_response_t BtPowerGetResponse(BtPower_t *this)
+BtPaircfg_response_t BtPaircfgGetResponse(BtPaircfg_t *this)
 {
     return this->response;
 }
 
-AT_CommandStatus_t BtPowerGetResponseStatus(BtPower_t *this)
+AT_CommandStatus_t BtPaircfgGetResponseStatus(BtPaircfg_t *this)
 {
     return this->response.status;
 }   
