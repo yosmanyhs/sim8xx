@@ -30,7 +30,7 @@
     - +:test/**
     - -:test/support
   :source:
-    - src/**
+    - source/**
   :support:
     - test/support
 
@@ -38,7 +38,7 @@
   # in order to add common defines:
   #  1) remove the trailing [] from the :common: section
   #  2) add entries to the :common: section (e.g. :test: has TEST defined)
-  :commmon: &common_defines []
+  :commmon: &common_defines [UNITY_NO_WEAK]
   :test:
     - *common_defines
     - TEST
