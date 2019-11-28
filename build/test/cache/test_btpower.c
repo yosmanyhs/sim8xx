@@ -366,7 +366,7 @@ void test_btpower_Parse_InvalidStatus_length(void)
 
 
 
-    UnityAssertEqualNumber((UNITY_INT)((6)), (UNITY_INT)((n)), (
+    UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((n)), (
 
    ((void *)0)
 
