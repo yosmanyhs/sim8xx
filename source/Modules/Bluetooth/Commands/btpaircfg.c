@@ -45,13 +45,13 @@ size_t BtPaircfgSerialize(void *p, char *obuf, size_t length)
 
     size_t n = 0;
     if (20 < length) {
-        char c;
+        char c = '0';
         if ((0 == mode) || (1 == mode) || (2 == mode))
-            c = mode + '0';
+            c += mode;
 
         strncat(obuf, "AT+BTPAIRCFG=", 13);
-        obuf[14] = c;
-        obuf[15] = '\0';
+        obuf[13] = c;
+        obuf[14] = '\0';
         if ( pin && (1 == mode)) {
             strncat(obuf, ",", 1);
             strncat(obuf, pin, 4);

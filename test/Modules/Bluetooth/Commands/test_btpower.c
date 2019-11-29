@@ -84,7 +84,6 @@ void test_btpower_Parse(void)
 {
     BtPower_t btpower;
     BtPowerObjectInit(&btpower);
-    BtPowerSetupRequest(&btpower, 1);
 
     const char *ibuf = "\r\nOK\r\n=CGNSINF...";
     size_t length = strlen(ibuf);
@@ -99,7 +98,6 @@ void test_btpower_Parse_Incomplete(void)
 {
     BtPower_t btpower;
     BtPowerObjectInit(&btpower);
-    BtPowerSetupRequest(&btpower, 1);
 
     const char *ibuf = "\r\nOK\r";
     size_t length = strlen(ibuf);
@@ -107,19 +105,6 @@ void test_btpower_Parse_Incomplete(void)
     size_t n = BtPowerParse(&btpower, ibuf, length);
 
     TEST_ASSERT_EQUAL(AT_CMD_INVALID, btpower.response.status);
-}
-
-void test_btpower_Parse_Incomplete_length(void)
-{
-    BtPower_t btpower;
-    BtPowerObjectInit(&btpower);
-    BtPowerSetupRequest(&btpower, 1);
-
-    const char *ibuf = "\r\nOK\r";
-    size_t length = strlen(ibuf);
-
-    size_t n = BtPowerParse(&btpower, ibuf, length);
-
     TEST_ASSERT_EQUAL(0, n);
 }
 
@@ -127,7 +112,6 @@ void test_btpower_Parse_InvalidStatus(void)
 {
     BtPower_t btpower;
     BtPowerObjectInit(&btpower);
-    BtPowerSetupRequest(&btpower, 1);
 
     const char *ibuf = "\r\nPROCEEDING\r\n";
     size_t length = strlen(ibuf);
@@ -135,18 +119,5 @@ void test_btpower_Parse_InvalidStatus(void)
     size_t n = BtPowerParse(&btpower, ibuf, length);
 
     TEST_ASSERT_EQUAL(AT_CMD_INVALID, btpower.response.status);
-}
-
-void test_btpower_Parse_InvalidStatus_length(void)
-{
-    BtPower_t btpower;
-    BtPowerObjectInit(&btpower);
-    BtPowerSetupRequest(&btpower, 1);
-
-    const char *ibuf = "\r\nPROCEEDING\r\n";
-    size_t length = strlen(ibuf);
-
-    size_t n = BtPowerParse(&btpower, ibuf, length);
-
     TEST_ASSERT_EQUAL(0, n);
 }
