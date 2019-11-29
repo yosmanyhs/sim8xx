@@ -1,21 +1,18 @@
 /**
- * @file Bluetooth.c
+ * @file btpower.c
  * @brief
  */
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "At.h"
-#include "Bluetooth.h"
-#include "Modem.h"
-#include "btpaircfg.h"
-#include "btpower.h"
 #include "bthost.h"
+#include <string.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
+#define TIMEOUT_IN_SEC   5
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -36,66 +33,71 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
+#if !defined(TEST)
+static 
+#endif
+size_t BtHostSerialize(void *p, char *obuf, size_t length)
+{
+    BtHost_t *obj = (BtHost_t *)p;
+    size_t n = 0;
+    if (28 < length) {
+        strncat(obuf, "AT+BTHOST=", 10);
+        strncat(obuf, obj->request.name, 18);
+        n = strlen(obuf);
+    }
+        
+    return n;
+}
+
+#if !defined(TEST)
+static 
+#endif
+size_t BtHostParse(void *p, const char *ibuf, size_t length)
+{
+    BtHost_t *obj = (BtHost_t *)p;
+    AT_CommandStatus_t status = AT_CMD_INVALID;
+    size_t n = AT_CommandStatusParse(ibuf, length, &status);
+
+    if (n && ((AT_CMD_OK == status) || (AT_CMD_ERROR == status))) {
+        obj->response.status = status;
+    }
+    else {
+        n = 0;
+    }
+
+    return n;
+}
 
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this)
+void BtHostObjectInit(BtHost_t *this)
 {
-    this->notify = NULL;
+    memset(this, 0, sizeof(*this));
+    this->atcmd.obj = this;
+    this->atcmd.serialize = BtHostSerialize;
+    this->atcmd.parse = BtHostParse;
+    this->atcmd.timeout = TIMEOUT_IN_SEC;
 }
 
-bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb cb)
+void BtHostSetupRequest(BtHost_t *this, const char *name)
 {
-    bool result = false;
-    if (!this->notify) {
-        this->notify = cb;
-        result = true;
-    }
-
-    return result;
+    this->request.name = name;
 }
 
-bool GSM_BluetoothSetup(GSM_Bluetooth_t *this, const char *name, const char *pin)
+AT_Command_t *BtHostGetAtCommand(BtHost_t *this)
 {
-    BtPaircfg_t btpaircfg = {0};
-    BtPaircfgObjectInit(&btpaircfg);
-    BtPaircfgSetupRequest(&btpaircfg, 1, pin);
-    GSM_ModemExecuteAtCommand(&btpaircfg.atcmd);
-
-    if (AT_CMD_OK != BtPaircfgGetResponseStatus(&btpaircfg))
-        return false;
-
-    BtHost_t bthost = {0};
-    BtHostObjectInit(&bthost);
-    BtHostSetupRequest(&bthost, name);
-    GSM_ModemExecuteAtCommand(&bthost.atcmd);
-
-    return AT_CMD_OK == BtHostGetResponseStatus(&bthost);
+    return &this->atcmd;
 }
 
-bool GSM_BluetoothStart(GSM_Bluetooth_t *this)
+BtHost_response_t BtHostGetResponse(BtHost_t *this)
 {
-    BtPower_t btpower = {0};
-    BtPowerObjectInit(&btpower);
-    BtPowerSetupRequest(&btpower, 1);
-
-    GSM_ModemExecuteAtCommand(&btpower.atcmd);
-
-    return (AT_CMD_OK == BtPowerGetResponseStatus(&btpower));
+    return this->response;
 }
 
-bool GSM_BluetoothStop(GSM_Bluetooth_t *this)
+AT_CommandStatus_t BtHostGetResponseStatus(BtHost_t *this)
 {
-    BtPower_t btpower = {0};
-    BtPowerObjectInit(&btpower);
-    BtPowerSetupRequest(&btpower, 0);
-
-    AT_Command_t *atcmd = BtPowerGetAtCommand(&btpower);
-    GSM_ModemExecuteAtCommand(atcmd);
-
-    return (AT_CMD_OK == BtPowerGetResponseStatus(&btpower));
-}
-
+    return this->response.status;
+}   
 
 /****************************** END OF FILE **********************************/
