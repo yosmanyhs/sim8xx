@@ -22,7 +22,7 @@ void test_bthost_ObjectInit(void)
     TEST_ASSERT_EQUAL(bthost.atcmd.obj, &bthost);
     TEST_ASSERT_EQUAL_PTR(bthost.atcmd.serialize, BtHostSerialize);
     TEST_ASSERT_EQUAL_PTR(bthost.atcmd.parse, BtHostParse);
-    TEST_ASSERT_EQUAL(bthost.atcmd.timeout, 5);
+    TEST_ASSERT_EQUAL(5, bthost.atcmd.timeout);
 }
 
 void test_bthost_SetupRequest(void)

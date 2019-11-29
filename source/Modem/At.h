@@ -36,6 +36,8 @@ typedef enum {
     AT_CMD_NO_ANSWER,
     AT_CMD_PROCEEDING,
     AT_CMD_WAIT_FOR_USER_DATA,
+    AT_CMD_SEND_OK,
+    AT_CMD_SEND_FAIL,
 } AT_CommandStatus_t;
 
 typedef size_t (*AT_Serialize_t)(void *p, char *obuf, size_t length);

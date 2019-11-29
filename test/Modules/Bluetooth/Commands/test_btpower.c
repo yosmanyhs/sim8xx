@@ -22,7 +22,7 @@ void test_btpower_ObjectInit(void)
     TEST_ASSERT_EQUAL(btpower.atcmd.obj, &btpower);
     TEST_ASSERT_EQUAL_PTR(btpower.atcmd.serialize, BtPowerSerialize);
     TEST_ASSERT_EQUAL_PTR(btpower.atcmd.parse, BtPowerParse);
-    TEST_ASSERT_EQUAL(btpower.atcmd.timeout, 10);
+    TEST_ASSERT_EQUAL(10, btpower.atcmd.timeout);
 }
 
 void test_btpower_SetupRequest_Mode0(void)

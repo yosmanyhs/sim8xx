@@ -22,7 +22,7 @@ void test_btpaircfg_ObjectInit(void)
     TEST_ASSERT_EQUAL(btpaircfg.atcmd.obj, &btpaircfg);
     TEST_ASSERT_EQUAL_PTR(btpaircfg.atcmd.serialize, BtPaircfgSerialize);
     TEST_ASSERT_EQUAL_PTR(btpaircfg.atcmd.parse, BtPaircfgParse);
-    TEST_ASSERT_EQUAL(btpaircfg.atcmd.timeout, 2);
+    TEST_ASSERT_EQUAL(2, btpaircfg.atcmd.timeout);
 }
 
 void test_btpaircfg_BtPaircfgSetupRequest_Mode0(void)

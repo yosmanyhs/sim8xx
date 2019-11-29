@@ -12,6 +12,7 @@
 #include "btpaircfg.h"
 #include "btpower.h"
 #include "bthost.h"
+#include "btsppsend.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -97,5 +98,21 @@ bool GSM_BluetoothStop(GSM_Bluetooth_t *this)
     return (AT_CMD_OK == BtPowerGetResponseStatus(&btpower));
 }
 
+bool GSM_BluetoothSendSPPData(GSM_Bluetooth_t *this, const char *data, size_t length)
+{
+    BtSppSend_t btsppsend = {0};
+    BtSppSendObjectInit(&btsppsend);
+    BtSppSendSetupRequest(&btsppsend, data, length);
+    BtSppSendSetCommandMode(&btsppsend);
+    GSM_ModemExecuteAtCommand(&btsppsend.atcmd);
+
+    if (AT_CMD_WAIT_FOR_USER_DATA != BtSppSendGetResponseStatus(&btsppsend))
+        return false;
+
+    BtSppSendSetDataMode(&btsppsend);
+    GSM_ModemExecuteAtCommand(&btsppsend.atcmd); 
+
+    return (AT_CMD_SEND_OK == BtSppSendGetResponseStatus(&btsppsend));
+}
 
 /****************************** END OF FILE **********************************/

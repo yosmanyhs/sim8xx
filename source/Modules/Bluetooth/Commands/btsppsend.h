@@ -1,15 +1,19 @@
 /**
- * @file Bluetooth.h
+ * @file btsppsend.h
  * @brief 
  */
 
-#ifndef BLUETOOTH_H
-#define BLUETOOTH_H
+#ifndef BTSPPSEND_H
+#define BTSPPSEND_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+
+#include "At.h"
+
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
@@ -21,27 +25,26 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
+typedef struct BtSppSend_request_s {
+    const char *data;
+    size_t length;
+} BtSppSend_request_t;
+
+typedef struct BtSppSend_response_s {
+    AT_CommandStatus_t status;
+} BtSppSend_response_t;
+
 typedef enum {
-    GSM_BT_SPP_DATA_RECEIVED,
-    GSM_BT_SPP_DISCONNECTED,
-} GSM_BluetoothEventId_t;
+    BT_SPP_SEND_STATE_COMMAND,
+    BT_SPP_SEND_STATE_DATA,
+} BtSppSendState_t;
 
-typedef struct GSM_BluetoothEvent_s {
-    GSM_BluetoothEventId_t id;
-    union {
-        struct {
-            uint8_t id;
-            uint32_t length;
-            char data[128];
-        } spp;
-    } data;
-} GSM_BluetoothEvent_t;
-
-typedef void (*GSM_BluetoothCb)(GSM_BluetoothEvent_t evt, void *p);
-
-typedef struct GSM_Bluetooth_s {
-    GSM_BluetoothCb notify;
-} GSM_Bluetooth_t;
+typedef struct BtSppSend_s {
+    BtSppSend_request_t request;
+    BtSppSend_response_t response;
+    BtSppSendState_t state;
+    AT_Command_t atcmd;
+} BtSppSend_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -50,18 +53,20 @@ typedef struct GSM_Bluetooth_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this);
+void BtSppSendObjectInit(BtSppSend_t *this);
 
-bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb cb);
+void BtSppSendSetupRequest(BtSppSend_t *this, const char *data, size_t length);
 
-bool GSM_BluetoothSetup(GSM_Bluetooth_t *this, const char *name, const char *pin);
+void BtSppSendSetCommandMode(BtSppSend_t *this);
 
-bool GSM_BluetoothStart(GSM_Bluetooth_t *this);
+void BtSppSendSetDataMode(BtSppSend_t *this);
 
-bool GSM_BluetoothStop(GSM_Bluetooth_t *this);
+AT_Command_t *BtSppSendGetAtCommand(BtSppSend_t *this);
 
-bool GSM_BluetoothSendSPPData(GSM_Bluetooth_t *this, const char *data, size_t length);
+BtSppSend_response_t BtSppSendGetResponse(BtSppSend_t *this);
 
-#endif /* BLUETOOTH_H */
+AT_CommandStatus_t BtSppSendGetResponseStatus(BtSppSend_t *this);
+
+#endif /* BTSPPSEND_H */
 
 /****************************** END OF FILE **********************************/
