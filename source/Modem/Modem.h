@@ -1,6 +1,6 @@
 /**
  * @file Modem.h
- * @brief 
+ * @brief
  */
 
 #ifndef MODEM_H
