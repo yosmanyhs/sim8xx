@@ -18,6 +18,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -48,6 +49,7 @@
 /*****************************************************************************/
 void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this)
 {
+  memset(this, 0, sizeof(*this));
   this->module.urcparse = GSM_BluetoothURCParse;
   this->notify = NULL;
 }
@@ -125,20 +127,19 @@ size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t length)
 {
   GSM_Bluetooth_t *obj = (GSM_Bluetooth_t *)p;
   size_t offset = 0;
-  GSM_BluetoothEvent_t event = {0};
 
   if (BtConnectIsURC(ibuf, length)) {
-    offset = BtConnectParseURC(&event.data.btconnecting, ibuf, length);
-
-  } else if (0) {
-    ;
+    obj->event.id = GSM_BT_BTCONNECTING;
+    offset = BtConnectParseURC(&obj->event.payload.btconnecting, ibuf, length);
   } else {
     ;
   }
 
-  if (0 < offset) {
-    obj->notify(&event);
-  }  
+  if (offset && obj->notify) {
+    obj->notify(&obj->event);
+  } else {
+    obj->event.id = GSM_BT_NO_EVENT;
+  }
 
   return offset;
 }

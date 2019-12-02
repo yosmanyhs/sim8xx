@@ -15,6 +15,8 @@
 
 #include "Module.h"
 
+#include "btconnect.h"
+
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
@@ -27,20 +29,15 @@
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
 typedef enum {
-  GSM_BT_SPP_DATA_RECEIVED,
-  GSM_BT_SPP_DISCONNECTED,
+  GSM_BT_NO_EVENT,
+  GSM_BT_BTCONNECTING,
 } GSM_BluetoothEventId_t;
 
 typedef struct GSM_BluetoothEvent_s {
   GSM_BluetoothEventId_t id;
   union {
-    struct {
-      uint8_t id;
-      uint32_t length;
-      char data[128];
-    } spp;
-    BtConnecting_t btconnecting;
-  } data;
+    BtConnectingURC_t btconnecting;
+  } payload;
 } GSM_BluetoothEvent_t;
 
 typedef void (*GSM_BluetoothCb)(void *p);
@@ -48,6 +45,7 @@ typedef void (*GSM_BluetoothCb)(void *p);
 typedef struct GSM_Bluetooth_s {
   GSM_Module_t module;
   GSM_BluetoothCb notify;
+  GSM_BluetoothEvent_t event;
 } GSM_Bluetooth_t;
 
 /*****************************************************************************/

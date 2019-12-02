@@ -10,7 +10,6 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "At.h"
-
 #include <stddef.h>
 #include <stdint.h>
 
@@ -25,10 +24,10 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct BtConnecting_s {
-    char address[50];
-    char profileName[20];
-} BtConnecting_t;
+typedef struct BtConnectingURC_s {
+    char address[19];
+    char profile[10];
+} BtConnectingURC_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -39,7 +38,7 @@ typedef struct BtConnecting_s {
 /*****************************************************************************/
 bool BtConnectIsURC(const char *ibuf, size_t length);
 
-size_t BtConnectParseURC(BtConnecting_t *obj, char *ibuf, size_t length);
+size_t BtConnectParseURC(BtConnectingURC_t *urc, const char *ibuf, size_t length);
 
 #endif /* BTCONNECT_H */
 

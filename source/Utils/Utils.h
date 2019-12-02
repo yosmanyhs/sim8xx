@@ -1,15 +1,14 @@
 /**
- * @file At.h
+ * @file Utils.h
  * @brief
  */
 
-#ifndef AT_H
-#define AT_H
+#ifndef UTILS_H
+#define UTILS_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -24,34 +23,6 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef enum {
-  AT_CMD_INVALID,
-  AT_CMD_OK,
-  AT_CMD_CONNECT,
-  AT_CMD_RING,
-  AT_CMD_NO_CARRIER,
-  AT_CMD_ERROR,
-  AT_CMD_NO_DIALTONE,
-  AT_CMD_BUSY,
-  AT_CMD_NO_ANSWER,
-  AT_CMD_PROCEEDING,
-  AT_CMD_WAIT_FOR_USER_DATA,
-  AT_CMD_SEND_OK,
-  AT_CMD_SEND_FAIL,
-} AT_CommandStatus_t;
-
-typedef size_t (*AT_Serialize_t)(void *p, char *obuf, size_t length);
-
-typedef size_t (*AT_Parse_t)(void *p, const char *ibuf, size_t length);
-
-typedef size_t (*URC_Parse_t)(void *p, const char *ibuf, size_t length);
-
-typedef struct AT_Command_s {
-  void *obj;
-  AT_Serialize_t serialize;
-  AT_Parse_t parse;
-  uint32_t timeout;
-} AT_Command_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -60,8 +31,14 @@ typedef struct AT_Command_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-size_t AT_CommandStatusParse(const char *ibuf, size_t length, AT_CommandStatus_t *status);
+size_t GSM_UtilsGetString(const char ibuf[], size_t ilen, char obuf[], size_t olen, char delim);
 
-#endif /* AT_H */
+size_t GSM_UtilsGetInt(const char ibuf[], size_t ilen, int *pd, char delim);
+
+size_t GSM_UtilsGetDouble(const char input[], size_t ilen, double *pd, char delim);
+
+size_t GSM_UtilsSkipReserved(const char input[], size_t ilen, char delim, size_t count);
+
+#endif /* UTILS_H */
 
 /****************************** END OF FILE **********************************/
