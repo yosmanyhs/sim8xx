@@ -1,6 +1,6 @@
 /**
  * @file btsppsend.h
- * @brief 
+ * @brief
  */
 
 #ifndef BTSPPSEND_H
@@ -9,10 +9,10 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include <stdint.h>
-#include <stddef.h>
-
 #include "At.h"
+
+#include <stddef.h>
+#include <stdint.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -26,24 +26,24 @@
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
 typedef struct BtSppSend_request_s {
-    const char *data;
-    size_t length;
+  const char *data;
+  size_t length;
 } BtSppSend_request_t;
 
 typedef struct BtSppSend_response_s {
-    AT_CommandStatus_t status;
+  AT_CommandStatus_t status;
 } BtSppSend_response_t;
 
 typedef enum {
-    BT_SPP_SEND_STATE_COMMAND,
-    BT_SPP_SEND_STATE_DATA,
+  BT_SPP_SEND_STATE_COMMAND,
+  BT_SPP_SEND_STATE_DATA,
 } BtSppSendState_t;
 
 typedef struct BtSppSend_s {
-    BtSppSend_request_t request;
-    BtSppSend_response_t response;
-    BtSppSendState_t state;
-    AT_Command_t atcmd;
+  BtSppSend_request_t request;
+  BtSppSend_response_t response;
+  BtSppSendState_t state;
+  AT_Command_t atcmd;
 } BtSppSend_t;
 
 /*****************************************************************************/

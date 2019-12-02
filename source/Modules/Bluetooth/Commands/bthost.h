@@ -1,6 +1,6 @@
 /**
  * @file bthost.h
- * @brief 
+ * @brief
  */
 
 #ifndef BTHOST_H
@@ -9,10 +9,10 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include <stdint.h>
-#include <stddef.h>
-
 #include "At.h"
+
+#include <stddef.h>
+#include <stdint.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -26,17 +26,17 @@
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
 typedef struct BtHost_request_s {
-    const char *name;
+  const char *name;
 } BtHost_request_t;
 
 typedef struct BtHost_response_s {
-    AT_CommandStatus_t status;
+  AT_CommandStatus_t status;
 } BtHost_response_t;
 
 typedef struct BtHost_s {
-    BtHost_request_t request;
-    BtHost_response_t response;
-    AT_Command_t atcmd;
+  BtHost_request_t request;
+  BtHost_response_t response;
+  AT_Command_t atcmd;
 } BtHost_t;
 
 /*****************************************************************************/

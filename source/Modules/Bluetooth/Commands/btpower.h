@@ -1,6 +1,6 @@
 /**
  * @file btpower.h
- * @brief 
+ * @brief
  */
 
 #ifndef BTPOWER_H
@@ -9,10 +9,10 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include <stdint.h>
-#include <stddef.h>
-
 #include "At.h"
+
+#include <stddef.h>
+#include <stdint.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -26,17 +26,17 @@
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
 typedef struct BtPower_request_s {
-    uint8_t mode;
+  uint8_t mode;
 } BtPower_request_t;
 
 typedef struct BtPower_response_s {
-    AT_CommandStatus_t status;
+  AT_CommandStatus_t status;
 } BtPower_response_t;
 
 typedef struct BtPower_s {
-    BtPower_request_t request;
-    BtPower_response_t response;
-    AT_Command_t atcmd;
+  BtPower_request_t request;
+  BtPower_response_t response;
+  AT_Command_t atcmd;
 } BtPower_t;
 
 /*****************************************************************************/

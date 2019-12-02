@@ -1,6 +1,6 @@
 /**
  * @file btpaircfg.h
- * @brief 
+ * @brief
  */
 
 #ifndef BTPAIRCFG_H
@@ -9,10 +9,10 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include <stdint.h>
-#include <stddef.h>
-
 #include "At.h"
+
+#include <stddef.h>
+#include <stdint.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -26,18 +26,18 @@
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
 typedef struct BtPaircfg_request_s {
-    uint8_t mode;
-    const char *pin;
+  uint8_t mode;
+  const char *pin;
 } BtPaircfg_request_t;
 
 typedef struct BtPaircfg_response_s {
-    AT_CommandStatus_t status;
+  AT_CommandStatus_t status;
 } BtPaircfg_response_t;
 
 typedef struct BtPaircfg_s {
-    BtPaircfg_request_t request;
-    BtPaircfg_response_t response;
-    AT_Command_t atcmd;
+  BtPaircfg_request_t request;
+  BtPaircfg_response_t response;
+  AT_Command_t atcmd;
 } BtPaircfg_t;
 
 /*****************************************************************************/

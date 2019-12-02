@@ -10,6 +10,7 @@
 
 #include "At.h"
 #include "Modem.h"
+#include "btconnect.h"
 #include "bthost.h"
 #include "btpaircfg.h"
 #include "btpower.h"
@@ -47,6 +48,7 @@
 /*****************************************************************************/
 void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this)
 {
+  this->module.urcparse = GSM_BluetoothURCParse;
   this->notify = NULL;
 }
 
@@ -117,6 +119,28 @@ bool GSM_BluetoothSendSPPData(GSM_Bluetooth_t *this, const char *data, size_t le
   GSM_ModemExecuteAtCommand(&btsppsend.atcmd);
 
   return (AT_CMD_SEND_OK == BtSppSendGetResponseStatus(&btsppsend));
+}
+
+size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t length)
+{
+  GSM_Bluetooth_t *obj = (GSM_Bluetooth_t *)p;
+  size_t offset = 0;
+  GSM_BluetoothEvent_t event = {0};
+
+  if (BtConnectIsURC(ibuf, length)) {
+    offset = BtConnectParseURC(&event.data.btconnecting, ibuf, length);
+
+  } else if (0) {
+    ;
+  } else {
+    ;
+  }
+
+  if (0 < offset) {
+    obj->notify(&event);
+  }  
+
+  return offset;
 }
 
 /****************************** END OF FILE **********************************/

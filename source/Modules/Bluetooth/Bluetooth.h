@@ -13,6 +13,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "Module.h"
+
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
@@ -37,12 +39,14 @@ typedef struct GSM_BluetoothEvent_s {
       uint32_t length;
       char data[128];
     } spp;
+    BtConnecting_t btconnecting;
   } data;
 } GSM_BluetoothEvent_t;
 
-typedef void (*GSM_BluetoothCb)(GSM_BluetoothEvent_t evt, void *p);
+typedef void (*GSM_BluetoothCb)(void *p);
 
 typedef struct GSM_Bluetooth_s {
+  GSM_Module_t module;
   GSM_BluetoothCb notify;
 } GSM_Bluetooth_t;
 
@@ -64,6 +68,8 @@ bool GSM_BluetoothStart(GSM_Bluetooth_t *this);
 bool GSM_BluetoothStop(GSM_Bluetooth_t *this);
 
 bool GSM_BluetoothSendSPPData(GSM_Bluetooth_t *this, const char *data, size_t length);
+
+size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t length);
 
 #endif /* BLUETOOTH_H */
 

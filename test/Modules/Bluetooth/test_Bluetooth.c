@@ -1,5 +1,5 @@
-#include "unity.h"
 #include "Bluetooth.h"
+#include "unity.h"
 
 TEST_FILE("btpower.c");
 TEST_FILE("bthost.c");
@@ -18,5 +18,5 @@ void tearDown(void)
 
 void test_Bluetooth_NeedToImplement(void)
 {
-    TEST_IGNORE_MESSAGE("Need to Implement Bluetooth");
+  TEST_IGNORE_MESSAGE("Need to Implement Bluetooth");
 }

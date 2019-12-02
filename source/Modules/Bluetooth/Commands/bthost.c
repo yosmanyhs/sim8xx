@@ -7,12 +7,13 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "bthost.h"
+
 #include <string.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC   5
+#define TIMEOUT_IN_SEC 5
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -34,38 +35,39 @@
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
 #if !defined(TEST)
-static 
+static
 #endif
-size_t BtHostSerialize(void *p, char *obuf, size_t length)
+    size_t
+    BtHostSerialize(void *p, char *obuf, size_t length)
 {
-    BtHost_t *obj = (BtHost_t *)p;
-    size_t n = 0;
-    if (28 < length) {
-        strncat(obuf, "AT+BTHOST=", 10);
-        strncat(obuf, obj->request.name, 18);
-        n = strlen(obuf);
-    }
-        
-    return n;
+  BtHost_t *obj = (BtHost_t *)p;
+  size_t n      = 0;
+  if (28 < length) {
+    strncat(obuf, "AT+BTHOST=", 10);
+    strncat(obuf, obj->request.name, 18);
+    n = strlen(obuf);
+  }
+
+  return n;
 }
 
 #if !defined(TEST)
-static 
+static
 #endif
-size_t BtHostParse(void *p, const char *ibuf, size_t length)
+    size_t
+    BtHostParse(void *p, const char *ibuf, size_t length)
 {
-    BtHost_t *obj = (BtHost_t *)p;
-    AT_CommandStatus_t status = AT_CMD_INVALID;
-    size_t n = AT_CommandStatusParse(ibuf, length, &status);
+  BtHost_t *obj             = (BtHost_t *)p;
+  AT_CommandStatus_t status = AT_CMD_INVALID;
+  size_t n                  = AT_CommandStatusParse(ibuf, length, &status);
 
-    if (n && ((AT_CMD_OK == status) || (AT_CMD_ERROR == status))) {
-        obj->response.status = status;
-    }
-    else {
-        n = 0;
-    }
+  if (n && ((AT_CMD_OK == status) || (AT_CMD_ERROR == status))) {
+    obj->response.status = status;
+  } else {
+    n = 0;
+  }
 
-    return n;
+  return n;
 }
 
 /*****************************************************************************/
@@ -73,31 +75,31 @@ size_t BtHostParse(void *p, const char *ibuf, size_t length)
 /*****************************************************************************/
 void BtHostObjectInit(BtHost_t *this)
 {
-    memset(this, 0, sizeof(*this));
-    this->atcmd.obj = this;
-    this->atcmd.serialize = BtHostSerialize;
-    this->atcmd.parse = BtHostParse;
-    this->atcmd.timeout = TIMEOUT_IN_SEC;
+  memset(this, 0, sizeof(*this));
+  this->atcmd.obj       = this;
+  this->atcmd.serialize = BtHostSerialize;
+  this->atcmd.parse     = BtHostParse;
+  this->atcmd.timeout   = TIMEOUT_IN_SEC;
 }
 
 void BtHostSetupRequest(BtHost_t *this, const char *name)
 {
-    this->request.name = name;
+  this->request.name = name;
 }
 
 AT_Command_t *BtHostGetAtCommand(BtHost_t *this)
 {
-    return &this->atcmd;
+  return &this->atcmd;
 }
 
 BtHost_response_t BtHostGetResponse(BtHost_t *this)
 {
-    return this->response;
+  return this->response;
 }
 
 AT_CommandStatus_t BtHostGetResponseStatus(BtHost_t *this)
 {
-    return this->response.status;
-}   
+  return this->response.status;
+}
 
 /****************************** END OF FILE **********************************/
