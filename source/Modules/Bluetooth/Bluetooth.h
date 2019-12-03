@@ -31,12 +31,14 @@
 typedef enum {
   GSM_BT_NO_EVENT,
   GSM_BT_BTCONNECTING,
+  GSM_BT_BTCONNECT,
 } GSM_BluetoothEventId_t;
 
 typedef struct GSM_BluetoothEvent_s {
   GSM_BluetoothEventId_t id;
   union {
     BtConnectingURC_t btconnecting;
+    BtConnectURC_t btconnect;
   } payload;
 } GSM_BluetoothEvent_t;
 

@@ -92,20 +92,20 @@ size_t GSM_UtilsGetString(const char input[], size_t ilen, char obuf[], size_t o
     return end - istart;
 }
 
-size_t GSM_UtilsGetInt(const char input[], size_t ilen, int *pi, char delim)
+size_t GSM_UtilsGetInt(const char input[], size_t ilen, int *pi, char stok, char etok)
 {
     const char *istart = input;
     const char *iend = input + ilen;
 
     *pi = 0;
 
-    char *begin = strchr(istart, delim);
+    char *begin = strchr(istart, stok);
     if (!begin || (iend <= begin))
         return 0;
 
-    begin += sizeof(delim);
+    begin += sizeof(stok);
 
-    char *end = strchr(begin, delim);
+    char *end = strchr(begin, etok);
     if (!end || (iend < end))
         return 0;    
 
@@ -122,20 +122,20 @@ size_t GSM_UtilsGetInt(const char input[], size_t ilen, int *pi, char delim)
     return end - istart;
 }
 
-size_t GSM_UtilsGetDouble(const char input[], size_t ilen, double *pd, char delim)
+size_t GSM_UtilsGetDouble(const char input[], size_t ilen, double *pd, char stok, char etok)
 {
     const char *istart = input;
     const char *iend = input + ilen;
 
     *pd = 0;
 
-    char *begin = strchr(istart, delim);
+    char *begin = strchr(istart, stok);
     if (!begin || (iend <= begin))
         return 0;
 
-    begin += sizeof(delim);
+    begin += sizeof(stok);
 
-    char *end = strchr(begin, delim);
+    char *end = strchr(begin, etok);
     if (!end || (iend < end))
         return 0;    
 

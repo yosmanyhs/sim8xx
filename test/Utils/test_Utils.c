@@ -60,7 +60,7 @@ void test_Utils_GetInt(void)
 
     int d = 0;
 
-    size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',');
+    size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',', ',');
 
     TEST_ASSERT_EQUAL(192, d);
     TEST_ASSERT_EQUAL(22, n);
@@ -73,7 +73,7 @@ void test_Utils_GetInt_NoInt(void)
 
     int d = 0;
 
-    size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',');
+    size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',', ',');
 
     TEST_ASSERT_EQUAL(0, d);
     TEST_ASSERT_EQUAL(0, n);
@@ -86,7 +86,7 @@ void test_Utils_GetInt_ExtraCharacters(void)
 
     int d = 0;
 
-    size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',');
+    size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',', ',');
 
     TEST_ASSERT_EQUAL(192, d);
     TEST_ASSERT_EQUAL(25, n);
@@ -99,7 +99,7 @@ void test_Utils_GetInt_NegativeInt(void)
 
     int d = 0;
 
-    size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',');
+    size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',', ',');
 
     TEST_ASSERT_EQUAL(-299, d);
     TEST_ASSERT_EQUAL(23, n);
@@ -112,7 +112,7 @@ void test_Utils_GetDouble(void)
 
     double d = 0;
 
-    size_t n = GSM_UtilsGetDouble(ibuf, ilen, &d, ',');
+    size_t n = GSM_UtilsGetDouble(ibuf, ilen, &d, ',', ',');
 
     TEST_ASSERT_EQUAL(3.14159265, d);
     TEST_ASSERT_EQUAL(29, n);
@@ -125,7 +125,7 @@ void test_Utils_GetDouble_NoDouble(void)
 
     double d = 0;
 
-    size_t n = GSM_UtilsGetDouble(ibuf, ilen, &d, ',');
+    size_t n = GSM_UtilsGetDouble(ibuf, ilen, &d, ',', ',');
 
     TEST_ASSERT_EQUAL_DOUBLE(0, d);
     TEST_ASSERT_EQUAL(0, n);
@@ -138,7 +138,7 @@ void test_Utils_GetDouble_Negative(void)
 
     double d = 0;
 
-    size_t n = GSM_UtilsGetDouble(ibuf, ilen, &d, ',');
+    size_t n = GSM_UtilsGetDouble(ibuf, ilen, &d, ',', ',');
 
     TEST_ASSERT_EQUAL_DOUBLE(-3.14159265, d);
     TEST_ASSERT_EQUAL(30, n);

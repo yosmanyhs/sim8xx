@@ -33,9 +33,9 @@
 /*****************************************************************************/
 size_t GSM_UtilsGetString(const char ibuf[], size_t ilen, char obuf[], size_t olen, char delim);
 
-size_t GSM_UtilsGetInt(const char ibuf[], size_t ilen, int *pd, char delim);
+size_t GSM_UtilsGetInt(const char ibuf[], size_t ilen, int *pd, char stok, char etok);
 
-size_t GSM_UtilsGetDouble(const char input[], size_t ilen, double *pd, char delim);
+size_t GSM_UtilsGetDouble(const char input[], size_t ilen, double *pd, char stok, char etok);
 
 size_t GSM_UtilsSkipReserved(const char input[], size_t ilen, char delim, size_t count);
 

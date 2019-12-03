@@ -128,9 +128,12 @@ size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t length)
   GSM_Bluetooth_t *obj = (GSM_Bluetooth_t *)p;
   size_t offset = 0;
 
-  if (BtConnectIsURC(ibuf, length)) {
+  if (BtConnectIsURC_BtConnecting(ibuf, length)) {
     obj->event.id = GSM_BT_BTCONNECTING;
-    offset = BtConnectParseURC(&obj->event.payload.btconnecting, ibuf, length);
+    offset = BtConnectParseURC_BtConnecting(&obj->event.payload.btconnecting, ibuf, length);
+  } else if (BtConnectIsURC_BtConnect(ibuf, length)) {
+    obj->event.id = GSM_BT_BTCONNECT;
+    offset = BtConnectParseURC_BtConnect(&obj->event.payload.btconnect, ibuf, length);
   } else {
     ;
   }
