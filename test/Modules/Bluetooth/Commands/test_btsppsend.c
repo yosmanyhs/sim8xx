@@ -19,9 +19,9 @@ void test_btsppsend_ObjectInit(void)
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
 
-  TEST_ASSERT_EQUAL(btsppsend.atcmd.obj, &btsppsend);
-  TEST_ASSERT_EQUAL_PTR(btsppsend.atcmd.serialize, BtSppSendSerialize);
-  TEST_ASSERT_EQUAL_PTR(btsppsend.atcmd.parse, BtSppSendParse);
+  TEST_ASSERT_EQUAL(&btsppsend, btsppsend.atcmd.obj);
+  TEST_ASSERT_EQUAL_PTR(BtSppSendSerialize, btsppsend.atcmd.serialize);
+  TEST_ASSERT_EQUAL_PTR(BtSppSendParse, btsppsend.atcmd.parse);
   TEST_ASSERT_EQUAL(10, btsppsend.atcmd.timeout);
 }
 

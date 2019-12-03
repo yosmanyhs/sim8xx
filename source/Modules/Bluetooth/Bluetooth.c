@@ -43,6 +43,52 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
+#if !defined(TEST)
+static
+#endif
+void GSM_bluetoothHandleBtConnectURC(BtConnectURC_t *urc, GSM_Bluetooth_t *blt)
+{
+  switch(urc->type) {
+    case BTCONNECT_CONNECTING: {
+      blt->event.type = GSM_BT_BTCONNECTING;
+      const char *src = urc->payload.connecting.address;
+      char *dst = blt->event.payload.connecting.address;
+      size_t n = sizeof(blt->event.payload.connecting.address);
+      memcpy(dst, src, n);
+      src = urc->payload.connecting.profile;
+      dst = blt->event.payload.connecting.profile;
+      n = sizeof(blt->event.payload.connecting.profile);
+      memcpy(dst, src, n);
+      if (blt->notify) {
+        blt->notify(&blt->event);
+      }
+      break;
+    }
+    case BTCONNECT_CONNECT: {
+      blt->event.type = GSM_BT_BTCONNECT;
+      blt->event.payload.connect.id = urc->payload.connect.id;
+      const char *src = urc->payload.connect.name;
+      char *dst = blt->event.payload.connect.name;
+      size_t n = sizeof(blt->event.payload.connect.name);
+      memcpy(dst, src, n);
+      src = urc->payload.connect.address;
+      dst = blt->event.payload.connect.address;
+      n = sizeof(blt->event.payload.connect.address);
+      memcpy(dst, src, n);
+      src = urc->payload.connect.profile;
+      dst = blt->event.payload.connect.profile;
+      n = sizeof(blt->event.payload.connect.profile);
+      memcpy(dst, src, n);
+      if (blt->notify) {
+        blt->notify(&blt->event);
+      }
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+}
 
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
@@ -125,25 +171,15 @@ bool GSM_BluetoothSendSPPData(GSM_Bluetooth_t *this, const char *data, size_t le
 
 size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t length)
 {
-  GSM_Bluetooth_t *obj = (GSM_Bluetooth_t *)p;
+  GSM_Bluetooth_t *blt = (GSM_Bluetooth_t *)p;
   size_t offset = 0;
 
-  if (BtConnectIsURC_BtConnecting(ibuf, length)) {
-    obj->event.id = GSM_BT_BTCONNECTING;
-    offset = BtConnectParseURC_BtConnecting(&obj->event.payload.btconnecting, ibuf, length);
-  } else if (BtConnectIsURC_BtConnect(ibuf, length)) {
-    obj->event.id = GSM_BT_BTCONNECT;
-    offset = BtConnectParseURC_BtConnect(&obj->event.payload.btconnect, ibuf, length);
-  } else {
-    ;
+  if (BtConnectIsURC(ibuf, length)) {
+    BtConnectURC_t urc = {0};
+    offset = BtConnectParseURC(&urc, ibuf, length);
+    GSM_bluetoothHandleBtConnectURC(&urc, blt);
   }
-
-  if (offset && obj->notify) {
-    obj->notify(&obj->event);
-  } else {
-    obj->event.id = GSM_BT_NO_EVENT;
-  }
-
+  
   return offset;
 }
 

@@ -19,9 +19,9 @@ void test_bthost_ObjectInit(void)
   BtHost_t bthost;
   BtHostObjectInit(&bthost);
 
-  TEST_ASSERT_EQUAL(bthost.atcmd.obj, &bthost);
-  TEST_ASSERT_EQUAL_PTR(bthost.atcmd.serialize, BtHostSerialize);
-  TEST_ASSERT_EQUAL_PTR(bthost.atcmd.parse, BtHostParse);
+  TEST_ASSERT_EQUAL(&bthost, bthost.atcmd.obj);
+  TEST_ASSERT_EQUAL_PTR(BtHostSerialize, bthost.atcmd.serialize);
+  TEST_ASSERT_EQUAL_PTR(BtHostParse, bthost.atcmd.parse);
   TEST_ASSERT_EQUAL(5, bthost.atcmd.timeout);
 }
 
@@ -42,10 +42,10 @@ void test_bthost_GetAtCommand(void)
 
   AT_Command_t *atcmd = BtHostGetAtCommand(&bthost);
 
-  TEST_ASSERT_EQUAL(atcmd->obj, &bthost);
-  TEST_ASSERT_EQUAL_PTR(atcmd->serialize, BtHostSerialize);
-  TEST_ASSERT_EQUAL_PTR(atcmd->parse, BtHostParse);
-  TEST_ASSERT_EQUAL(atcmd->timeout, 5);
+  TEST_ASSERT_EQUAL(&bthost, atcmd->obj);
+  TEST_ASSERT_EQUAL_PTR(BtHostSerialize, atcmd->serialize);
+  TEST_ASSERT_EQUAL_PTR(BtHostParse, atcmd->parse);
+  TEST_ASSERT_EQUAL(5, atcmd->timeout);
 }
 
 void test_bthost_Serialize(void)
