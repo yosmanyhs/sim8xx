@@ -91,6 +91,8 @@ bool GSM_BluetoothStart(GSM_Bluetooth_t *this);
 
 bool GSM_BluetoothStop(GSM_Bluetooth_t *this);
 
+bool GSM_BluetoothAcceptConnection(GSM_Bluetooth_t *this);
+
 bool GSM_BluetoothSendSPPData(GSM_Bluetooth_t *this, const char *data, size_t length);
 
 size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t length);

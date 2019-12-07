@@ -10,6 +10,7 @@
 
 #include "At.h"
 #include "Modem.h"
+#include "btacpt.h"
 #include "btconnect.h"
 #include "btdisconn.h"
 #include "bthost.h"
@@ -204,6 +205,18 @@ bool GSM_BluetoothStop(GSM_Bluetooth_t *this)
   GSM_ModemExecuteAtCommand(atcmd);
 
   return (AT_CMD_OK == BtPowerGetResponseStatus(&btpower));
+}
+
+bool GSM_BluetoothAcceptConnection(GSM_Bluetooth_t *this)
+{
+  BtAcpt_t btacpt = {0};
+  BtAcptObjectInit(&btacpt);
+  BtAcptSetupRequest(&btacpt, 1);
+
+  AT_Command_t *atcmd = BtAcptGetAtCommand(&btacpt);
+  GSM_ModemExecuteAtCommand(atcmd);
+
+  return (AT_CMD_OK == BtAcptGetResponseStatus(&btacpt));
 }
 
 bool GSM_BluetoothSendSPPData(GSM_Bluetooth_t *this, const char *data, size_t length)

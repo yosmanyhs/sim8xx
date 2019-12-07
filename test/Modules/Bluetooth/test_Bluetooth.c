@@ -4,6 +4,7 @@
 
 #include "mock_test_Bluetooth_callback.h"
 
+TEST_FILE("btacpt.c");
 TEST_FILE("btconnect.c");
 TEST_FILE("btdisconn.c");
 TEST_FILE("btpower.c");
