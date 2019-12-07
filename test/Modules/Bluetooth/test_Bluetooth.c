@@ -1,5 +1,6 @@
 #include "Bluetooth.h"
 #include "unity.h"
+#include "mock_Modem.h"
 #include <string.h>
 
 #include "mock_test_Bluetooth_callback.h"
@@ -12,7 +13,6 @@ TEST_FILE("bthost.c");
 TEST_FILE("btsppget.c");
 TEST_FILE("btsppsend.c");
 TEST_FILE("btpaircfg.c");
-TEST_FILE("Modem.c");
 TEST_FILE("At.c");
 TEST_FILE("Utils.c");
 
@@ -24,13 +24,24 @@ void tearDown(void)
 {
 }
 
+void test_Bluetooth_ObjectInit(void)
+{
+  GSM_Modem_t modem;
+  GSM_Bluetooth_t bluetooth;
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
+
+  TEST_ASSERT_EQUAL_PTR(&modem, bluetooth.parent);
+  TEST_ASSERT_EQUAL_PTR(NULL, bluetooth.notify);
+}
+
 void test_Bluetooth_URC_BTCONNECTING(void)
 {
   const char *ibuf = "\r\n+BTCONNECTING: \"34:c7:31:aa:37:5b\",\"SPP\"\r\n";
   size_t ilen = strlen(ibuf);
 
+  GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
-  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
   GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
 
   BTcallback_Expect(&bluetooth.event);
@@ -47,8 +58,9 @@ void test_Bluetooth_URC_BTCONNECTING_Incomplete(void)
   const char *ibuf = "\r\n+BTCONNECTING: \"34:c7:31:aa:37:5b\",\"SP";
   size_t ilen = strlen(ibuf);
 
+  GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
-  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
   GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
 
   size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);
@@ -64,8 +76,9 @@ void test_Bluetooth_URC_BTCONNECT(void)
   const char *ibuf = "\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n";
   size_t ilen = strlen(ibuf);
 
+  GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
-  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
   GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
 
   BTcallback_Expect(&bluetooth.event);
@@ -84,8 +97,9 @@ void test_Bluetooth_URC_BTCONNECT_Incomplete(void)
   const char *ibuf = "\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:7";
   size_t ilen = strlen(ibuf);
 
+  GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
-  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
   GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
 
   size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);
@@ -103,8 +117,9 @@ void test_Bluetooth_URC_SPPGET(void)
   const char *ibuf = "\r\n+BTSPPDATA: 1,15,SIMCOMSPPFORAPP\r\n";
   size_t ilen = strlen(ibuf);
 
+  GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
-  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
   GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
 
   BTcallback_Expect(&bluetooth.event);
@@ -120,8 +135,9 @@ void test_Bluetooth_URC_SPPGET_Incomplete(void)
   const char *ibuf = "\r\n+BTSPPDATA: 1,15,SIMCOMSPPFORAPP";
   size_t ilen = strlen(ibuf);
 
+  GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
-  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
   GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
 
   size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);
@@ -136,8 +152,9 @@ void test_Bluetooth_URC_DISCONN(void)
   const char *ibuf = "\r\n+BTDISCONN:\"SIM800H\",34:c7:31:aa:37:5b,\"SPP\"\r\n";
   size_t ilen = strlen(ibuf);
 
+  GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
-  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
   GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
 
   BTcallback_Expect(&bluetooth.event);
@@ -153,8 +170,9 @@ void test_Bluetooth_URC_DISCONN_Incomplete(void)
   const char *ibuf = "\r\n+BTDISCONN:\"SIM800H\",34:c7:31:aa:";
   size_t ilen = strlen(ibuf);
 
+  GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
-  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
   GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
 
   size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);

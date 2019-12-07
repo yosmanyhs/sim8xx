@@ -13,7 +13,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "Module.h"
+#include "BluetoothEvent.h"
 
 #include "btconnect.h"
 
@@ -28,48 +28,9 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef enum {
-  GSM_BT_NO_EVENT,
-  GSM_BT_CONNECTING,
-  GSM_BT_CONNECTED,
-  GSM_BT_INCOMING_DATA,
-  GSM_BT_DISCONNECTED,
-} GSM_BluetoothEventType_t;
-
-typedef struct GSM_BluetoothEvent_Connecting_s {
-  char address[19];
-  char profile[10];
-} GSM_BluetoothEvent_Connecting_t;
-
-typedef struct GSM_BluetoothEvent_Connect_s {
-  uint32_t id;
-  char name[19];
-  char address[19];
-  char profile[10];
-} GSM_BluetoothEvent_Connected_t;
-
-typedef struct GSM_BluetoothEvent_IncomingData_s {
-  char data[256];
-} GSM_BluetoothEvent_IncomingData_t;
-
-typedef struct GSM_BluetoothEvent_Disconnected_s {
-  char name[19];
-} GSM_BluetoothEvent_Disconnected_t;
-
-typedef struct GSM_BluetoothEvent_s {
-  GSM_BluetoothEventType_t type;
-  union {
-    GSM_BluetoothEvent_Connecting_t connecting;
-    GSM_BluetoothEvent_Connected_t connected;
-    GSM_BluetoothEvent_IncomingData_t incomingData;
-    GSM_BluetoothEvent_Disconnected_t disconnected;
-  } payload;
-} GSM_BluetoothEvent_t;
-
-typedef void (*GSM_BluetoothCb)(GSM_BluetoothEvent_t *p);
-
+typedef struct GSM_Modem_s GSM_Modem_t;
 typedef struct GSM_Bluetooth_s {
-  GSM_Module_t module;
+  GSM_Modem_t *parent;
   GSM_BluetoothCb notify;
   GSM_BluetoothEvent_t event;
 } GSM_Bluetooth_t;
@@ -81,7 +42,7 @@ typedef struct GSM_Bluetooth_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this);
+void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this, GSM_Modem_t *parent);
 
 bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb cb);
 

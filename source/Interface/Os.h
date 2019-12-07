@@ -1,16 +1,15 @@
 /**
- * @file Modem.h
+ * @file Os.h
  * @brief
  */
 
-#ifndef MODEM_H
-#define MODEM_H
+#ifndef OS_H
+#define OS_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "At.h"
-#include "Bluetooth.h"
+#include <stdint.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -23,10 +22,10 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct GSM_Modem_s {
-    AT_Command_t *currentAt;
-    GSM_Bluetooth_t bluetooth;
-} GSM_Modem_t;
+typedef enum {
+    OS_NO_ERROR,
+    OS_TIMEOUT,
+} OS_Error_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -35,14 +34,20 @@ typedef struct GSM_Modem_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this);
+void OS_Init(void);
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb *cb);
+void OS_LockModem(void);
 
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
+void OS_UnlockModem(void);
 
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
+void OS_LockParser(void);
 
-#endif /* MODEM_H */
+void OS_UnlockParser(void);
+
+OS_Error_t OS_WaitForMessageWithTimeout(uint32_t timeoutInMs);
+
+void OS_WakeUpThreadWaitingForMessage(void);
+
+#endif /* OS_H */
 
 /****************************** END OF FILE **********************************/

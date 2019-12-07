@@ -1,16 +1,16 @@
 /**
- * @file Modem.h
+ * @file Sim8xx.h
  * @brief
  */
 
-#ifndef MODEM_H
-#define MODEM_H
+#ifndef SIM_8XX_H
+#define SIM_8XX_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "At.h"
-#include "Bluetooth.h"
+#include <stdbool.h>
+#include <stddef.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -23,10 +23,7 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct GSM_Modem_s {
-    AT_Command_t *currentAt;
-    GSM_Bluetooth_t bluetooth;
-} GSM_Modem_t;
+typedef void (*GSM_BluetoothCb)(GSM_BluetoothEvent_t *p);
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -35,14 +32,13 @@ typedef struct GSM_Modem_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this);
+void SIM_Init(void);
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb *cb);
+bool SIM_BluetoothRegisterCallback(GSM_BluetoothCb cb);
 
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
+size_t SIM_ProcessInput(const char ibuf[], size_t ilen);
 
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
 
-#endif /* MODEM_H */
+#endif /* SIM_8_XX_H */
 
 /****************************** END OF FILE **********************************/

@@ -1,16 +1,14 @@
 /**
- * @file Modem.h
- * @brief
+ * @file Serial.h
+ * @brief 
  */
 
-#ifndef MODEM_H
-#define MODEM_H
+#ifndef SERIAL_H
+#define SERIAL_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "At.h"
-#include "Bluetooth.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -23,10 +21,6 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct GSM_Modem_s {
-    AT_Command_t *currentAt;
-    GSM_Bluetooth_t bluetooth;
-} GSM_Modem_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -35,14 +29,10 @@ typedef struct GSM_Modem_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this);
+size_t GSM_SerialWrite(const char obuf[], size_t olen);
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb *cb);
+size_t GSM_SerialRead(char ibuf[], size_t ilen);
 
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
-
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
-
-#endif /* MODEM_H */
+#endif /* SERIAL_H */
 
 /****************************** END OF FILE **********************************/

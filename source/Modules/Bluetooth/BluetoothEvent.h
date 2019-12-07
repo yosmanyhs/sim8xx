@@ -1,16 +1,16 @@
 /**
- * @file Modem.h
+ * @file BluetoothEvent.h
  * @brief
  */
 
-#ifndef MODEM_H
-#define MODEM_H
+#ifndef BLUETOOTH_EVENT_H
+#define BLUETOOTH_EVENT_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "At.h"
-#include "Bluetooth.h"
+#include <stdint.h>
+#include <stddef.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -23,10 +23,45 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct GSM_Modem_s {
-    AT_Command_t *currentAt;
-    GSM_Bluetooth_t bluetooth;
-} GSM_Modem_t;
+typedef enum {
+  GSM_BT_NO_EVENT,
+  GSM_BT_CONNECTING,
+  GSM_BT_CONNECTED,
+  GSM_BT_INCOMING_DATA,
+  GSM_BT_DISCONNECTED,
+} GSM_BluetoothEventType_t;
+
+typedef struct GSM_BluetoothEvent_Connecting_s {
+  char address[19];
+  char profile[10];
+} GSM_BluetoothEvent_Connecting_t;
+
+typedef struct GSM_BluetoothEvent_Connect_s {
+  uint32_t id;
+  char name[19];
+  char address[19];
+  char profile[10];
+} GSM_BluetoothEvent_Connected_t;
+
+typedef struct GSM_BluetoothEvent_IncomingData_s {
+  char data[256];
+} GSM_BluetoothEvent_IncomingData_t;
+
+typedef struct GSM_BluetoothEvent_Disconnected_s {
+  char name[19];
+} GSM_BluetoothEvent_Disconnected_t;
+
+typedef struct GSM_BluetoothEvent_s {
+  GSM_BluetoothEventType_t type;
+  union {
+    GSM_BluetoothEvent_Connecting_t connecting;
+    GSM_BluetoothEvent_Connected_t connected;
+    GSM_BluetoothEvent_IncomingData_t incomingData;
+    GSM_BluetoothEvent_Disconnected_t disconnected;
+  } payload;
+} GSM_BluetoothEvent_t;
+
+typedef void (*GSM_BluetoothCb)(GSM_BluetoothEvent_t *p);
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -35,14 +70,7 @@ typedef struct GSM_Modem_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this);
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb *cb);
-
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
-
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
-
-#endif /* MODEM_H */
+#endif /* BLUETOOTH_CALLBACK_H */
 
 /****************************** END OF FILE **********************************/

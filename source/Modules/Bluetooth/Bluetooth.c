@@ -8,8 +8,9 @@
 /*****************************************************************************/
 #include "Bluetooth.h"
 
-#include "At.h"
+
 #include "Modem.h"
+#include "At.h"
 #include "btacpt.h"
 #include "btconnect.h"
 #include "btdisconn.h"
@@ -148,16 +149,17 @@ void GSM_bluetoothHandleBtDisconnURC(BtDisconnURC_t *urc, GSM_Bluetooth_t *blt)
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this)
+void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this, GSM_Modem_t *parent)
 {
-  memset(this, 0, sizeof(*this));
-  this->module.urcparse = GSM_BluetoothURCParse;
+  memset(&this->event, 0, sizeof(this->event));
+  this->parent = parent;
   this->notify = NULL;
 }
 
 bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb cb)
 {
   bool result = false;
+
   if (!this->notify) {
     this->notify = cb;
     result       = true;
@@ -171,7 +173,7 @@ bool GSM_BluetoothSetup(GSM_Bluetooth_t *this, const char *name, const char *pin
   BtPaircfg_t btpaircfg = {0};
   BtPaircfgObjectInit(&btpaircfg);
   BtPaircfgSetupRequest(&btpaircfg, 1, pin);
-  GSM_ModemExecuteAtCommand(&btpaircfg.atcmd);
+  GSM_ModemExecuteAtCommand(this->parent, &btpaircfg.atcmd);
 
   if (AT_CMD_OK != BtPaircfgGetResponseStatus(&btpaircfg))
     return false;
@@ -179,7 +181,7 @@ bool GSM_BluetoothSetup(GSM_Bluetooth_t *this, const char *name, const char *pin
   BtHost_t bthost = {0};
   BtHostObjectInit(&bthost);
   BtHostSetupRequest(&bthost, name);
-  GSM_ModemExecuteAtCommand(&bthost.atcmd);
+  GSM_ModemExecuteAtCommand(this->parent, &bthost.atcmd);
 
   return AT_CMD_OK == BtHostGetResponseStatus(&bthost);
 }
@@ -190,7 +192,7 @@ bool GSM_BluetoothStart(GSM_Bluetooth_t *this)
   BtPowerObjectInit(&btpower);
   BtPowerSetupRequest(&btpower, 1);
 
-  GSM_ModemExecuteAtCommand(&btpower.atcmd);
+  GSM_ModemExecuteAtCommand(this->parent, &btpower.atcmd);
 
   return (AT_CMD_OK == BtPowerGetResponseStatus(&btpower));
 }
@@ -202,7 +204,7 @@ bool GSM_BluetoothStop(GSM_Bluetooth_t *this)
   BtPowerSetupRequest(&btpower, 0);
 
   AT_Command_t *atcmd = BtPowerGetAtCommand(&btpower);
-  GSM_ModemExecuteAtCommand(atcmd);
+  GSM_ModemExecuteAtCommand(this->parent, atcmd);
 
   return (AT_CMD_OK == BtPowerGetResponseStatus(&btpower));
 }
@@ -214,7 +216,7 @@ bool GSM_BluetoothAcceptConnection(GSM_Bluetooth_t *this)
   BtAcptSetupRequest(&btacpt, 1);
 
   AT_Command_t *atcmd = BtAcptGetAtCommand(&btacpt);
-  GSM_ModemExecuteAtCommand(atcmd);
+  GSM_ModemExecuteAtCommand(this->parent, atcmd);
 
   return (AT_CMD_OK == BtAcptGetResponseStatus(&btacpt));
 }
@@ -225,13 +227,13 @@ bool GSM_BluetoothSendSPPData(GSM_Bluetooth_t *this, const char *data, size_t le
   BtSppSendObjectInit(&btsppsend);
   BtSppSendSetupRequest(&btsppsend, data, length);
   BtSppSendSetCommandMode(&btsppsend);
-  GSM_ModemExecuteAtCommand(&btsppsend.atcmd);
+  GSM_ModemExecuteAtCommand(this->parent, &btsppsend.atcmd);
 
   if (AT_CMD_WAIT_FOR_USER_DATA != BtSppSendGetResponseStatus(&btsppsend))
     return false;
 
   BtSppSendSetDataMode(&btsppsend);
-  GSM_ModemExecuteAtCommand(&btsppsend.atcmd);
+  GSM_ModemExecuteAtCommand(this->parent, &btsppsend.atcmd);
 
   return (AT_CMD_SEND_OK == BtSppSendGetResponseStatus(&btsppsend));
 }

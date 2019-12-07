@@ -1,12 +1,13 @@
 /**
- * @file Serial.c
+ * @file Sim8xx.c
  * @brief
  */
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "Serial.h"
+#include "Sim8xx.h"
+#include "Modem.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -23,6 +24,7 @@
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL CONSTANTS AND VARIABLES                              */
 /*****************************************************************************/
+static GSM_Modem_t sim8xx;
 
 /*****************************************************************************/
 /* DECLARATION OF LOCAL FUNCTIONS                                            */
@@ -35,5 +37,19 @@
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
+void SIM_Init(void)
+{
+    GSM_ModemObjectInit(&sim8xx);
+}
+
+bool SIM_BluetoothRegisterCallback(GSM_BluetoothCb cb)
+{
+    return GSM_ModemRegisterBluetoothCallback(&sim8xx, cb);
+}
+
+size_t SIM_ProcessInput(const char ibuf[], size_t ilen)
+{
+    return GSM_ModemParse(&sim8xx, ibuf, ilen);
+}
 
 /****************************** END OF FILE **********************************/
