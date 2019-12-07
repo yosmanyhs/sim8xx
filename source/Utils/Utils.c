@@ -65,20 +65,20 @@ static double GSM_utilsAscii2Double(const char ibuf[], size_t length)
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-size_t GSM_UtilsGetString(const char input[], size_t ilen, char obuf[], size_t olen, char delim)
+size_t GSM_UtilsGetString(const char input[], size_t ilen, char obuf[], size_t olen, char stok, char etok)
 {
     const char *istart = input;
     const char *iend = input + ilen;
 
     memset(obuf, 0, olen);
 
-    char *begin = strchr(istart, delim);
+    char *begin = strchr(istart, stok);
     if (!begin || (iend <= begin))
         return 0;
 
-    begin += sizeof(delim);
+    begin += sizeof(stok);
 
-    char *end = strchr(begin, delim);
+    char *end = strchr(begin, etok);
     if (!end || (iend < end))
         return 0;
 

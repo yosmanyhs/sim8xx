@@ -59,7 +59,7 @@ size_t BtConnect_parseBtConnecting(BtConnect_ConnectingURC_t *urc, const char *i
     const char *next = ibuf;
     const char *end = ibuf + length;
 
-    size_t n = GSM_UtilsGetString(next, end - next, urc->address, sizeof(urc->address), '"');
+    size_t n = GSM_UtilsGetString(next, end - next, urc->address, sizeof(urc->address), '"', '"');
     if (n) {
         offset += n + 1;
         next += n + 1;
@@ -68,7 +68,7 @@ size_t BtConnect_parseBtConnecting(BtConnect_ConnectingURC_t *urc, const char *i
         return 0;
     }
     
-    n = GSM_UtilsGetString(next, end - next, urc->profile, sizeof(urc->profile), '"');
+    n = GSM_UtilsGetString(next, end - next, urc->profile, sizeof(urc->profile), '"', '"');
     if (n) {
         offset += n;
         next += n + 1;
@@ -119,7 +119,7 @@ size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *ibuf, size_
         return 0;
     }
 
-    n = GSM_UtilsGetString(next, end - next, urc->name, sizeof(urc->name), '"');
+    n = GSM_UtilsGetString(next, end - next, urc->name, sizeof(urc->name), '"', '"');
     if (n) {
         offset += n + 1;
         next += n + 1;
@@ -128,7 +128,7 @@ size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *ibuf, size_
         return 0;
     }
 
-    n = GSM_UtilsGetString(next, end - next, urc->address, sizeof(urc->address), ',');
+    n = GSM_UtilsGetString(next, end - next, urc->address, sizeof(urc->address), ',', ',');
     if (n) {
         offset += n + 1;
         next += n + 1;
@@ -137,7 +137,7 @@ size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *ibuf, size_
         return 0;
     }
     
-    n = GSM_UtilsGetString(next, end - next, urc->profile, sizeof(urc->profile), '"');
+    n = GSM_UtilsGetString(next, end - next, urc->profile, sizeof(urc->profile), '"', '"');
     if (n) {
         offset += n;
         next += n + 1;
@@ -188,7 +188,7 @@ static
     obj->response.status = AT_CMD_ERROR;
   } else {
     n = BtConnect_parseBtConnect(&obj->response.result, ibuf, length);
-    obj->response.status = n ? AT_CMD_OK : AT_CMD_INVALID;
+    obj->response.status = (0 < n) ? AT_CMD_OK : AT_CMD_INVALID;
   }
 
   return n;

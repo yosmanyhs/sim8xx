@@ -30,7 +30,7 @@ typedef enum {
   BTCONNECT_CONNECT,
 } BtConnectURC_Type_t;
 
-typedef struct BtConnect_ConnectURC_s {
+typedef struct BtConnect_Result_s {
   uint32_t id;
   char name[19];
   char address[19];

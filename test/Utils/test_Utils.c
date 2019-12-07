@@ -19,7 +19,7 @@ void test_Utils_GetString(void)
     char obuf[20] = {0};
     size_t olen = sizeof(obuf);
 
-    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, olen, '"');
+    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, olen, '"', '"');
 
     TEST_ASSERT_EQUAL(17, n);
     TEST_ASSERT_EQUAL_STRING("text to parse", obuf);
@@ -33,7 +33,7 @@ void test_Utils_GetString_NoString(void)
     char obuf[20] = {0};
     size_t olen = sizeof(obuf);
 
-    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, sizeof(obuf), '"');
+    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, sizeof(obuf), '"', '"');
 
     TEST_ASSERT_EQUAL(0, n);
     TEST_ASSERT_EQUAL_STRING("", obuf);
@@ -47,7 +47,7 @@ void test_Utils_GetString_NoEnding(void)
     char obuf[20] = {0};
     size_t olen = sizeof(obuf);
 
-    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, sizeof(obuf), '"');
+    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, sizeof(obuf), '"', '"');
 
     TEST_ASSERT_EQUAL(0, n);
     TEST_ASSERT_EQUAL_STRING("", obuf);

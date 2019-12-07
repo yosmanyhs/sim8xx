@@ -1,16 +1,17 @@
 /**
- * @file Utils.h
+ * @file btsppget.h
  * @brief
  */
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef BT_SPP_GET_H
+#define BT_SPP_GET_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -23,6 +24,23 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
+typedef enum {
+  BTSPPGET_NO_URC,
+  BTSPPGET_SPPDATA,
+} BtSppGetURC_Type_t;
+
+typedef struct BtSppGetDataURC_s {
+  uint32_t id;
+  size_t length;
+  char data[128];
+} BtSppGetDataURC_t;
+
+typedef struct BtSppGetURC_s {
+    BtSppGetURC_Type_t type;
+    union {
+        BtSppGetDataURC_t getdata;
+    } payload;
+} BtSppGetURC_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -31,14 +49,10 @@
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-size_t GSM_UtilsGetString(const char ibuf[], size_t ilen, char obuf[], size_t olen, char stok, char etok);
+bool BtSppGetIsURC(const char *ibuf, size_t length);
 
-size_t GSM_UtilsGetInt(const char ibuf[], size_t ilen, int *pd, char stok, char etok);
+size_t BtSppGetParseURC(BtSppGetURC_t *urc, const char *ibuf, size_t length);
 
-size_t GSM_UtilsGetDouble(const char input[], size_t ilen, double *pd, char stok, char etok);
-
-size_t GSM_UtilsSkipReserved(const char input[], size_t ilen, char delim, size_t count);
-
-#endif /* UTILS_H */
+#endif /* BT_SPP_GET_H */
 
 /****************************** END OF FILE **********************************/

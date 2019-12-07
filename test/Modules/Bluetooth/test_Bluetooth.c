@@ -7,6 +7,7 @@
 TEST_FILE("btconnect.c");
 TEST_FILE("btpower.c");
 TEST_FILE("bthost.c");
+TEST_FILE("btsppget.c");
 TEST_FILE("btsppsend.c");
 TEST_FILE("btpaircfg.c");
 TEST_FILE("Modem.c");
@@ -34,7 +35,7 @@ void test_Bluetooth_URC_BTCONNECTING(void)
   size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);
 
   TEST_ASSERT_EQUAL(ilen, n);
-  TEST_ASSERT_EQUAL(GSM_BT_BTCONNECTING, bluetooth.event.type);  
+  TEST_ASSERT_EQUAL(GSM_BT_CONNECTING, bluetooth.event.type);  
   TEST_ASSERT_EQUAL_STRING("34:c7:31:aa:37:5b", bluetooth.event.payload.connecting.address);
   TEST_ASSERT_EQUAL_STRING("SPP", bluetooth.event.payload.connecting.profile);
 }
@@ -69,11 +70,11 @@ void test_Bluetooth_URC_BTCONNECT(void)
   size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);
 
   TEST_ASSERT_EQUAL(ilen, n);
-  TEST_ASSERT_EQUAL(GSM_BT_BTCONNECT, bluetooth.event.type);  
-  TEST_ASSERT_EQUAL(1, bluetooth.event.payload.connect.id);
-  TEST_ASSERT_EQUAL_STRING("MK-ZHANZHIMIN", bluetooth.event.payload.connect.name);
-  TEST_ASSERT_EQUAL_STRING("00:1a:7d:da:71:10", bluetooth.event.payload.connect.address);
-  TEST_ASSERT_EQUAL_STRING("HFP(AG)", bluetooth.event.payload.connect.profile);
+  TEST_ASSERT_EQUAL(GSM_BT_CONNECTED, bluetooth.event.type);  
+  TEST_ASSERT_EQUAL(1, bluetooth.event.payload.connected.id);
+  TEST_ASSERT_EQUAL_STRING("MK-ZHANZHIMIN", bluetooth.event.payload.connected.name);
+  TEST_ASSERT_EQUAL_STRING("00:1a:7d:da:71:10", bluetooth.event.payload.connected.address);
+  TEST_ASSERT_EQUAL_STRING("HFP(AG)", bluetooth.event.payload.connected.profile);
 }
 
 void test_Bluetooth_URC_BTCONNECT_Incomplete(void)
@@ -89,8 +90,41 @@ void test_Bluetooth_URC_BTCONNECT_Incomplete(void)
 
   TEST_ASSERT_EQUAL(0, n);
   TEST_ASSERT_EQUAL(GSM_BT_NO_EVENT, bluetooth.event.type);  
-  TEST_ASSERT_EQUAL(0, bluetooth.event.payload.connect.id);
-  TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.connect.name);
-  TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.connect.address);
-  TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.connect.profile);
+  TEST_ASSERT_EQUAL(0, bluetooth.event.payload.connected.id);
+  TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.connected.name);
+  TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.connected.address);
+  TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.connected.profile);
+}
+
+void test_Bluetooth_URC_SPPGET(void)
+{
+  const char *ibuf = "\r\n+BTSPPDATA: 1,15,SIMCOMSPPFORAPP\r\n";
+  size_t ilen = strlen(ibuf);
+
+  GSM_Bluetooth_t bluetooth;
+  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
+
+  BTcallback_Expect(&bluetooth.event);
+  size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(ilen, n);
+  TEST_ASSERT_EQUAL(GSM_BT_INCOMING_DATA, bluetooth.event.type);  
+  TEST_ASSERT_EQUAL_STRING("SIMCOMSPPFORAPP", bluetooth.event.payload.incomingData.data);
+}
+
+void test_Bluetooth_URC_SPPGET_Incomplete(void)
+{
+  const char *ibuf = "\r\n+BTSPPDATA: 1,15,SIMCOMSPPFORAPP";
+  size_t ilen = strlen(ibuf);
+
+  GSM_Bluetooth_t bluetooth;
+  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
+
+  size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(0, n);
+  TEST_ASSERT_EQUAL(GSM_BT_NO_EVENT, bluetooth.event.type);  
+  TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.incomingData.data);
 }

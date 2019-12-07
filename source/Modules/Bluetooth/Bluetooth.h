@@ -30,8 +30,9 @@
 /*****************************************************************************/
 typedef enum {
   GSM_BT_NO_EVENT,
-  GSM_BT_BTCONNECTING,
-  GSM_BT_BTCONNECT,
+  GSM_BT_CONNECTING,
+  GSM_BT_CONNECTED,
+  GSM_BT_INCOMING_DATA,
 } GSM_BluetoothEventType_t;
 
 typedef struct GSM_BluetoothEvent_Connecting_s {
@@ -44,13 +45,18 @@ typedef struct GSM_BluetoothEvent_Connect_s {
   char name[19];
   char address[19];
   char profile[10];
-} GSM_BluetoothEvent_Connect_t;
+} GSM_BluetoothEvent_Connected_t;
+
+typedef struct GSM_BluetoothEvent_IncomingData_s {
+  char data[256];
+} GSM_BluetoothEvent_IncomingData_t;
 
 typedef struct GSM_BluetoothEvent_s {
   GSM_BluetoothEventType_t type;
   union {
     GSM_BluetoothEvent_Connecting_t connecting;
-    GSM_BluetoothEvent_Connect_t connect;
+    GSM_BluetoothEvent_Connected_t connected;
+    GSM_BluetoothEvent_IncomingData_t incomingData;
   } payload;
 } GSM_BluetoothEvent_t;
 
