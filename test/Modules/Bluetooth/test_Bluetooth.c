@@ -5,6 +5,7 @@
 #include "mock_test_Bluetooth_callback.h"
 
 TEST_FILE("btconnect.c");
+TEST_FILE("btdisconn.c");
 TEST_FILE("btpower.c");
 TEST_FILE("bthost.c");
 TEST_FILE("btsppget.c");
@@ -127,4 +128,37 @@ void test_Bluetooth_URC_SPPGET_Incomplete(void)
   TEST_ASSERT_EQUAL(0, n);
   TEST_ASSERT_EQUAL(GSM_BT_NO_EVENT, bluetooth.event.type);  
   TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.incomingData.data);
+}
+
+void test_Bluetooth_URC_DISCONN(void)
+{
+  const char *ibuf = "\r\n+BTDISCONN:\"SIM800H\",34:c7:31:aa:37:5b,\"SPP\"\r\n";
+  size_t ilen = strlen(ibuf);
+
+  GSM_Bluetooth_t bluetooth;
+  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
+
+  BTcallback_Expect(&bluetooth.event);
+  size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(ilen, n);
+  TEST_ASSERT_EQUAL(GSM_BT_DISCONNECTED, bluetooth.event.type);  
+  TEST_ASSERT_EQUAL_STRING("SIM800H", bluetooth.event.payload.disconnected.name);
+}
+
+void test_Bluetooth_URC_DISCONN_Incomplete(void)
+{
+  const char *ibuf = "\r\n+BTDISCONN:\"SIM800H\",34:c7:31:aa:";
+  size_t ilen = strlen(ibuf);
+
+  GSM_Bluetooth_t bluetooth;
+  GSM_BluetoothObjectInit(&bluetooth);
+  GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
+
+  size_t n = GSM_BluetoothURCParse(&bluetooth, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(0, n);
+  TEST_ASSERT_EQUAL(GSM_BT_NO_EVENT, bluetooth.event.type);  
+  TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.disconnected.name);
 }
