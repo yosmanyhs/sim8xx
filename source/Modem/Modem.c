@@ -42,7 +42,7 @@ void GSM_ModemObjectInit(GSM_Modem_t *this)
     GSM_BluetoothObjectInit(&this->bluetooth, this);
 }
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb *cb)
+bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb)
 {
     return GSM_BluetoothRegisterCallback(&this->bluetooth, cb);
 }

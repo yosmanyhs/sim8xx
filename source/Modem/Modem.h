@@ -37,7 +37,7 @@ typedef struct GSM_Modem_s {
 /*****************************************************************************/
 void GSM_ModemObjectInit(GSM_Modem_t *this);
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb *cb);
+bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb);
 
 void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
 

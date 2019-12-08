@@ -156,7 +156,7 @@ void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this, GSM_Modem_t *parent)
   this->notify = NULL;
 }
 
-bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb cb)
+bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb_t cb)
 {
   bool result = false;
 
@@ -247,11 +247,13 @@ size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t length)
     BtConnectURC_t urc = {0};
     offset = BtConnectParseURC(&urc, ibuf, length);
     GSM_bluetoothHandleBtConnectURC(&urc, blt);
-  } else if (BtSppGetIsURC(ibuf, length)) {
+  } 
+  else if (BtSppGetIsURC(ibuf, length)) {
     BtSppGetURC_t urc = {0};
     offset = BtSppGetParseURC(&urc, ibuf, length);
     GSM_bluetoothHandleBtSppGetURC(&urc, blt);
-  } else if (BtDisconnIsURC(ibuf, length)) {
+  } 
+  else if (BtDisconnIsURC(ibuf, length)) {
     BtDisconnURC_t urc = {0};
     offset = BtDisconnParseURC(&urc, ibuf, length);
     GSM_bluetoothHandleBtDisconnURC(&urc, blt);

@@ -14,7 +14,7 @@ void tearDown(void)
 {
 }
 
-void test_btsppsend_ObjectInit(void)
+void test_BtSppSendObjectInit(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -25,7 +25,7 @@ void test_btsppsend_ObjectInit(void)
   TEST_ASSERT_EQUAL(10, btsppsend.atcmd.timeout);
 }
 
-void test_btsppsend_BtSppSendSetCommandMode(void)
+void test_BtSppSendSetCommandMode(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -35,7 +35,7 @@ void test_btsppsend_BtSppSendSetCommandMode(void)
   TEST_ASSERT_EQUAL(BT_SPP_SEND_STATE_COMMAND, btsppsend.state);
 }
 
-void test_btsppsend_BtSppSendSetDataMode(void)
+void test_BtSppSendSetDataMode(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -45,7 +45,7 @@ void test_btsppsend_BtSppSendSetDataMode(void)
   TEST_ASSERT_EQUAL(BT_SPP_SEND_STATE_DATA, btsppsend.state);
 }
 
-void test_btsppsend_BtSppSendSetupRequest(void)
+void test_BtSppSendSetupRequest(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -58,7 +58,7 @@ void test_btsppsend_BtSppSendSetupRequest(void)
   TEST_ASSERT_EQUAL(length, btsppsend.request.length);
 }
 
-void test_btsppsend_BtSppSendSerialize_CommandMode(void)
+void test_BtSppSendSerialize_CommandMode(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -74,7 +74,7 @@ void test_btsppsend_BtSppSendSerialize_CommandMode(void)
   TEST_ASSERT_EQUAL_STRING("AT+BTSPPSEND", obuf);
 }
 
-void test_btsppsend_BtSppSendSerialize_DataMode(void)
+void test_BtSppSendSerialize_DataMode(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -90,7 +90,7 @@ void test_btsppsend_BtSppSendSerialize_DataMode(void)
   TEST_ASSERT_EQUAL_STRING(data, obuf);
 }
 
-void test_btsppsend_Parse(void)
+void test_BtSppSendParse(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -104,7 +104,7 @@ void test_btsppsend_Parse(void)
   TEST_ASSERT_EQUAL(0, n);
 }
 
-void test_btsppsend_Parse_Incomplete(void)
+void test_BtSppSendParse_Incomplete(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -118,7 +118,7 @@ void test_btsppsend_Parse_Incomplete(void)
   TEST_ASSERT_EQUAL(0, n);
 }
 
-void test_btsppsend_Parse_InvalidStatus(void)
+void test_BtSppSendParse_InvalidStatus(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -132,7 +132,7 @@ void test_btsppsend_Parse_InvalidStatus(void)
   TEST_ASSERT_EQUAL(0, n);
 }
 
-void test_btsppsend_Parse_WAIT_USER_DATA(void)
+void test_BtSppSendParse_WAIT_USER_DATA(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -146,7 +146,7 @@ void test_btsppsend_Parse_WAIT_USER_DATA(void)
   TEST_ASSERT_EQUAL(2, n);
 }
 
-void test_btsppsend_Parse_SEND_OK(void)
+void test_BtSppSendParse_SEND_OK(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -161,7 +161,7 @@ void test_btsppsend_Parse_SEND_OK(void)
   TEST_ASSERT_EQUAL(11, n);
 }
 
-void test_btsppsend_Parse_SEND_FAIL(void)
+void test_BtSppSendParse_SEND_FAIL(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -176,7 +176,7 @@ void test_btsppsend_Parse_SEND_FAIL(void)
   TEST_ASSERT_EQUAL(13, n);
 }
 
-void test_btsppsend_Parse_ERROR(void)
+void test_BtSppSendParse_ERROR(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
@@ -191,7 +191,7 @@ void test_btsppsend_Parse_ERROR(void)
   TEST_ASSERT_EQUAL(9, n);
 }
 
-void test_btsppsend_Parse_Unexpected_Status(void)
+void test_BtSppSendParse_Unexpected_Status(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);

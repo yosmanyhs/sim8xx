@@ -14,7 +14,7 @@ void tearDown(void)
 {
 }
 
-void test_btpaircfg_ObjectInit(void)
+void test_BtPaircfgObjectInit(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);
@@ -25,7 +25,7 @@ void test_btpaircfg_ObjectInit(void)
   TEST_ASSERT_EQUAL(2, btpaircfg.atcmd.timeout);
 }
 
-void test_btpaircfg_BtPaircfgSetupRequest_Mode0(void)
+void test_BtPaircfgSetupRequest_Mode0(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);
@@ -35,7 +35,7 @@ void test_btpaircfg_BtPaircfgSetupRequest_Mode0(void)
   TEST_ASSERT_EQUAL_PTR(NULL, btpaircfg.request.pin);
 }
 
-void test_btpaircfg_BtPaircfgSetupRequest_Mode1(void)
+void test_BtPaircfgSetupRequest_Mode1(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);
@@ -46,7 +46,7 @@ void test_btpaircfg_BtPaircfgSetupRequest_Mode1(void)
   TEST_ASSERT_EQUAL_PTR(pin, btpaircfg.request.pin);
 }
 
-void test_btpaircfg_BtPaircfgSetupRequest_Mode2(void)
+void test_BtPaircfgSetupRequest_Mode2(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);
@@ -56,7 +56,7 @@ void test_btpaircfg_BtPaircfgSetupRequest_Mode2(void)
   TEST_ASSERT_EQUAL_PTR(NULL, btpaircfg.request.pin);
 }
 
-void test_btpaircfg_BtPaircfgSerialize_Mode0(void)
+void test_BtPaircfgSerialize_Mode0(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);
@@ -70,7 +70,7 @@ void test_btpaircfg_BtPaircfgSerialize_Mode0(void)
   TEST_ASSERT_EQUAL(strlen(expected), n);
 }
 
-void test_btpaircfg_BtPaircfgSerialize_Mode1(void)
+void test_BtPaircfgSerialize_Mode1(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);
@@ -85,7 +85,7 @@ void test_btpaircfg_BtPaircfgSerialize_Mode1(void)
   TEST_ASSERT_EQUAL(strlen(expected), n);
 }
 
-void test_btpaircfg_BtPaircfgSerialize_Mode2(void)
+void test_BtPaircfgSerialize_Mode2(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);
@@ -99,7 +99,7 @@ void test_btpaircfg_BtPaircfgSerialize_Mode2(void)
   TEST_ASSERT_EQUAL(strlen(expected), n);
 }
 
-void test_btpaircfg_Parse(void)
+void test_BtPaircfgParse(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);
@@ -113,7 +113,7 @@ void test_btpaircfg_Parse(void)
   TEST_ASSERT_EQUAL(6, n);
 }
 
-void test_btpaircfg_Parse_Incomplete(void)
+void test_BtPaircfgParse_Incomplete(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);
@@ -127,7 +127,7 @@ void test_btpaircfg_Parse_Incomplete(void)
   TEST_ASSERT_EQUAL(0, n);
 }
 
-void test_btpaircfg_Parse_InvalidStatus(void)
+void test_BtPaircfgParse_InvalidStatus(void)
 {
   BtPaircfg_t btpaircfg;
   BtPaircfgObjectInit(&btpaircfg);

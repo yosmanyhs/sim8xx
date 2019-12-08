@@ -15,7 +15,7 @@ void tearDown(void)
 {
 }
 
-void test_btconnect_ObjectInit(void)
+void test_BtConnectObjectInit(void)
 {
   BtConnect_t btconnect;
   BtConnectObjectInit(&btconnect);
@@ -26,7 +26,7 @@ void test_btconnect_ObjectInit(void)
   TEST_ASSERT_EQUAL(5, btconnect.atcmd.timeout);
 }
 
-void test_btconnect_SetupRequest(void)
+void test_BtConnectSetupRequest(void)
 {
   BtConnect_t btconnect;
   BtConnectObjectInit(&btconnect);
@@ -36,7 +36,7 @@ void test_btconnect_SetupRequest(void)
   TEST_ASSERT_EQUAL(9, btconnect.request.profileId);
 }
 
-void test_btconnect_GetAtCommand(void)
+void test_BtConnectGetAtCommand(void)
 {
   BtConnect_t btconnect;
   BtConnectObjectInit(&btconnect);
@@ -49,7 +49,7 @@ void test_btconnect_GetAtCommand(void)
   TEST_ASSERT_EQUAL(5, atcmd->timeout);
 }
 
-void test_btconnect_Serialize(void)
+void test_BtConnectSerialize(void)
 {
   BtConnect_t btconnect;
   BtConnectObjectInit(&btconnect);
@@ -63,7 +63,7 @@ void test_btconnect_Serialize(void)
   TEST_ASSERT_EQUAL_STRING("AT+BTCONNECT=3,9", obuf);
 }
 
-void test_btconnect_Parse_OK(void)
+void test_BtConnectParse_OK(void)
 {
   BtConnect_t btconnect;
   BtConnectObjectInit(&btconnect);
@@ -81,7 +81,7 @@ void test_btconnect_Parse_OK(void)
   TEST_ASSERT_EQUAL_STRING("HFP(AG)", btconnect.response.result.profile);
 }
 
-void test_btconnect_Parse_Error(void)
+void test_BtConnectParse_Error(void)
 {
   BtConnect_t btconnect;
   BtConnectObjectInit(&btconnect);
@@ -99,7 +99,7 @@ void test_btconnect_Parse_Error(void)
   TEST_ASSERT_EQUAL_STRING("", btconnect.response.result.profile);
 }
 
-void test_btconnect_IsURC_BTCONNECTING(void)
+void test_BtConnectIsURC_BTCONNECTING(void)
 {
     const char *ibuf = "\r\n+BTCONNECTING: \"34:c7:31:aa:37:5b\",\"SPP\"\r\n";
     size_t ilen = strlen(ibuf);
@@ -109,7 +109,7 @@ void test_btconnect_IsURC_BTCONNECTING(void)
     TEST_ASSERT(result);
 }
 
-void test_btconnect_IsURC_BTCONNECT(void)
+void test_BtConnectIsURC_BTCONNECT(void)
 {
     const char *ibuf = "\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n";
     size_t ilen = strlen(ibuf);
@@ -119,7 +119,7 @@ void test_btconnect_IsURC_BTCONNECT(void)
     TEST_ASSERT(result);
 }
 
-void test_btconnect_ParseURC_BTCONNECTING(void)
+void test_BtConnectParseURC_BTCONNECTING(void)
 {
     const char *ibuf = "\r\n+BTCONNECTING: \"34:c7:31:aa:37:5b\",\"SPP\"\r\n";
     size_t ilen = strlen(ibuf);
@@ -133,7 +133,7 @@ void test_btconnect_ParseURC_BTCONNECTING(void)
     TEST_ASSERT_EQUAL_STRING("SPP", urc.payload.connecting.profile);
 }
 
-void test_btconnect_ParseURC_BTCONNECT(void)
+void test_BtConnectParseURC_BTCONNECT(void)
 {
     const char *ibuf = "\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n";
     size_t ilen = strlen(ibuf);
@@ -148,7 +148,7 @@ void test_btconnect_ParseURC_BTCONNECT(void)
     TEST_ASSERT_EQUAL_STRING("HFP(AG)", urc.payload.connect.profile);
 }
 
-void test_btconnect_URCParser_IncompleteURC(void)
+void test_BtConnectParseURC_IncompleteURC(void)
 {
     const char *ibuf = "\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:";
     size_t ilen = strlen(ibuf);

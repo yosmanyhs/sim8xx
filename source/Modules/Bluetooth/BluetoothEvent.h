@@ -61,7 +61,7 @@ typedef struct GSM_BluetoothEvent_s {
   } payload;
 } GSM_BluetoothEvent_t;
 
-typedef void (*GSM_BluetoothCb)(GSM_BluetoothEvent_t *p);
+typedef void (*GSM_BluetoothCb_t)(GSM_BluetoothEvent_t *p);
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */

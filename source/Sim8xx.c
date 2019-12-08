@@ -24,7 +24,10 @@
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL CONSTANTS AND VARIABLES                              */
 /*****************************************************************************/
-static GSM_Modem_t sim8xx;
+#if !defined(TEST)
+static 
+#endif
+GSM_Modem_t sim8xx;
 
 /*****************************************************************************/
 /* DECLARATION OF LOCAL FUNCTIONS                                            */
@@ -42,7 +45,7 @@ void SIM_Init(void)
     GSM_ModemObjectInit(&sim8xx);
 }
 
-bool SIM_BluetoothRegisterCallback(GSM_BluetoothCb cb)
+bool SIM_BluetoothRegisterCallback(GSM_BluetoothCb_t cb)
 {
     return GSM_ModemRegisterBluetoothCallback(&sim8xx, cb);
 }

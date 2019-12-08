@@ -15,7 +15,7 @@ void tearDown(void)
 {
 }
 
-void test_btacpt_ObjectInit(void)
+void test_BtAcptObjectInit(void)
 {
   BtAcpt_t btacpt;
   BtAcptObjectInit(&btacpt);
@@ -26,7 +26,7 @@ void test_btacpt_ObjectInit(void)
   TEST_ASSERT_EQUAL(5, btacpt.atcmd.timeout);
 }
 
-void test_btacpt_SetupRequest(void)
+void test_BtAcptSetupRequest(void)
 {
   BtAcpt_t btacpt;
   BtAcptObjectInit(&btacpt);
@@ -35,7 +35,7 @@ void test_btacpt_SetupRequest(void)
   TEST_ASSERT_EQUAL(1, btacpt.request.mode);
 }
 
-void test_btacpt_GetAtCommand(void)
+void test_BtAcptGetAtCommand(void)
 {
   BtAcpt_t btacpt;
   BtAcptObjectInit(&btacpt);
@@ -48,7 +48,19 @@ void test_btacpt_GetAtCommand(void)
   TEST_ASSERT_EQUAL(5, atcmd->timeout);
 }
 
-void test_btacpt_Serialize(void)
+void test_BtAcptSerialize_Mode0(void)
+{
+  BtAcpt_t btacpt;
+  BtAcptObjectInit(&btacpt);
+  BtAcptSetupRequest(&btacpt, 0);
+
+  char obuf[32] = {0};
+  size_t n      = BtAcptSerialize(&btacpt, obuf, sizeof(obuf));
+
+  TEST_ASSERT_EQUAL_STRING("AT+BTACPT=0", obuf);
+}
+
+void test_BtAcptSerialize_Mode1(void)
 {
   BtAcpt_t btacpt;
   BtAcptObjectInit(&btacpt);
@@ -60,7 +72,7 @@ void test_btacpt_Serialize(void)
   TEST_ASSERT_EQUAL_STRING("AT+BTACPT=1", obuf);
 }
 
-void test_btacpt_Parse(void)
+void test_BtAcptParse(void)
 {
   BtAcpt_t btacpt;
   BtAcptObjectInit(&btacpt);
@@ -74,7 +86,7 @@ void test_btacpt_Parse(void)
   TEST_ASSERT_EQUAL(6, n);
 }
 
-void test_btacpt_Parse_Incomplete(void)
+void test_BtAcptParse_Incomplete(void)
 {
   BtAcpt_t btacpt;
   BtAcptObjectInit(&btacpt);
@@ -88,7 +100,7 @@ void test_btacpt_Parse_Incomplete(void)
   TEST_ASSERT_EQUAL(0, n);
 }
 
-void test_btacpt_Parse_InvalidStatus(void)
+void test_BtAcptParse_InvalidStatus(void)
 {
   BtAcpt_t btacpt;
   BtAcptObjectInit(&btacpt);

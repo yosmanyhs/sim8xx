@@ -12,6 +12,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "BluetoothEvent.h"
+
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
@@ -23,7 +25,6 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef void (*GSM_BluetoothCb)(GSM_BluetoothEvent_t *p);
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -34,7 +35,7 @@ typedef void (*GSM_BluetoothCb)(GSM_BluetoothEvent_t *p);
 /*****************************************************************************/
 void SIM_Init(void);
 
-bool SIM_BluetoothRegisterCallback(GSM_BluetoothCb cb);
+bool SIM_BluetoothRegisterCallback(GSM_BluetoothCb_t cb);
 
 size_t SIM_ProcessInput(const char ibuf[], size_t ilen);
 

@@ -15,7 +15,7 @@ void tearDown(void)
 {
 }
 
-void test_btsppget_IsURC_BTSPPDATA(void)
+void test_BtSppGetIsURC_BTSPPDATA(void)
 {
     const char *ibuf = "\r\n+BTSPPDATA: 2,15,SIMCOMSPPFORAPP\r\n";
     size_t ilen = strlen(ibuf);
@@ -25,7 +25,7 @@ void test_btsppget_IsURC_BTSPPDATA(void)
     TEST_ASSERT(result);
 }
 
-void test_btsppget_ParseURC_BTSPPDATA(void)
+void test_BtSppGetParseURC_BTSPPDATA(void)
 {
     const char *ibuf = "\r\n+BTSPPDATA: 2,15,SIMCOMSPPFORAPP\r\n";
     size_t ilen = strlen(ibuf);
@@ -40,7 +40,7 @@ void test_btsppget_ParseURC_BTSPPDATA(void)
     TEST_ASSERT_EQUAL_STRING("SIMCOMSPPFORAPP", urc.payload.getdata.data);
 }
 
-void test_btsppget_URCParser_IncompleteURC(void)
+void test_BtSppGetParseURC_IncompleteURC(void)
 {
     const char *ibuf = "\r\n+BTSPPDATA: 2,15,SIMCOMSPP";
     size_t ilen = strlen(ibuf);

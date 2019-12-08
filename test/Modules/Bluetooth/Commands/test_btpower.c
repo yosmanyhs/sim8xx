@@ -14,7 +14,7 @@ void tearDown(void)
 {
 }
 
-void test_btpower_ObjectInit(void)
+void test_BtPowerObjectInit(void)
 {
   BtPower_t btpower;
   BtPowerObjectInit(&btpower);
@@ -25,7 +25,7 @@ void test_btpower_ObjectInit(void)
   TEST_ASSERT_EQUAL(10, btpower.atcmd.timeout);
 }
 
-void test_btpower_SetupRequest_Mode0(void)
+void test_BtPowerSetupRequest_Mode0(void)
 {
   BtPower_t btpower;
   BtPowerObjectInit(&btpower);
@@ -34,7 +34,7 @@ void test_btpower_SetupRequest_Mode0(void)
   TEST_ASSERT_EQUAL(0, btpower.request.mode);
 }
 
-void test_btpower_SetupRequest_Mode1(void)
+void test_BtPowerSetupRequest_Mode1(void)
 {
   BtPower_t btpower;
   BtPowerObjectInit(&btpower);
@@ -43,7 +43,7 @@ void test_btpower_SetupRequest_Mode1(void)
   TEST_ASSERT_EQUAL(1, btpower.request.mode);
 }
 
-void test_btpower_GetAtCommand(void)
+void test_BtPowerGetAtCommand(void)
 {
   BtPower_t btpower;
   BtPowerObjectInit(&btpower);
@@ -56,7 +56,7 @@ void test_btpower_GetAtCommand(void)
   TEST_ASSERT_EQUAL(10, atcmd->timeout);
 }
 
-void test_btpower_Serialize_Mode0(void)
+void test_BtPowerSerialize_Mode0(void)
 {
   BtPower_t btpower;
   BtPowerObjectInit(&btpower);
@@ -68,7 +68,7 @@ void test_btpower_Serialize_Mode0(void)
   TEST_ASSERT_EQUAL_STRING("AT+BTPOWER=0", obuf);
 }
 
-void test_btpower_Serialize_Mode1(void)
+void test_BtPowerSerialize_Mode1(void)
 {
   BtPower_t btpower;
   BtPowerObjectInit(&btpower);
@@ -80,7 +80,7 @@ void test_btpower_Serialize_Mode1(void)
   TEST_ASSERT_EQUAL_STRING("AT+BTPOWER=1", obuf);
 }
 
-void test_btpower_Parse(void)
+void test_BtPowerParse(void)
 {
   BtPower_t btpower;
   BtPowerObjectInit(&btpower);
@@ -94,7 +94,7 @@ void test_btpower_Parse(void)
   TEST_ASSERT_EQUAL(6, n);
 }
 
-void test_btpower_Parse_Incomplete(void)
+void test_BtPowerParse_Incomplete(void)
 {
   BtPower_t btpower;
   BtPowerObjectInit(&btpower);
@@ -108,7 +108,7 @@ void test_btpower_Parse_Incomplete(void)
   TEST_ASSERT_EQUAL(0, n);
 }
 
-void test_btpower_Parse_InvalidStatus(void)
+void test_BtPowerParse_InvalidStatus(void)
 {
   BtPower_t btpower;
   BtPowerObjectInit(&btpower);

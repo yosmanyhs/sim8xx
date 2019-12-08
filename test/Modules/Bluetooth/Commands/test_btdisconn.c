@@ -15,17 +15,17 @@ void tearDown(void)
 {
 }
 
-void test_btdisconn_BtDisconnIsBtDisconn(void)
+void test_BtDisconnIsURC(void)
 {
     const char *ibuf = "\r\n+BTDISCONN:\"SIM800H...";
     size_t ilen = strlen(ibuf);
 
-    bool result = BtDisconnIsBtDisconn(ibuf, ilen);
+    bool result = BtDisconnIsURC(ibuf, ilen);
 
     TEST_ASSERT(result);
 }
 
-void test_btdisconn_ParseURC_BTDISCONN(void)
+void test_BtDisconnParseURC_BTDISCONN(void)
 {
     const char *ibuf = "\r\n+BTDISCONN:\"SIM800H\",34:c7:31:aa:37:5b,\"SPP\"\r\n";
     size_t ilen = strlen(ibuf);
@@ -40,7 +40,7 @@ void test_btdisconn_ParseURC_BTDISCONN(void)
     TEST_ASSERT_EQUAL_STRING("SPP", urc.payload.disconn.profile);
 }
 
-void test_btdisconn_URCParser_IncompleteURC(void)
+void test_BtDisconnParseURC_IncompleteURC(void)
 {
     const char *ibuf = "\r\n+BTDISCONN:\"SIM800H\",34:c7:31:aa:37:5b,\"SPP";
     size_t ilen = strlen(ibuf);

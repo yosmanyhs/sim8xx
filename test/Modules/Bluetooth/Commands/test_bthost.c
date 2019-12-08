@@ -14,7 +14,7 @@ void tearDown(void)
 {
 }
 
-void test_bthost_ObjectInit(void)
+void test_BtHostObjectInit(void)
 {
   BtHost_t bthost;
   BtHostObjectInit(&bthost);
@@ -25,7 +25,7 @@ void test_bthost_ObjectInit(void)
   TEST_ASSERT_EQUAL(5, bthost.atcmd.timeout);
 }
 
-void test_bthost_SetupRequest(void)
+void test_BtHostSetupRequest(void)
 {
   BtHost_t bthost;
   BtHostObjectInit(&bthost);
@@ -35,7 +35,7 @@ void test_bthost_SetupRequest(void)
   TEST_ASSERT_EQUAL(name, bthost.request.name);
 }
 
-void test_bthost_GetAtCommand(void)
+void test_BtHostGetAtCommand(void)
 {
   BtHost_t bthost;
   BtHostObjectInit(&bthost);
@@ -48,7 +48,7 @@ void test_bthost_GetAtCommand(void)
   TEST_ASSERT_EQUAL(5, atcmd->timeout);
 }
 
-void test_bthost_Serialize(void)
+void test_BtHostSerialize(void)
 {
   BtHost_t bthost;
   BtHostObjectInit(&bthost);
@@ -61,7 +61,7 @@ void test_bthost_Serialize(void)
   TEST_ASSERT_EQUAL_STRING("AT+BTHOST=gtrack", obuf);
 }
 
-void test_bthost_Parse(void)
+void test_BtHostParse(void)
 {
   BtHost_t bthost;
   BtHostObjectInit(&bthost);
@@ -75,7 +75,7 @@ void test_bthost_Parse(void)
   TEST_ASSERT_EQUAL(6, n);
 }
 
-void test_bthost_Parse_Incomplete(void)
+void test_BtHostParse_Incomplete(void)
 {
   BtHost_t bthost;
   BtHostObjectInit(&bthost);
@@ -89,7 +89,7 @@ void test_bthost_Parse_Incomplete(void)
   TEST_ASSERT_EQUAL(0, n);
 }
 
-void test_bthost_Parse_InvalidStatus(void)
+void test_BtHostParse_InvalidStatus(void)
 {
   BtHost_t bthost;
   BtHostObjectInit(&bthost);

@@ -31,7 +31,7 @@
 typedef struct GSM_Modem_s GSM_Modem_t;
 typedef struct GSM_Bluetooth_s {
   GSM_Modem_t *parent;
-  GSM_BluetoothCb notify;
+  GSM_BluetoothCb_t notify;
   GSM_BluetoothEvent_t event;
 } GSM_Bluetooth_t;
 
@@ -44,7 +44,7 @@ typedef struct GSM_Bluetooth_s {
 /*****************************************************************************/
 void GSM_BluetoothObjectInit(GSM_Bluetooth_t *this, GSM_Modem_t *parent);
 
-bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb cb);
+bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb_t cb);
 
 bool GSM_BluetoothSetup(GSM_Bluetooth_t *this, const char *name, const char *pin);
 

@@ -24,7 +24,7 @@ void tearDown(void)
 {
 }
 
-void test_Bluetooth_ObjectInit(void)
+void test_GSM_BluetoothObjectInit(void)
 {
   GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
@@ -34,7 +34,36 @@ void test_Bluetooth_ObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(NULL, bluetooth.notify);
 }
 
-void test_Bluetooth_URC_BTCONNECTING(void)
+void bluetoothCallback(GSM_BluetoothEvent_t *p)
+{
+
+}
+
+void test_GSM_BluetoothRegisterCallback(void)
+{
+  GSM_Modem_t modem;
+  GSM_Bluetooth_t bluetooth;
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
+  bool result = GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
+  
+  TEST_ASSERT(result);
+  TEST_ASSERT_EQUAL_PTR(BTcallback, bluetooth.notify);
+}
+
+void test_GSM_BluetoothRegisterCallback_SecondAttemptFails(void)
+{
+  GSM_Modem_t modem;
+  GSM_Bluetooth_t bluetooth;
+  GSM_BluetoothObjectInit(&bluetooth, &modem);
+  bool result = GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
+  TEST_ASSERT_EQUAL_PTR(BTcallback, bluetooth.notify);
+  TEST_ASSERT(result);
+
+  result = GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
+  TEST_ASSERT_FALSE(result);
+}
+
+void test_GSM_BluetoothURCParse_URC_BTCONNECTING(void)
 {
   const char *ibuf = "\r\n+BTCONNECTING: \"34:c7:31:aa:37:5b\",\"SPP\"\r\n";
   size_t ilen = strlen(ibuf);
@@ -53,7 +82,7 @@ void test_Bluetooth_URC_BTCONNECTING(void)
   TEST_ASSERT_EQUAL_STRING("SPP", bluetooth.event.payload.connecting.profile);
 }
 
-void test_Bluetooth_URC_BTCONNECTING_Incomplete(void)
+void test_GSM_BluetoothURCParse_URC_BTCONNECTING_Incomplete(void)
 {
   const char *ibuf = "\r\n+BTCONNECTING: \"34:c7:31:aa:37:5b\",\"SP";
   size_t ilen = strlen(ibuf);
@@ -71,7 +100,7 @@ void test_Bluetooth_URC_BTCONNECTING_Incomplete(void)
   TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.connecting.profile);
 }
 
-void test_Bluetooth_URC_BTCONNECT(void)
+void test_GSM_BluetoothURCParse_URC_BTCONNECT(void)
 {
   const char *ibuf = "\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n";
   size_t ilen = strlen(ibuf);
@@ -92,7 +121,7 @@ void test_Bluetooth_URC_BTCONNECT(void)
   TEST_ASSERT_EQUAL_STRING("HFP(AG)", bluetooth.event.payload.connected.profile);
 }
 
-void test_Bluetooth_URC_BTCONNECT_Incomplete(void)
+void test_GSM_BluetoothURCParse_URC_BTCONNECT_Incomplete(void)
 {
   const char *ibuf = "\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:7";
   size_t ilen = strlen(ibuf);
@@ -112,7 +141,7 @@ void test_Bluetooth_URC_BTCONNECT_Incomplete(void)
   TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.connected.profile);
 }
 
-void test_Bluetooth_URC_SPPGET(void)
+void test_GSM_BluetoothURCParse_URC_SPPGET(void)
 {
   const char *ibuf = "\r\n+BTSPPDATA: 1,15,SIMCOMSPPFORAPP\r\n";
   size_t ilen = strlen(ibuf);
@@ -130,7 +159,7 @@ void test_Bluetooth_URC_SPPGET(void)
   TEST_ASSERT_EQUAL_STRING("SIMCOMSPPFORAPP", bluetooth.event.payload.incomingData.data);
 }
 
-void test_Bluetooth_URC_SPPGET_Incomplete(void)
+void test_GSM_BluetoothURCParse_URC_SPPGET_Incomplete(void)
 {
   const char *ibuf = "\r\n+BTSPPDATA: 1,15,SIMCOMSPPFORAPP";
   size_t ilen = strlen(ibuf);
@@ -147,7 +176,7 @@ void test_Bluetooth_URC_SPPGET_Incomplete(void)
   TEST_ASSERT_EQUAL_STRING("", bluetooth.event.payload.incomingData.data);
 }
 
-void test_Bluetooth_URC_DISCONN(void)
+void test_GSM_BluetoothURCParse_URC_DISCONN(void)
 {
   const char *ibuf = "\r\n+BTDISCONN:\"SIM800H\",34:c7:31:aa:37:5b,\"SPP\"\r\n";
   size_t ilen = strlen(ibuf);
@@ -165,7 +194,7 @@ void test_Bluetooth_URC_DISCONN(void)
   TEST_ASSERT_EQUAL_STRING("SIM800H", bluetooth.event.payload.disconnected.name);
 }
 
-void test_Bluetooth_URC_DISCONN_Incomplete(void)
+void test_GSM_BluetoothURCParse_URC_DISCONN_Incomplete(void)
 {
   const char *ibuf = "\r\n+BTDISCONN:\"SIM800H\",34:c7:31:aa:";
   size_t ilen = strlen(ibuf);
