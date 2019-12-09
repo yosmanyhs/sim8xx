@@ -1,15 +1,17 @@
 /**
- * @file Gps.h
+ * @file cgnsinf.h
  * @brief
  */
 
-#ifndef GPS_H
-#define GPS_H
+#ifndef CGNSINF_H
+#define CGNSINF_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include <stdbool.h>
+#include "At.h"
+
+#include <stddef.h>
 #include <stdint.h>
 
 /*****************************************************************************/
@@ -23,31 +25,32 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct GSM_Modem_s GSM_Modem_t;
-typedef struct GSM_Gps_s {
-    GSM_Modem_t *parent;
-} GSM_Gps_t;
-
-typedef struct GPS_Time_s {
-  uint32_t year;
-  uint32_t month;
-  uint32_t day;
-  uint32_t hour;
-  uint32_t min;
-  uint32_t sec;
-  uint32_t msec;
-} GPS_Time_t;
-
-typedef struct GPS_Position_s {
-  GPS_Time_t time;
+typedef struct CgnsInf_response_s {
+  AT_CommandStatus_t status;
+  int runStatus;
+  int fixStatus;
+  char date[19];
   double latitude;
   double longitude;
   double altitude;
   double speed;
+  double course;
+  int fixMode;
+  double hdop;
+  double pdop;
+  double vdop;
   int gpsSatInView;
   int gnssSatInUse;
   int gnssSatInView;
-} GPS_Data_t;
+  int cnomax;
+  double hpa;
+  double vpa;
+} CgnsInf_response_t;
+
+typedef struct CgnsInf_s {
+  CgnsInf_response_t response;
+  AT_Command_t atcmd;
+} CgnsInf_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -56,14 +59,14 @@ typedef struct GPS_Position_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_GpsObjectInit(GSM_Gps_t *this, GSM_Modem_t *parent);
+void CgnsInfObjectInit(CgnsInf_t *this);
 
-bool GSM_GpsStart(GSM_Gps_t *this);
+AT_Command_t *CgnsInfGetAtCommand(CgnsInf_t *this);
 
-bool GSM_GpsStop(GSM_Gps_t *this);
+CgnsInf_response_t CgnsInfGetResponse(CgnsInf_t *this);
 
-bool GSM_GpsRead(GSM_Gps_t *this, GPS_Data_t *data);
+AT_CommandStatus_t CgnsInfGetResponseStatus(CgnsInf_t *this);
 
-#endif /* GPS_H */
+#endif /* CGNSINF_H */
 
 /****************************** END OF FILE **********************************/

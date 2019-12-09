@@ -42,7 +42,7 @@ static
 {
   CgnsPwr_t *obj = (CgnsPwr_t *)p;
   size_t n       = 0;
-  if (12 < length) {
+  if (13 < length) {
     strncat(obuf, "AT+CGNSPWR=", 11);
     strncat(obuf, obj->request.mode == 1 ? "1" : "0", 1);
     n = strlen(obuf);
