@@ -1,13 +1,14 @@
 /**
- * @file Modem.c
+ * @file Gps.c
  * @brief
  */
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
+#include "Gps.h"
 #include "Modem.h"
-#include "Os.h"
+#include "cgnspwr.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -36,70 +37,31 @@
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this)
+void GSM_GpsObjectInit(GSM_Gps_t *this, GSM_Modem_t *parent)
 {
-    this->currentAt = NULL;
-    GSM_BluetoothObjectInit(&this->bluetooth, this);
-    GSM_GpsObjectInit(&this->gps, this);
+    this->parent = parent;
 }
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb)
+bool GSM_GpsStart(GSM_Gps_t *this)
 {
-    return GSM_BluetoothRegisterCallback(&this->bluetooth, cb);
+  CgnsPwr_t cgnspwr = {0};
+  CgnsPwrObjectInit(&cgnspwr);
+  CgnsPwrSetupRequest(&cgnspwr, 1);
+
+  GSM_ModemExecuteAtCommand(this->parent, &cgnspwr.atcmd);
+
+  return AT_CMD_OK == CgnsPwrGetResponseStatus(&cgnspwr);
 }
 
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
+bool GSM_GpsStop(GSM_Gps_t *this)
 {
-    // TODO lock
-    OS_LockModem();
+  CgnsPwr_t cgnspwr = {0};
+  CgnsPwrObjectInit(&cgnspwr);
+  CgnsPwrSetupRequest(&cgnspwr, 0);
 
-    // Serialize command.
-    char obuf[128] = {0};
-    size_t olen = sizeof(obuf);
-    size_t n = atcmd->serialize(atcmd->obj, obuf, olen);
+  GSM_ModemExecuteAtCommand(this->parent, &cgnspwr.atcmd);
 
-    // Send string via serial port.
-    GSM_SerialWrite(obuf, n);
-    GSM_SerialWrite("\r", 1);
-
-
-    // Register command.
-    OS_LockParser();
-    this->currentAt = atcmd;
-    OS_UnlockParser();
-
-    // Wait for response.
-    OS_Error_t error = OS_WaitForMessageWithTimeout(atcmd->timeout);
-
-    // Unregister command.
-    OS_LockParser();
-    this->currentAt = NULL;
-    OS_UnlockParser();
-
-    // TODO unlock
-    OS_UnlockModem();
-}
-
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
-{
-    OS_LockParser();
-
-    size_t offset = 0;
-    if (this->currentAt) {
-        AT_Parse_t parser = this->currentAt->parse;
-        offset = parser(this->currentAt->obj, ibuf, ilen);
-        if (offset) {
-            OS_WakeUpThreadWaitingForMessage();
-        }
-    }
-
-    if (0 == offset) {
-        offset = GSM_BluetoothURCParse(&this->bluetooth, ibuf, ilen);
-    }
-
-    OS_UnlockParser();
-
-    return offset;
+  return AT_CMD_OK == CgnsPwrGetResponseStatus(&cgnspwr);
 }
 
 /****************************** END OF FILE **********************************/

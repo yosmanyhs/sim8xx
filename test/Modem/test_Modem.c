@@ -15,9 +15,11 @@ TEST_FILE("bthost.c");
 TEST_FILE("btsppget.c");
 TEST_FILE("btsppsend.c");
 TEST_FILE("btpaircfg.c");
+TEST_FILE("cgnspwr.c");
 TEST_FILE("At.c");
 TEST_FILE("Utils.c");
 TEST_FILE("Bluetooth.c")
+TEST_FILE("Gps.c")
 
 void setUp(void)
 {
@@ -34,6 +36,7 @@ void test_GSM_ModemObjectInit(void)
 
   TEST_ASSERT_EQUAL_PTR(NULL, modem.currentAt);
   TEST_ASSERT_EQUAL_PTR(&modem, modem.bluetooth.parent);
+  TEST_ASSERT_EQUAL_PTR(&modem, modem.gps.parent);
 }
 
 void test_GSM_ModemRegisterBluetoothCallback(void)

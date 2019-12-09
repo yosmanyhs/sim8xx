@@ -1,17 +1,19 @@
 /**
- * @file Modem.c
+ * @file cgnspwr.c
  * @brief
  */
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "Modem.h"
-#include "Os.h"
+#include "cgnspwr.h"
+
+#include <string.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
+#define TIMEOUT_IN_SEC 10
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -32,74 +34,72 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
+#if !defined(TEST)
+static
+#endif
+    size_t
+    CgnsPwrSerialize(void *p, char *obuf, size_t length)
+{
+  CgnsPwr_t *obj = (CgnsPwr_t *)p;
+  size_t n       = 0;
+  if (12 < length) {
+    strncat(obuf, "AT+CGNSPWR=", 11);
+    strncat(obuf, obj->request.mode == 1 ? "1" : "0", 1);
+    n = strlen(obuf);
+  }
+
+  return n;
+}
+
+#if !defined(TEST)
+static
+#endif
+    size_t
+    CgnsPwrParse(void *p, const char *ibuf, size_t length)
+{
+  CgnsPwr_t *obj            = (CgnsPwr_t *)p;
+  AT_CommandStatus_t status = AT_CMD_INVALID;
+  size_t n                  = AT_CommandStatusParse(ibuf, length, &status);
+
+  if (n && ((AT_CMD_OK == status) || (AT_CMD_ERROR == status))) {
+    obj->response.status = status;
+  } else {
+    n = 0;
+  }
+
+  return n;
+}
 
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this)
+void CgnsPwrObjectInit(CgnsPwr_t *this)
 {
-    this->currentAt = NULL;
-    GSM_BluetoothObjectInit(&this->bluetooth, this);
-    GSM_GpsObjectInit(&this->gps, this);
+  memset(this, 0, sizeof(*this));
+  this->atcmd.obj       = this;
+  this->atcmd.serialize = CgnsPwrSerialize;
+  this->atcmd.parse     = CgnsPwrParse;
+  this->atcmd.timeout   = TIMEOUT_IN_SEC;
 }
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb)
+void CgnsPwrSetupRequest(CgnsPwr_t *this, uint8_t mode)
 {
-    return GSM_BluetoothRegisterCallback(&this->bluetooth, cb);
+  this->request.mode = mode;
 }
 
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
+AT_Command_t *CgnsPwrGetAtCommand(CgnsPwr_t *this)
 {
-    // TODO lock
-    OS_LockModem();
-
-    // Serialize command.
-    char obuf[128] = {0};
-    size_t olen = sizeof(obuf);
-    size_t n = atcmd->serialize(atcmd->obj, obuf, olen);
-
-    // Send string via serial port.
-    GSM_SerialWrite(obuf, n);
-    GSM_SerialWrite("\r", 1);
-
-
-    // Register command.
-    OS_LockParser();
-    this->currentAt = atcmd;
-    OS_UnlockParser();
-
-    // Wait for response.
-    OS_Error_t error = OS_WaitForMessageWithTimeout(atcmd->timeout);
-
-    // Unregister command.
-    OS_LockParser();
-    this->currentAt = NULL;
-    OS_UnlockParser();
-
-    // TODO unlock
-    OS_UnlockModem();
+  return &this->atcmd;
 }
 
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
+CgnsPwr_response_t CgnsPwrGetResponse(CgnsPwr_t *this)
 {
-    OS_LockParser();
+  return this->response;
+}
 
-    size_t offset = 0;
-    if (this->currentAt) {
-        AT_Parse_t parser = this->currentAt->parse;
-        offset = parser(this->currentAt->obj, ibuf, ilen);
-        if (offset) {
-            OS_WakeUpThreadWaitingForMessage();
-        }
-    }
-
-    if (0 == offset) {
-        offset = GSM_BluetoothURCParse(&this->bluetooth, ibuf, ilen);
-    }
-
-    OS_UnlockParser();
-
-    return offset;
+AT_CommandStatus_t CgnsPwrGetResponseStatus(CgnsPwr_t *this)
+{
+  return this->response.status;
 }
 
 /****************************** END OF FILE **********************************/

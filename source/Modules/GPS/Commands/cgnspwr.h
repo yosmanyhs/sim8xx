@@ -1,17 +1,18 @@
 /**
- * @file Modem.h
+ * @file cgnspwr.h
  * @brief
  */
 
-#ifndef MODEM_H
-#define MODEM_H
+#ifndef CGNS_PWR_H
+#define CGNS_PWR_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "At.h"
-#include "Bluetooth.h"
-#include "Gps.h"
+
+#include <stddef.h>
+#include <stdint.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -24,11 +25,19 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct GSM_Modem_s {
-    AT_Command_t *currentAt;
-    GSM_Bluetooth_t bluetooth;
-    GSM_Gps_t gps;
-} GSM_Modem_t;
+typedef struct CgnsPwr_request_s {
+  uint8_t mode;
+} CgnsPwr_request_t;
+
+typedef struct CgnsPwr_response_s {
+  AT_CommandStatus_t status;
+} CgnsPwr_response_t;
+
+typedef struct CgnsPwr_s {
+  CgnsPwr_request_t request;
+  CgnsPwr_response_t response;
+  AT_Command_t atcmd;
+} CgnsPwr_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -37,14 +46,16 @@ typedef struct GSM_Modem_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this);
+void CgnsPwrObjectInit(CgnsPwr_t *this);
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb);
+void CgnsPwrSetupRequest(CgnsPwr_t *this, uint8_t mode);
 
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
+AT_Command_t *CgnsPwrGetAtCommand(CgnsPwr_t *this);
 
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
+CgnsPwr_response_t CgnsPwrGetResponse(CgnsPwr_t *this);
 
-#endif /* MODEM_H */
+AT_CommandStatus_t CgnsPwrGetResponseStatus(CgnsPwr_t *this);
+
+#endif /* CGNS_PWR_H */
 
 /****************************** END OF FILE **********************************/

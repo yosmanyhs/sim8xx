@@ -1,17 +1,15 @@
 /**
- * @file Modem.h
+ * @file Gps.h
  * @brief
  */
 
-#ifndef MODEM_H
-#define MODEM_H
+#ifndef GPS_H
+#define GPS_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "At.h"
-#include "Bluetooth.h"
-#include "Gps.h"
+#include <stdbool.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -24,11 +22,10 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct GSM_Modem_s {
-    AT_Command_t *currentAt;
-    GSM_Bluetooth_t bluetooth;
-    GSM_Gps_t gps;
-} GSM_Modem_t;
+typedef struct GSM_Modem_s GSM_Modem_t;
+typedef struct GSM_Gps_s {
+    GSM_Modem_t *parent;
+} GSM_Gps_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -37,14 +34,12 @@ typedef struct GSM_Modem_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this);
+void GSM_GpsObjectInit(GSM_Gps_t *this, GSM_Modem_t *parent);
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb);
+bool GSM_GpsStart(GSM_Gps_t *this);
 
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
+bool GSM_GpsStop(GSM_Gps_t *this);
 
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
-
-#endif /* MODEM_H */
+#endif /* GPS_H */
 
 /****************************** END OF FILE **********************************/
