@@ -50,18 +50,32 @@ void test_AtSerialize(void)
   TEST_ASSERT_EQUAL_STRING("AT", obuf);
 }
 
-void test_AtParse(void)
+void test_AtParse_NoEcho(void)
 {
   At_t at;
   AtObjectInit(&at);
 
   const char *ibuf = "\r\nOK\r\n";
-  size_t length    = strlen(ibuf);
+  size_t ilen    = strlen(ibuf);
 
-  size_t n = AtParse(&at, ibuf, length);
+  size_t n = AtParse(&at, ibuf, ilen);
 
   TEST_ASSERT_EQUAL(AT_CMD_OK, at.response.status);
-  TEST_ASSERT_EQUAL(6, n);
+  TEST_ASSERT_EQUAL(ilen, n);
+}
+
+void test_AtParse_WithEcho(void)
+{
+  At_t at;
+  AtObjectInit(&at);
+
+  const char *ibuf = "AT\r\r\nOK\r\n";
+  size_t ilen = strlen(ibuf);
+
+  size_t n = AtParse(&at, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(AT_CMD_OK, at.response.status);
+  TEST_ASSERT_EQUAL(ilen, n);
 }
 
 void test_AtParse_Incomplete(void)
