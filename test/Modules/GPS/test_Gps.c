@@ -8,7 +8,7 @@
 
 TEST_FILE("cgnspwr.c");
 TEST_FILE("cgnsinf.c");
-TEST_FILE("At.c");
+TEST_FILE("AtCommand.c");
 TEST_FILE("Utils.c");
 
 void setUp(void)

@@ -3,8 +3,8 @@
  * @brief
  */
 
-#ifndef AT_H
-#define AT_H
+#ifndef ATCOMMAND_H
+#define ATCOMMAND_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
@@ -64,6 +64,6 @@ typedef struct AT_Command_s {
 /*****************************************************************************/
 size_t AT_CommandStatusParse(const char *ibuf, size_t length, AT_CommandStatus_t *status);
 
-#endif /* AT_H */
+#endif /* ATCOMMAND_H */
 
 /****************************** END OF FILE **********************************/

@@ -17,7 +17,7 @@ TEST_FILE("btsppsend.c");
 TEST_FILE("btpaircfg.c");
 TEST_FILE("cgnspwr.c");
 TEST_FILE("cgnsinf.c");
-TEST_FILE("At.c");
+TEST_FILE("AtCommand.c");
 TEST_FILE("Utils.c");
 TEST_FILE("Bluetooth.c")
 TEST_FILE("Gps.c")

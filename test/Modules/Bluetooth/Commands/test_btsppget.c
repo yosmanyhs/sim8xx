@@ -4,7 +4,7 @@
 
 #include <string.h>
 
-TEST_FILE("At.c");
+TEST_FILE("AtCommand.c");
 TEST_FILE("Utils.c");
 
 void setUp(void)
