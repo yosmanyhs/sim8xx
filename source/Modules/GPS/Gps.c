@@ -7,9 +7,9 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Gps.h"
-#include "Modem.h"
-#include "cgnspwr.h"
-#include "cgnsinf.h"
+#include "Modem/Modem.h"
+#include "Commands/cgnspwr.h"
+#include "Commands/cgnsinf.h"
 
 #include <string.h>
 

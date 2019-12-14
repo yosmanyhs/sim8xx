@@ -7,7 +7,8 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Modem.h"
-#include "Os.h"
+#include "Interface/Os.h"
+#include "Interface/Serial.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */

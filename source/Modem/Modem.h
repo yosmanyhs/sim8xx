@@ -9,9 +9,9 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "AtCommand.h"
-#include "Bluetooth.h"
-#include "Gps.h"
+#include "Common/AtCommand.h"
+#include "Modules/Bluetooth/Bluetooth.h"
+#include "Modules/GPS/Gps.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */

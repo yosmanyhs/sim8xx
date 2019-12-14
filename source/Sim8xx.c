@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Sim8xx.h"
-#include "Modem.h"
+#include "Modem/Modem.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -48,6 +48,19 @@ void SIM_Init(void)
 bool SIM_BluetoothRegisterCallback(GSM_BluetoothCb_t cb)
 {
     return GSM_ModemRegisterBluetoothCallback(&sim8xx, cb);
+}
+
+
+bool SIM_Start(void)
+{
+    //TODO: start serial
+
+    // TODO: stop blabla
+}
+
+bool SIM_Stop(void)
+{
+
 }
 
 size_t SIM_ProcessInput(const char ibuf[], size_t ilen)

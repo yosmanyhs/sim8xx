@@ -12,7 +12,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "BluetoothEvent.h"
+#include "Modules/Bluetooth/BluetoothEvent.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */

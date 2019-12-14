@@ -9,16 +9,16 @@
 #include "Bluetooth.h"
 
 
-#include "Modem.h"
-#include "AtCommand.h"
-#include "btacpt.h"
-#include "btconnect.h"
-#include "btdisconn.h"
-#include "bthost.h"
-#include "btpaircfg.h"
-#include "btpower.h"
-#include "btsppsend.h"
-#include "btsppget.h"
+#include "Modem/Modem.h"
+#include "Common/AtCommand.h"
+#include "Commands/btacpt.h"
+#include "Commands/btconnect.h"
+#include "Commands/btdisconn.h"
+#include "Commands/bthost.h"
+#include "Commands/btpaircfg.h"
+#include "Commands/btpower.h"
+#include "Commands/btsppsend.h"
+#include "Commands/btsppget.h"
 
 #include <stddef.h>
 #include <stdint.h>
