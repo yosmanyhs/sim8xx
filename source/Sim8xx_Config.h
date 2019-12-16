@@ -1,19 +1,19 @@
 /**
- * @file Os.h
+ * @file Sim8xx_Config.h
  * @brief
  */
 
-#ifndef OS_H
-#define OS_H
+#ifndef SIM8XX_CONFIG_H
+#define SIM8XX_CONFIG_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include <stdint.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
+#define SIM8XX_INPUT_BUFFER_LENGTH       256
 
 /*****************************************************************************/
 /* MACRO DEFINITIONS                                                         */
@@ -22,10 +22,6 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef enum {
-    OS_NO_ERROR,
-    OS_TIMEOUT,
-} OS_Error_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -34,24 +30,7 @@ typedef enum {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void OS_Init(void);
 
-void OS_LockModem(void);
-
-void OS_UnlockModem(void);
-
-void OS_LockParser(void);
-
-void OS_UnlockParser(void);
-
-void OS_LockBuffer(void);
-
-void OS_UnlockBuffer(void);
-
-OS_Error_t OS_WaitForMessageWithTimeout(uint32_t timeoutInMs);
-
-void OS_WakeUpThreadWaitingForMessage(void);
-
-#endif /* OS_H */
+#endif /* SIM8XX_CONFIG_H */
 
 /****************************** END OF FILE **********************************/

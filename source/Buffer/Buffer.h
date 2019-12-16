@@ -1,15 +1,17 @@
 /**
- * @file Os.h
+ * @file Buffer.h
  * @brief
  */
 
-#ifndef OS_H
-#define OS_H
+#ifndef BUFFER_H
+#define BUFFER_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
+#include "Sim8xx_Config.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -22,10 +24,16 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef enum {
-    OS_NO_ERROR,
-    OS_TIMEOUT,
-} OS_Error_t;
+typedef struct Buffer_s {
+  char buffer[SIM8XX_INPUT_BUFFER_LENGTH];
+  size_t wrindex;
+  size_t rdindex;
+} Buffer_t;
+
+typedef struct Data_s {
+  const char *data;
+  size_t length;
+} Data_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -34,24 +42,14 @@ typedef enum {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void OS_Init(void);
+void GSM_BufferObjectInit(Buffer_t *this);
 
-void OS_LockModem(void);
+bool GSM_BufferPutChar(Buffer_t *this, char c);
 
-void OS_UnlockModem(void);
+Data_t GSM_BufferGetData(Buffer_t *this);
 
-void OS_LockParser(void);
+bool GSM_BufferClearData(Buffer_t *this, size_t length);
 
-void OS_UnlockParser(void);
-
-void OS_LockBuffer(void);
-
-void OS_UnlockBuffer(void);
-
-OS_Error_t OS_WaitForMessageWithTimeout(uint32_t timeoutInMs);
-
-void OS_WakeUpThreadWaitingForMessage(void);
-
-#endif /* OS_H */
+#endif /* BUFFER_H */
 
 /****************************** END OF FILE **********************************/
