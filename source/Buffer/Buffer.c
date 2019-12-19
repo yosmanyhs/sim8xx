@@ -7,6 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Buffer.h"
+#include "Interface/Os.h"
 
 #include <string.h>
 
