@@ -24,10 +24,13 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
+typedef void (*GSM_SerialPut_t)(char c);
+
 typedef struct GSM_Modem_s {
-    AT_Command_t *currentAt;
-    GSM_Bluetooth_t bluetooth;
-    GSM_Gps_t gps;
+  AT_Command_t *currentAt;
+  GSM_SerialPut_t put;
+  GSM_Bluetooth_t bluetooth;
+  GSM_Gps_t gps;
 } GSM_Modem_t;
 
 /*****************************************************************************/
@@ -38,6 +41,8 @@ typedef struct GSM_Modem_s {
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
 void GSM_ModemObjectInit(GSM_Modem_t *this);
+
+bool GSM_ModemRegisterPutFunction(GSM_Modem_t *this, GSM_SerialPut_t put);
 
 bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb);
 

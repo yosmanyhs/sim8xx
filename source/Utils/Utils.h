@@ -33,12 +33,13 @@
 /*****************************************************************************/
 size_t GSM_UtilsGetString(const char ibuf[], size_t ilen, char obuf[], size_t olen, char stok, char etok);
 
-size_t GSM_UtilsGetInt(const char ibuf[], size_t ilen, int *pd, char stok, char etok);
+size_t GSM_UtilsGetInt(const char ibuf[], size_t ilen, int32_t *pi, char stok, char etok);
 
-size_t GSM_UtilsGetDouble(const char input[], size_t ilen, double *pd, char stok, char etok);
+size_t GSM_UtilsGetDouble(const char ibuf[], size_t ilen, double *pd, char stok, char etok);
 
-size_t GSM_UtilsSkipReserved(const char input[], size_t ilen, char delim, size_t count);
+size_t GSM_UtilsSkipReserved(const char ibuf[], size_t ilen, char delim, size_t count);
 
+size_t GSM_UtilsItoA(char obuf[], size_t olen, int n);
 #endif /* UTILS_H */
 
 /****************************** END OF FILE **********************************/

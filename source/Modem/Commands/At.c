@@ -39,7 +39,7 @@ static
 {
   memset(obuf, 0, length);
 
-  At_t *obj = (At_t *)p;
+  (void)p;
   size_t n      = 0;
   if (2 < length) {
     strncpy(obuf, "AT", length);

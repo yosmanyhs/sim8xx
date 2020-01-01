@@ -27,22 +27,22 @@
 /*****************************************************************************/
 typedef struct CgnsInf_response_s {
   AT_CommandStatus_t status;
-  int runStatus;
-  int fixStatus;
+  int32_t runStatus;
+  int32_t fixStatus;
   char date[19];
   double latitude;
   double longitude;
   double altitude;
   double speed;
   double course;
-  int fixMode;
+  int32_t fixMode;
   double hdop;
   double pdop;
   double vdop;
-  int gpsSatInView;
-  int gnssSatInUse;
-  int gnssSatInView;
-  int cnomax;
+  int32_t gpsSatInView;
+  int32_t gnssSatInUse;
+  int32_t gnssSatInView;
+  int32_t cnomax;
   double hpa;
   double vpa;
 } CgnsInf_response_t;

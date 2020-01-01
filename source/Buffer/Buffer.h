@@ -11,11 +11,11 @@
 /*****************************************************************************/
 #include <stddef.h>
 #include <stdbool.h>
-#include "Sim8xx_Config.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
+#define SIM8XX_INPUT_BUFFER_LENGTH       256
 
 /*****************************************************************************/
 /* MACRO DEFINITIONS                                                         */
@@ -28,12 +28,12 @@ typedef struct Buffer_s {
   char buffer[SIM8XX_INPUT_BUFFER_LENGTH];
   size_t wrindex;
   size_t rdindex;
-} Buffer_t;
+} GSM_Buffer_t;
 
 typedef struct Data_s {
   const char *data;
   size_t length;
-} Data_t;
+} GSM_BufferData_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -42,13 +42,13 @@ typedef struct Data_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_BufferObjectInit(Buffer_t *this);
+void GSM_BufferObjectInit(GSM_Buffer_t *this);
 
-bool GSM_BufferPutChar(Buffer_t *this, char c);
+bool GSM_BufferPutChar(GSM_Buffer_t *this, char c);
 
-Data_t GSM_BufferGetData(Buffer_t *this);
+GSM_BufferData_t GSM_BufferGetData(GSM_Buffer_t *this);
 
-bool GSM_BufferClearData(Buffer_t *this, size_t length);
+bool GSM_BufferClearData(GSM_Buffer_t *this, size_t length);
 
 #endif /* BUFFER_H */
 

@@ -11,7 +11,7 @@ void tearDown(void)
 {
 }
 
-void test_Utils_GetString(void)
+void test_GSM_UtilsGetString(void)
 {
     const char *ibuf = "asd\"text to parse\"extra characters .";
     size_t ilen = strlen(ibuf);
@@ -25,7 +25,7 @@ void test_Utils_GetString(void)
     TEST_ASSERT_EQUAL_STRING("text to parse", obuf);
 }
 
-void test_Utils_GetString_NoString(void)
+void test_GSM_UtilsGetString_NoString(void)
 {
     const char *ibuf = "asd text to parse extra characters .";
     size_t ilen = strlen(ibuf);
@@ -33,13 +33,13 @@ void test_Utils_GetString_NoString(void)
     char obuf[20] = {0};
     size_t olen = sizeof(obuf);
 
-    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, sizeof(obuf), '"', '"');
+    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, olen, '"', '"');
 
     TEST_ASSERT_EQUAL(0, n);
     TEST_ASSERT_EQUAL_STRING("", obuf);
 }
 
-void test_Utils_GetString_NoEnding(void)
+void test_GSM_UtilsGetString_NoEnding(void)
 {
     const char *ibuf = "asd\"text to parse extra characters .";
     size_t ilen = strlen(ibuf);
@@ -47,18 +47,18 @@ void test_Utils_GetString_NoEnding(void)
     char obuf[20] = {0};
     size_t olen = sizeof(obuf);
 
-    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, sizeof(obuf), '"', '"');
+    size_t n = GSM_UtilsGetString(ibuf, ilen, obuf, olen, '"', '"');
 
     TEST_ASSERT_EQUAL(0, n);
     TEST_ASSERT_EQUAL_STRING("", obuf);
 }
 
-void test_Utils_GetInt(void)
+void test_GSM_UtilsGetInt(void)
 {
     const char *ibuf = "asd\"int to parse: ,192, extra characters .";
     size_t ilen = strlen(ibuf);
 
-    int d = 0;
+    int32_t d = 0;
 
     size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',', ',');
 
@@ -66,12 +66,12 @@ void test_Utils_GetInt(void)
     TEST_ASSERT_EQUAL(22, n);
 }
 
-void test_Utils_GetInt_NoInt(void)
+void test_GSM_UtilsGetInt_NoInt(void)
 {
     const char *ibuf = "asd\"int to parse: 192 extra characters .";
     size_t ilen = strlen(ibuf);
 
-    int d = 0;
+    int32_t d = 0;
 
     size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',', ',');
 
@@ -79,12 +79,12 @@ void test_Utils_GetInt_NoInt(void)
     TEST_ASSERT_EQUAL(0, n);
 }
 
-void test_Utils_GetInt_ExtraCharacters(void)
+void test_GSM_UtilsGetInt_ExtraCharacters(void)
 {
     const char *ibuf = "asd\"int to parse: ,192sss, extra characters .";
     size_t ilen = strlen(ibuf);
 
-    int d = 0;
+    int32_t d = 0;
 
     size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',', ',');
 
@@ -92,12 +92,12 @@ void test_Utils_GetInt_ExtraCharacters(void)
     TEST_ASSERT_EQUAL(25, n);
 }
 
-void test_Utils_GetInt_NegativeInt(void)
+void test_GSM_UtilsGetInt_NegativeInt(void)
 {
     const char *ibuf = "asd\"int to parse: ,-299, extra characters .";
     size_t ilen = strlen(ibuf);
 
-    int d = 0;
+    int32_t d = 0;
 
     size_t n = GSM_UtilsGetInt(ibuf, ilen, &d, ',', ',');
 
@@ -105,7 +105,7 @@ void test_Utils_GetInt_NegativeInt(void)
     TEST_ASSERT_EQUAL(23, n);
 }
 
-void test_Utils_GetDouble(void)
+void test_GSM_UtilsGetDouble(void)
 {
     const char *ibuf = "asd\"int to parse: ,3.14159265, extra characters .";
     size_t ilen = strlen(ibuf);
@@ -118,7 +118,7 @@ void test_Utils_GetDouble(void)
     TEST_ASSERT_EQUAL(29, n);
 }
 
-void test_Utils_GetDouble_NoDouble(void)
+void test_GSM_UtilsGetDouble_NoDouble(void)
 {
     const char *ibuf = "asd\"int to parse:  extra characters .";
     size_t ilen = strlen(ibuf);
@@ -131,7 +131,7 @@ void test_Utils_GetDouble_NoDouble(void)
     TEST_ASSERT_EQUAL(0, n);
 }
 
-void test_Utils_GetDouble_Negative(void)
+void test_GSM_UtilsGetDouble_Negative(void)
 {
     const char *ibuf = "asd\"int to parse: ,-3.14159265, extra characters .";
     size_t ilen = strlen(ibuf);
@@ -144,7 +144,7 @@ void test_Utils_GetDouble_Negative(void)
     TEST_ASSERT_EQUAL(30, n);
 }
 
-void test_Utils_SkipReserved_7(void)
+void test_GSM_UtilsSkipReserved_7(void)
 {
     const char *ibuf = "01,11,21,31,41,51,61,71,81,91,101.";
     size_t ilen = strlen(ibuf);
@@ -154,7 +154,7 @@ void test_Utils_SkipReserved_7(void)
     TEST_ASSERT_EQUAL(23,n);
 }
 
-void test_Utils_SkipReserved_1(void)
+void test_GSM_UtilsSkipReserved_1(void)
 {
     const char *ibuf = "01,11,21,31,41,51,61,71,81,91,101.";
     size_t ilen = strlen(ibuf);
@@ -164,7 +164,7 @@ void test_Utils_SkipReserved_1(void)
     TEST_ASSERT_EQUAL(5,n);
 }
 
-void test_Utils_SkipReserved_2(void)
+void test_GSM_UtilsSkipReserved_2(void)
 {
     const char *ibuf = "01,11,21,31,41,51,61,71,81,91,101.";
     size_t ilen = strlen(ibuf);
@@ -174,7 +174,7 @@ void test_Utils_SkipReserved_2(void)
     TEST_ASSERT_EQUAL(8,n);
 }
 
-void test_Utils_SkipReserved_NotFound(void)
+void test_GSM_UtilsSkipReserved_NotFound(void)
 {
     const char *ibuf = "01,11,21,31,41,51,61,71,81,91,101.";
     size_t ilen = strlen(ibuf);
@@ -184,7 +184,7 @@ void test_Utils_SkipReserved_NotFound(void)
     TEST_ASSERT_EQUAL(0,n);
 }
 
-void test_Utils_SkipReserved_FoundLess(void)
+void test_GSM_UtilsSkipReserved_FoundLess(void)
 {
     const char *ibuf = "01,11,";
     size_t ilen = strlen(ibuf);
@@ -192,4 +192,48 @@ void test_Utils_SkipReserved_FoundLess(void)
     size_t n = GSM_UtilsSkipReserved(ibuf, ilen, ',', 2);
 
     TEST_ASSERT_EQUAL(0,n);
+}
+
+void test_GSM_UtilsItoA_Negative(void)
+{
+    char obuf[20] = {0};
+    size_t olen = sizeof(obuf);
+
+    size_t n = GSM_UtilsItoA(obuf, olen, -39);
+
+    TEST_ASSERT_EQUAL(3, n);
+    TEST_ASSERT_EQUAL_STRING("-39", obuf);
+}
+
+void test_GSM_UtilsItoA_Positive(void)
+{
+    char obuf[20] = {0};
+    size_t olen = sizeof(obuf);
+
+    size_t n = GSM_UtilsItoA(obuf, olen, 4096);
+
+    TEST_ASSERT_EQUAL(4, n);
+    TEST_ASSERT_EQUAL_STRING("4096", obuf);
+}
+
+void test_GSM_UtilsItoA_Zero(void)
+{
+    char obuf[20] = {0};
+    size_t olen = sizeof(obuf);
+
+    size_t n = GSM_UtilsItoA(obuf, olen, 0);
+
+    TEST_ASSERT_EQUAL(1, n);
+    TEST_ASSERT_EQUAL_STRING("0", obuf);
+}
+
+void test_GSM_UtilsItoA_BufferTooSmall(void)
+{
+    char obuf[4] = {0};
+    size_t olen = sizeof(obuf);
+
+    size_t n = GSM_UtilsItoA(obuf, olen, 4096);
+
+    TEST_ASSERT_EQUAL(0, n);
+    TEST_ASSERT_EQUAL_STRING("", obuf);
 }

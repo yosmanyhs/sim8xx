@@ -44,6 +44,13 @@
     - *common_defines
     - TEST
 
+:flags:
+  :test:
+    :compile:
+      :*:
+        - -Wall
+#        - -Werror
+
 :cmock:
   :mock_prefix: mock_
   :when_no_prototypes: :warn
@@ -87,4 +94,5 @@
     - stdout_pretty_tests_report
     - module_generator
     - raw_output_report
+    - xml_tests_report
 ...

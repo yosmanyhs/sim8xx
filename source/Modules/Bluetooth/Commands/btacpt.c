@@ -10,6 +10,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "Utils/Utils.h"
+
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
@@ -45,7 +47,8 @@ static
   BtAcpt_t *obj = (BtAcpt_t *)p;
   size_t n      = 0;
   if (12 < length) {
-    snprintf(obuf, length, "AT+BTACPT=%d", obj->request.mode);
+    strncpy(obuf, "AT+BTACPT=", length);
+    GSM_UtilsItoA(obuf + 10, length - 10, (int)obj->request.mode);
     n = strlen(obuf);
   }
 

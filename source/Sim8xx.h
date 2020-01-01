@@ -12,6 +12,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+
+#include "Buffer/Buffer.h" 
+#include "Modem/Modem.h"
 #include "Modules/Bluetooth/BluetoothEvent.h"
 
 /*****************************************************************************/
@@ -25,6 +28,10 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
+typedef struct {
+  GSM_Modem_t modem;
+  GSM_Buffer_t buffer;
+} Sim8xx_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -33,11 +40,9 @@
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void SIM_Init(void);
+void SIM_Init(Sim8xx_t *this);
 
-bool SIM_BluetoothRegisterCallback(GSM_BluetoothCb_t cb);
-
-size_t SIM_ProcessInput(const char ibuf[], size_t ilen);
+bool SIM_BluetoothRegisterCallback(Sim8xx_t *this, GSM_BluetoothCb_t cb);
 
 
 #endif /* SIM_8_XX_H */

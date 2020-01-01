@@ -66,7 +66,11 @@ void test_AteSerialize_Mode0(void)
   char obuf[32] = {0};
   size_t n      =  AteSerialize(&ate, obuf, sizeof(obuf));
 
-  TEST_ASSERT_EQUAL_STRING("ATE0", obuf);
+  const char *expected = "ATE0";
+  size_t expectedLength = strlen(expected);
+
+  TEST_ASSERT_EQUAL_STRING(expected, obuf);
+  TEST_ASSERT_EQUAL(expectedLength, n);
 }
 
 void test_AteSerialize_Mode1(void)
@@ -78,7 +82,11 @@ void test_AteSerialize_Mode1(void)
   char obuf[32] = {0};
   size_t n      =  AteSerialize(&ate, obuf, sizeof(obuf));
 
-  TEST_ASSERT_EQUAL_STRING("ATE1", obuf);
+  const char *expected = "ATE1";
+  size_t expectedLength = strlen(expected);
+
+  TEST_ASSERT_EQUAL_STRING(expected, obuf);
+  TEST_ASSERT_EQUAL(expectedLength, n);
 }
 
 void test_AteParse_Mode0_NoEcho(void)

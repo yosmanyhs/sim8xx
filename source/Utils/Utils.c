@@ -8,9 +8,9 @@
 /*****************************************************************************/
 #include "Utils.h"
 
-#include <string.h>
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -37,138 +37,186 @@
 /*****************************************************************************/
 static double GSM_utilsAscii2Double(const char ibuf[], size_t length)
 {
-    if (0 == length)
-        return 0.0;
+  if (0 == length)
+    return 0.0;
 
-    double result = 0.0;
+  double result = 0.0;
 
-    bool isNegative = ('-' == ibuf[0]);
+  bool isNegative = ('-' == ibuf[0]);
 
-    size_t i;
-    for (i = isNegative ? 1 : 0; i < length && ibuf[i] != '.'; ++i) {
-        result = 10 * result + (ibuf[i] - '0');
-    }
+  size_t i;
+  for (i = isNegative ? 1 : 0; i < length && ibuf[i] != '.'; ++i) {
+    result = 10 * result + (ibuf[i] - '0');
+  }
 
-    if (i == length)
-        return result * (isNegative ? (-1) : 1);
-    i++;
-
-    double fract = 1.0;
-    while (i < length) {
-        fract *= 0.1;
-        result += fract * (ibuf[i++] - '0');
-    }
-
+  if (i == length)
     return result * (isNegative ? (-1) : 1);
+  i++;
+
+  double fract = 1.0;
+  while (i < length) {
+    fract *= 0.1;
+    result += fract * (ibuf[i++] - '0');
+  }
+
+  return result * (isNegative ? (-1) : 1);
+}
+
+static void GSM_UtilsReverse(char s[], size_t len)
+{
+  if (0 == len)
+    return;
+
+  size_t i, j;
+  for (i = 0, j = len - 1; i < j; ++i, --j) {
+    char c = s[i];
+    s[i]   = s[j];
+    s[j]   = c;
+  }
 }
 
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-size_t GSM_UtilsGetString(const char input[], size_t ilen, char obuf[], size_t olen, char stok, char etok)
+size_t
+GSM_UtilsGetString(const char ibuf[], size_t ilen, char obuf[], size_t olen, char stok, char etok)
 {
-    const char *istart = input;
-    const char *iend = input + ilen;
+  const char *istart = ibuf;
+  const char *iend   = ibuf + ilen;
 
-    memset(obuf, 0, olen);
+  memset(obuf, 0, olen);
 
-    char *begin = strchr(istart, stok);
-    if (!begin || (iend <= begin))
-        return 0;
+  char *begin = strchr(istart, stok);
+  if (!begin || (iend <= begin))
+    return 0;
 
-    begin += sizeof(stok);
+  begin += sizeof(stok);
 
-    char *end = strchr(begin, etok);
-    if (!end || (iend < end))
-        return 0;
+  char *end = strchr(begin, etok);
+  if (!end || (iend < end))
+    return 0;
 
-    size_t length = end - begin;
-    if (olen < (length + 1))
-        length = olen - 1;
+  size_t length = end - begin;
+  if (olen < (length + 1))
+    length = olen - 1;
 
-    memcpy(obuf, begin, length);
-    obuf[length] = '\0';
+  memcpy(obuf, begin, length);
+  obuf[length] = '\0';
 
-    return end - istart;
+  return end - istart;
 }
 
-size_t GSM_UtilsGetInt(const char input[], size_t ilen, int *pi, char stok, char etok)
+size_t GSM_UtilsGetInt(const char ibuf[], size_t ilen, int32_t *pi, char stok, char etok)
 {
-    const char *istart = input;
-    const char *iend = input + ilen;
+  const char *istart = ibuf;
+  const char *iend   = ibuf + ilen;
 
-    *pi = 0;
+  *pi = 0;
 
-    char *begin = strchr(istart, stok);
-    if (!begin || (iend <= begin))
-        return 0;
+  char *begin = strchr(istart, stok);
+  if (!begin || (iend <= begin))
+    return 0;
 
-    begin += sizeof(stok);
+  begin += sizeof(stok);
 
-    char *end = strchr(begin, etok);
-    if (!end || (iend < end))
-        return 0;    
+  char *end = strchr(begin, etok);
+  if (!end || (iend < end))
+    return 0;
 
-    char num[10] = {0};
-    size_t length = end - begin;
-    if (sizeof(num) < (length + 1))
-        length = sizeof(num) - 1;
+  char num[10]  = {0};
+  size_t length = end - begin;
+  if (sizeof(num) < (length + 1))
+    length = sizeof(num) - 1;
 
-    memcpy(num, begin, length);
-    num[length] = '\0';
+  memcpy(num, begin, length);
+  num[length] = '\0';
 
-    *pi = atoi(num);
+  *pi = atoi(num);
 
-    return end - istart;
+  return end - istart;
 }
 
-size_t GSM_UtilsGetDouble(const char input[], size_t ilen, double *pd, char stok, char etok)
+size_t GSM_UtilsGetDouble(const char ibuf[], size_t ilen, double *pd, char stok, char etok)
 {
-    const char *istart = input;
-    const char *iend = input + ilen;
+  const char *istart = ibuf;
+  const char *iend   = ibuf + ilen;
 
-    *pd = 0;
+  *pd = 0;
 
-    char *begin = strchr(istart, stok);
-    if (!begin || (iend <= begin))
-        return 0;
+  char *begin = strchr(istart, stok);
+  if (!begin || (iend <= begin))
+    return 0;
 
-    begin += sizeof(stok);
+  begin += sizeof(stok);
 
-    char *end = strchr(begin, etok);
-    if (!end || (iend < end))
-        return 0;    
+  char *end = strchr(begin, etok);
+  if (!end || (iend < end))
+    return 0;
 
-    char num[20] = {0};
-    size_t length = end - begin;
-    if (sizeof(num) < (length + 1))
-        length = sizeof(num) - 1;
+  char num[20]  = {0};
+  size_t length = end - begin;
+  if (sizeof(num) < (length + 1))
+    length = sizeof(num) - 1;
 
-    memcpy(num, begin, length);
-    num[length] = '\0';
+  memcpy(num, begin, length);
+  num[length] = '\0';
 
-    *pd = GSM_utilsAscii2Double(num, strlen(num));
+  *pd = GSM_utilsAscii2Double(num, strlen(num));
 
-    return end - istart;
+  return end - istart;
 }
 
 size_t GSM_UtilsSkipReserved(const char input[], size_t ilen, char delim, size_t count)
 {
-    const char *istart = input;
-    const char *iend = input + ilen;
+  const char *istart = input;
+  const char *iend   = input + ilen;
 
-    const char *end;
-    size_t i;
-    for (i = 0, end = input; end && (end < iend) && (i <= count); ++i) {
-        end = strchr(end, delim);
-        if (end) ++end;
+  const char *end;
+  size_t i;
+  for (i = 0, end = input; end && (end < iend) && (i <= count); ++i) {
+    end = strchr(end, delim);
+    if (end)
+      ++end;
+  }
+
+  size_t offset = 0;
+  if ((istart < end) && (i == count + 1))
+    offset = end - 1 - istart;
+
+  return offset;
+}
+
+size_t GSM_UtilsItoA(char obuf[], size_t olen, int n)
+{
+  int sign = n;
+
+  if (n < 0)
+    n = -n;
+
+  size_t i = 0;
+  do {
+    obuf[i++] = n % 10 + '0';
+    n /= 10;
+  } while ((i < olen - 1) && (0 < n));
+
+  if (0 == n) {
+    if (sign < 0) {
+      if (i < (olen - 2)) {
+        obuf[i++] = '-';
+      } else {
+        memset(obuf, 0, olen);
+        i = 0;
+      }
     }
 
-    size_t offset = 0;
-    if ((istart < end) && (i == count+1))
-        offset = end - 1 - istart;
+    obuf[i] = '\0';
+    GSM_UtilsReverse(obuf, i);
+  } else {
+    memset(obuf, 0, olen);
+    i = 0;
+  }
 
-    return offset;
+  return i;
 }
 
 /****************************** END OF FILE **********************************/

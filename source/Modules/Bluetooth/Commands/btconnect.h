@@ -32,7 +32,7 @@ typedef enum {
 } BtConnectURC_Type_t;
 
 typedef struct BtConnect_Result_s {
-  uint32_t id;
+  int32_t id;
   char name[19];
   char address[19];
   char profile[10];
@@ -52,8 +52,8 @@ typedef struct BtConnectURC_s {
 } BtConnectURC_t;
 
 typedef struct BtConnect_request_s {
-  uint32_t deviceId;
-  uint32_t profileId;
+  int32_t deviceId;
+  int32_t profileId;
 } BtConnect_request_t;
 
 typedef struct BtConnect_response_s {

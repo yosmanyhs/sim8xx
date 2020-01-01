@@ -7,7 +7,6 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Sim8xx.h"
-#include "Modem/Modem.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -24,10 +23,6 @@
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL CONSTANTS AND VARIABLES                              */
 /*****************************************************************************/
-#if !defined(TEST)
-static 
-#endif
-GSM_Modem_t sim8xx;
 
 /*****************************************************************************/
 /* DECLARATION OF LOCAL FUNCTIONS                                            */
@@ -40,32 +35,30 @@ GSM_Modem_t sim8xx;
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-void SIM_Init(void)
+void SIM_Init(Sim8xx_t *this)
 {
-    GSM_ModemObjectInit(&sim8xx);
+  GSM_ModemObjectInit(&this->modem);
+  GSM_BufferObjectInit(&this->buffer);
 }
 
-bool SIM_BluetoothRegisterCallback(GSM_BluetoothCb_t cb)
+bool SIM_BluetoothRegisterCallback(Sim8xx_t *this, GSM_BluetoothCb_t cb)
 {
-    return GSM_ModemRegisterBluetoothCallback(&sim8xx, cb);
+  return GSM_ModemRegisterBluetoothCallback(&this->modem, cb);
 }
-
 
 bool SIM_Start(void)
 {
-    //TODO: start serial
+  // TODO: start serial
 
-    // TODO: stop blabla
+  return false;
 }
 
 bool SIM_Stop(void)
 {
+  // TODO stop serial
 
+  return false;
 }
 
-size_t SIM_ProcessInput(const char ibuf[], size_t ilen)
-{
-    return GSM_ModemParse(&sim8xx, ibuf, ilen);
-}
 
 /****************************** END OF FILE **********************************/

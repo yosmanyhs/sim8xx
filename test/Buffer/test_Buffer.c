@@ -15,7 +15,7 @@ void tearDown(void)
 
 void test_GSM_BufferObjectInit(void)
 {
-  Buffer_t buffer;
+  GSM_Buffer_t buffer;
   GSM_BufferObjectInit(&buffer);
 
   TEST_ASSERT_EQUAL(0, buffer.rdindex);
@@ -24,7 +24,7 @@ void test_GSM_BufferObjectInit(void)
 
 void test_GSM_BufferPutChar(void)
 {
-  Buffer_t buffer;
+  GSM_Buffer_t buffer;
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -47,7 +47,7 @@ void test_GSM_BufferPutChar(void)
 
 void test_GSM_BufferPutChar_Overflow(void)
 {
-  Buffer_t buffer;
+  GSM_Buffer_t buffer;
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -69,7 +69,7 @@ void test_GSM_BufferPutChar_Overflow(void)
 
 void test_GSM_BufferGetData(void)
 {
-  Buffer_t buffer;
+  GSM_Buffer_t buffer;
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -82,7 +82,7 @@ void test_GSM_BufferGetData(void)
 
   OS_LockBuffer_Expect();
   OS_UnlockBuffer_Expect();
-  Data_t idata = GSM_BufferGetData(&buffer);
+  GSM_BufferData_t idata = GSM_BufferGetData(&buffer);
 
   TEST_ASSERT_EQUAL(15, idata.length);
 
@@ -98,7 +98,7 @@ void test_GSM_BufferGetData(void)
 
 void test_GSM_BufferGetData_InternalError(void)
 {
-  Buffer_t buffer;
+  GSM_Buffer_t buffer;
   GSM_BufferObjectInit(&buffer);
 
   buffer.rdindex = 16;
@@ -106,7 +106,7 @@ void test_GSM_BufferGetData_InternalError(void)
 
   OS_LockBuffer_Expect();
   OS_UnlockBuffer_Expect();
-  Data_t idata = GSM_BufferGetData(&buffer);
+  GSM_BufferData_t idata = GSM_BufferGetData(&buffer);
 
   TEST_ASSERT_EQUAL_PTR(NULL, idata.data);
   TEST_ASSERT_EQUAL(0, idata.length);
@@ -116,7 +116,7 @@ void test_GSM_BufferGetData_InternalError(void)
 
 void test_GSM_BufferClearData(void)
 {
-  Buffer_t buffer;
+  GSM_Buffer_t buffer;
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -141,7 +141,7 @@ void test_GSM_BufferClearData(void)
 
 void test_GSM_BufferClearData_InvalidLength(void)
 {
-  Buffer_t buffer;
+  GSM_Buffer_t buffer;
   GSM_BufferObjectInit(&buffer);
 
   size_t i;

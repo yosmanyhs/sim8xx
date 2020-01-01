@@ -38,12 +38,12 @@
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-void GSM_BufferObjectInit(Buffer_t *this)
+void GSM_BufferObjectInit(GSM_Buffer_t *this)
 {
   memset(this, 0, sizeof(*this));
 }
 
-bool GSM_BufferPutChar(Buffer_t *this, char c)
+bool GSM_BufferPutChar(GSM_Buffer_t *this, char c)
 {
   OS_LockBuffer();
 
@@ -64,9 +64,9 @@ bool GSM_BufferPutChar(Buffer_t *this, char c)
   return result;
 }
 
-Data_t GSM_BufferGetData(Buffer_t *this)
+GSM_BufferData_t GSM_BufferGetData(GSM_Buffer_t *this)
 {
-  Data_t data = {0};
+  GSM_BufferData_t data = {0};
 
   OS_LockBuffer();
   if (this->rdindex <= this->wrindex) {
@@ -78,7 +78,7 @@ Data_t GSM_BufferGetData(Buffer_t *this)
   return data;
 }
 
-bool GSM_BufferClearData(Buffer_t *this, size_t length)
+bool GSM_BufferClearData(GSM_Buffer_t *this, size_t length)
 {
   OS_LockBuffer();
   
@@ -89,6 +89,8 @@ bool GSM_BufferClearData(Buffer_t *this, size_t length)
   }
     
   OS_UnlockBuffer();
+
+  return result;
 }
 
 /****************************** END OF FILE **********************************/

@@ -41,8 +41,8 @@ static
     size_t
     CgnsInfSerialize(void *p, char *obuf, size_t length)
 {
-  CgnsInf_t *obj = (CgnsInf_t *)p;
-  size_t n       = 0;
+  (void)p;
+  size_t n = 0;
   if (11 < length) {
     strncat(obuf, "AT+CGNSINF", 10);
     n = strlen(obuf);

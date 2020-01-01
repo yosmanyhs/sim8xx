@@ -2,8 +2,9 @@
 
 #include "Modem.h"
 #include "mock_Os.h"
-#include "mock_Serial.h"
 #include "mock_test_Bluetooth_callback.h"
+
+#include <string.h>
 
 #include "btpower.h"
 #include "btconnect.h"
@@ -31,14 +32,30 @@ void tearDown(void)
 {
 }
 
+void put(char c)
+{
+}
+
 void test_GSM_ModemObjectInit(void)
 {
   GSM_Modem_t modem;
   GSM_ModemObjectInit(&modem);
 
   TEST_ASSERT_EQUAL_PTR(NULL, modem.currentAt);
+  TEST_ASSERT_EQUAL_PTR(NULL, modem.put);
   TEST_ASSERT_EQUAL_PTR(&modem, modem.bluetooth.parent);
   TEST_ASSERT_EQUAL_PTR(&modem, modem.gps.parent);
+}
+
+
+
+void test_GSM_ModemRegisterPutFunction(void)
+{
+  GSM_Modem_t modem;
+  GSM_ModemObjectInit(&modem);
+  GSM_ModemRegisterPutFunction(&modem,put);
+
+  TEST_ASSERT_EQUAL_PTR(put, modem.put);
 }
 
 void test_GSM_ModemRegisterBluetoothCallback(void)
@@ -54,6 +71,7 @@ void test_GSM_ModemExecuteAtCommand(void)
 {
   GSM_Modem_t modem;
   GSM_ModemObjectInit(&modem);
+  GSM_ModemRegisterPutFunction(&modem,put);
   GSM_ModemRegisterBluetoothCallback(&modem, BTcallback);
 
   BtPower_t btpower = {0};
@@ -61,8 +79,6 @@ void test_GSM_ModemExecuteAtCommand(void)
   BtPowerSetupRequest(&btpower, 1);
 
   OS_LockModem_Expect();
-  GSM_SerialWrite_ExpectAnyArgsAndReturn(0);
-  GSM_SerialWrite_ExpectAnyArgsAndReturn(0);
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
   OS_WaitForMessageWithTimeout_ExpectAnyArgsAndReturn(OS_NO_ERROR);
@@ -77,6 +93,7 @@ void test_GSM_ModemParse_AtResponseReceived(void)
 {
   GSM_Modem_t modem;
   GSM_ModemObjectInit(&modem);
+  GSM_ModemRegisterPutFunction(&modem,put);
   GSM_ModemRegisterBluetoothCallback(&modem, BTcallback);
 
   BtConnect_t btconnect;
@@ -105,6 +122,7 @@ void test_GSM_ModemParse_URCReceived(void)
 {
   GSM_Modem_t modem;
   GSM_ModemObjectInit(&modem);
+  GSM_ModemRegisterPutFunction(&modem,put);
   GSM_ModemRegisterBluetoothCallback(&modem, BTcallback);
 
   const char *ibuf = "\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n";
@@ -126,6 +144,7 @@ void test_GSM_ModemParse_ATandURCReceived(void)
 {
   GSM_Modem_t modem;
   GSM_ModemObjectInit(&modem);
+  GSM_ModemRegisterPutFunction(&modem,put);
   GSM_ModemRegisterBluetoothCallback(&modem, BTcallback);
 
   BtConnect_t btconnect;

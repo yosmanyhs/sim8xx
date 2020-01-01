@@ -71,7 +71,11 @@ void test_BtSppSendSerialize_CommandMode(void)
   char obuf[32] = {0};
   size_t n      = BtSppSendSerialize(&btsppsend, obuf, sizeof(obuf));
 
-  TEST_ASSERT_EQUAL_STRING("AT+BTSPPSEND", obuf);
+  const char *expected = "AT+BTSPPSEND";
+  size_t expectedLength = strlen(expected);
+
+  TEST_ASSERT_EQUAL_STRING(expected, obuf);
+  TEST_ASSERT_EQUAL(expectedLength, n);
 }
 
 void test_BtSppSendSerialize_DataMode(void)
@@ -88,6 +92,7 @@ void test_BtSppSendSerialize_DataMode(void)
   size_t n      = BtSppSendSerialize(&btsppsend, obuf, sizeof(obuf));
 
   TEST_ASSERT_EQUAL_STRING(data, obuf);
+  TEST_ASSERT_EQUAL(length, n);
 }
 
 void test_BtSppSendParse(void)

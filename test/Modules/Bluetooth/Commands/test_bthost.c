@@ -58,7 +58,11 @@ void test_BtHostSerialize(void)
   char obuf[32] = {0};
   size_t n      = BtHostSerialize(&bthost, obuf, sizeof(obuf));
 
-  TEST_ASSERT_EQUAL_STRING("AT+BTHOST=gtrack", obuf);
+  const char *expected = "AT+BTHOST=gtrack";
+  size_t expectedLength = strlen(expected);
+
+  TEST_ASSERT_EQUAL_STRING(expected, obuf);
+  TEST_ASSERT_EQUAL(expectedLength, n);
 }
 
 void test_BtHostParse(void)

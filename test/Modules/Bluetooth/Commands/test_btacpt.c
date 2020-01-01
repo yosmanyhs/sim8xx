@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 TEST_FILE("AtCommand.c");
+TEST_FILE("Utils.c");
 
 void setUp(void)
 {
@@ -57,7 +58,11 @@ void test_BtAcptSerialize_Mode0(void)
   char obuf[32] = {0};
   size_t n      = BtAcptSerialize(&btacpt, obuf, sizeof(obuf));
 
-  TEST_ASSERT_EQUAL_STRING("AT+BTACPT=0", obuf);
+  const char *expected = "AT+BTACPT=0";
+  size_t expectedLength = strlen(expected);
+
+  TEST_ASSERT_EQUAL_STRING(expected, obuf);
+  TEST_ASSERT_EQUAL(expectedLength, n);
 }
 
 void test_BtAcptSerialize_Mode1(void)
@@ -69,7 +74,11 @@ void test_BtAcptSerialize_Mode1(void)
   char obuf[32] = {0};
   size_t n      = BtAcptSerialize(&btacpt, obuf, sizeof(obuf));
 
-  TEST_ASSERT_EQUAL_STRING("AT+BTACPT=1", obuf);
+  const char *expected = "AT+BTACPT=1";
+  size_t expectedLength = strlen(expected);
+
+  TEST_ASSERT_EQUAL_STRING(expected, obuf);
+  TEST_ASSERT_EQUAL(expectedLength, n);
 }
 
 void test_BtAcptParse(void)

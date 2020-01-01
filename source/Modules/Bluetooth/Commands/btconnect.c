@@ -166,8 +166,12 @@ static
   size_t n      = 0;
 
   if (18 < length) {
-    snprintf(obuf, length, "AT+BTCONNECT=%d,%d", obj->request.deviceId, obj->request.profileId);
+    strncpy(obuf, "AT+BTCONNECT=", length);
     n = strlen(obuf);
+    n += GSM_UtilsItoA(obuf + n, length - n, obj->request.deviceId);
+    strncat(obuf, ",", length - n);
+    ++n;
+    n += GSM_UtilsItoA(obuf + n, length - n, obj->request.profileId);
   }
 
   return n;
@@ -180,7 +184,6 @@ static
     BtConnectParse(void *p, const char *ibuf, size_t length)
 {
   BtConnect_t *obj          = (BtConnect_t *)p;
-  AT_CommandStatus_t status = AT_CMD_INVALID;
 
   size_t n = 0;
   if (0 == strncasecmp(ibuf, "\r\n+BTCONNECT: 0\r\n", 17)) {
