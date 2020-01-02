@@ -23,7 +23,8 @@ void test_BtConnectObjectInit(void)
   TEST_ASSERT_EQUAL(&btconnect, btconnect.atcmd.obj);
   TEST_ASSERT_EQUAL_PTR(BtConnectSerialize, btconnect.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(BtConnectParse, btconnect.atcmd.parse);
-  TEST_ASSERT_EQUAL(5, btconnect.atcmd.timeout);
+  TEST_ASSERT_EQUAL_PTR(BtConnectTimeout, btconnect.atcmd.timeout);
+  TEST_ASSERT_EQUAL(5, btconnect.atcmd.timeoutInSec);
 }
 
 void test_BtConnectSetupRequest(void)
@@ -46,7 +47,7 @@ void test_BtConnectGetAtCommand(void)
   TEST_ASSERT_EQUAL(&btconnect, atcmd->obj);
   TEST_ASSERT_EQUAL_PTR(BtConnectSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(BtConnectParse, atcmd->parse);
-  TEST_ASSERT_EQUAL(5, atcmd->timeout);
+  TEST_ASSERT_EQUAL(5, atcmd->timeoutInSec);
 }
 
 void test_BtConnectSerialize(void)
@@ -158,4 +159,14 @@ void test_BtConnectParseURC_IncompleteURC(void)
 
     TEST_ASSERT_EQUAL(0, n);
     TEST_ASSERT_EQUAL(BTCONNECT_NO_URC, urc.type);
+}
+
+void test_BtConnectTimeout(void)
+{
+  BtConnect_t btconnect;
+  BtConnectObjectInit(&btconnect);
+
+  BtConnectTimeout(&btconnect);
+
+  TEST_ASSERT_EQUAL(AT_CMD_TIMEOUT, btconnect.response.status);
 }

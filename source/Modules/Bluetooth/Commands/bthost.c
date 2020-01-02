@@ -70,6 +70,15 @@ static
   return n;
 }
 
+#if !defined(TEST)
+static
+#endif
+void BtHostTimeout(void *p)
+{
+  BtHost_t *obj = (BtHost_t *)p;
+  obj->response.status = AT_CMD_TIMEOUT;
+}
+
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
@@ -79,7 +88,8 @@ void BtHostObjectInit(BtHost_t *this)
   this->atcmd.obj       = this;
   this->atcmd.serialize = BtHostSerialize;
   this->atcmd.parse     = BtHostParse;
-  this->atcmd.timeout   = TIMEOUT_IN_SEC;
+  this->atcmd.timeout   = BtHostTimeout;
+  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
 }
 
 void BtHostSetupRequest(BtHost_t *this, const char *name)

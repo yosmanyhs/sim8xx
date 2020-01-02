@@ -1,5 +1,5 @@
 /**
- * @file At.h
+ * @file AtCommand.h
  * @brief
  */
 
@@ -28,6 +28,7 @@
 /*****************************************************************************/
 typedef enum {
   AT_CMD_INVALID,
+  AT_CMD_TIMEOUT,
   AT_CMD_OK,
   AT_CMD_CONNECT,
   AT_CMD_RING,
@@ -46,13 +47,14 @@ typedef size_t (*AT_Serialize_t)(void *p, char *obuf, size_t length);
 
 typedef size_t (*AT_Parse_t)(void *p, const char *ibuf, size_t length);
 
-typedef size_t (*URC_Parse_t)(void *p, const char *ibuf, size_t length);
+typedef void (*AT_Timeout)(void *p);
 
 typedef struct AT_Command_s {
   void *obj;
   AT_Serialize_t serialize;
   AT_Parse_t parse;
-  uint32_t timeout;
+  AT_Timeout timeout;
+  uint32_t timeoutInSec;
 } AT_Command_t;
 
 /*****************************************************************************/

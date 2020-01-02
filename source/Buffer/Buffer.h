@@ -30,7 +30,7 @@ typedef struct Buffer_s {
   size_t rdindex;
 } GSM_Buffer_t;
 
-typedef struct Data_s {
+typedef struct GSM_BufferData_s {
   const char *data;
   size_t length;
 } GSM_BufferData_t;
@@ -44,11 +44,13 @@ typedef struct Data_s {
 /*****************************************************************************/
 void GSM_BufferObjectInit(GSM_Buffer_t *this);
 
-bool GSM_BufferPutChar(GSM_Buffer_t *this, char c);
+bool GSM_BufferPushChar(GSM_Buffer_t *this, char c);
 
 GSM_BufferData_t GSM_BufferGetData(GSM_Buffer_t *this);
 
-bool GSM_BufferClearData(GSM_Buffer_t *this, size_t length);
+bool GSM_BufferPopData(GSM_Buffer_t *this, size_t length);
+
+size_t GSM_BufferGetLength(GSM_Buffer_t *this);
 
 #endif /* BUFFER_H */
 

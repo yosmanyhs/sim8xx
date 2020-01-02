@@ -82,6 +82,15 @@ static
   return n;
 }
 
+#if !defined(TEST)
+static
+#endif
+void BtPaircfgTimeout(void *p)
+{
+  BtPaircfg_t *obj = (BtPaircfg_t *)p;
+  obj->response.status = AT_CMD_TIMEOUT;
+}
+
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
@@ -91,7 +100,8 @@ void BtPaircfgObjectInit(BtPaircfg_t *this)
   this->atcmd.obj       = this;
   this->atcmd.serialize = BtPaircfgSerialize;
   this->atcmd.parse     = BtPaircfgParse;
-  this->atcmd.timeout   = TIMEOUT_IN_SEC;
+  this->atcmd.timeout   = BtPaircfgTimeout;
+  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
 }
 
 void BtPaircfgSetupRequest(BtPaircfg_t *this, uint8_t mode, const char *pin)

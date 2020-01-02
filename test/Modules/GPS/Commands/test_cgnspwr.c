@@ -22,7 +22,8 @@ void test_CgnsPwrObjectInit(void)
   TEST_ASSERT_EQUAL(&btpower, btpower.atcmd.obj);
   TEST_ASSERT_EQUAL_PTR(CgnsPwrSerialize, btpower.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(CgnsPwrParse, btpower.atcmd.parse);
-  TEST_ASSERT_EQUAL(10, btpower.atcmd.timeout);
+  TEST_ASSERT_EQUAL_PTR(CgnsPwrTimeout, btpower.atcmd.timeout);
+  TEST_ASSERT_EQUAL(10, btpower.atcmd.timeoutInSec);
 }
 
 void test_CgnsPwrSetupRequest_Mode0(void)
@@ -53,7 +54,8 @@ void test_CgnsPwrGetAtCommand(void)
   TEST_ASSERT_EQUAL(&btpower, atcmd->obj);
   TEST_ASSERT_EQUAL_PTR(CgnsPwrSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(CgnsPwrParse, atcmd->parse);
-  TEST_ASSERT_EQUAL(10, atcmd->timeout);
+  TEST_ASSERT_EQUAL_PTR(CgnsPwrTimeout, btpower.atcmd.timeout);
+  TEST_ASSERT_EQUAL(10, atcmd->timeoutInSec);
 }
 
 void test_CgnsPwrSerialize_Mode0(void)
@@ -128,4 +130,14 @@ void test_CgnsPwrParse_InvalidStatus(void)
 
   TEST_ASSERT_EQUAL(AT_CMD_INVALID, btpower.response.status);
   TEST_ASSERT_EQUAL(0, n);
+}
+
+void test_CgnsPwrTimeout(void)
+{
+  CgnsPwr_t btpower;
+  CgnsPwrObjectInit(&btpower);
+
+  CgnsPwrTimeout(&btpower);
+
+  TEST_ASSERT_EQUAL(AT_CMD_TIMEOUT, btpower.response.status);
 }

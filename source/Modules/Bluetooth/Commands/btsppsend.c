@@ -82,6 +82,15 @@ static
   return n;
 }
 
+#if !defined(TEST)
+static
+#endif
+void BtSppSendTimeout(void *p)
+{
+  BtSppSend_t *obj = (BtSppSend_t *)p;
+  obj->response.status = AT_CMD_TIMEOUT;
+}
+
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
@@ -91,7 +100,8 @@ void BtSppSendObjectInit(BtSppSend_t *this)
   this->atcmd.obj       = this;
   this->atcmd.serialize = BtSppSendSerialize;
   this->atcmd.parse     = BtSppSendParse;
-  this->atcmd.timeout   = TIMEOUT_IN_SEC;
+  this->atcmd.timeout   = BtSppSendTimeout;
+  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
 }
 
 void BtSppSendSetCommandMode(BtSppSend_t *this)

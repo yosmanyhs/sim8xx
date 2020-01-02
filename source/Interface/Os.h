@@ -48,9 +48,9 @@ void OS_LockBuffer(void);
 
 void OS_UnlockBuffer(void);
 
-OS_Error_t OS_WaitForMessageWithTimeout(uint32_t timeoutInMs);
+OS_Error_t OS_WaitForResponseWithTimeout(uint32_t timeoutInMs);
 
-void OS_WakeUpThreadWaitingForMessage(void);
+void OS_WakeUpThreadWaitingForResponse(void);
 
 #endif /* OS_H */
 

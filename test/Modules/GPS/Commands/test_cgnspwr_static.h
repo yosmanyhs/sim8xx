@@ -5,5 +5,6 @@
 
 size_t CgnsPwrSerialize(void *obj, char *obuf, size_t length);
 size_t CgnsPwrParse(void *obj, const char *ibuf, size_t length);
+void CgnsPwrTimeout(void *p);
 
 #endif

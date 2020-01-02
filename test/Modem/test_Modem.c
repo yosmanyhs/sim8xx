@@ -9,6 +9,8 @@
 #include "btpower.h"
 #include "btconnect.h"
 
+TEST_FILE("at.c")
+TEST_FILE("ate.c")
 TEST_FILE("btacpt.c");
 TEST_FILE("btconnect.c");
 TEST_FILE("btdisconn.c");
@@ -40,14 +42,13 @@ void test_GSM_ModemObjectInit(void)
 {
   GSM_Modem_t modem;
   GSM_ModemObjectInit(&modem);
+  GSM_ModemRegisterPutFunction(&modem, put);
 
   TEST_ASSERT_EQUAL_PTR(NULL, modem.currentAt);
-  TEST_ASSERT_EQUAL_PTR(NULL, modem.put);
+  TEST_ASSERT_EQUAL_PTR(put, modem.put);
   TEST_ASSERT_EQUAL_PTR(&modem, modem.bluetooth.parent);
   TEST_ASSERT_EQUAL_PTR(&modem, modem.gps.parent);
 }
-
-
 
 void test_GSM_ModemRegisterPutFunction(void)
 {
@@ -81,7 +82,7 @@ void test_GSM_ModemExecuteAtCommand(void)
   OS_LockModem_Expect();
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
-  OS_WaitForMessageWithTimeout_ExpectAnyArgsAndReturn(OS_NO_ERROR);
+  OS_WaitForResponseWithTimeout_ExpectAnyArgsAndReturn(OS_NO_ERROR);
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
   OS_UnlockModem_Expect();
@@ -106,7 +107,7 @@ void test_GSM_ModemParse_AtResponseReceived(void)
   size_t ilen = strlen(ibuf);
 
   OS_LockParser_Expect();
-  OS_WakeUpThreadWaitingForMessage_ExpectAnyArgs();
+  OS_WakeUpThreadWaitingForResponse_ExpectAnyArgs();
   OS_UnlockParser_Expect();
   size_t n = GSM_ModemParse(&modem, ibuf, ilen);
 
@@ -158,7 +159,7 @@ void test_GSM_ModemParse_ATandURCReceived(void)
   size_t ilen = strlen(ibuf);
 
   OS_LockParser_Expect();
-  OS_WakeUpThreadWaitingForMessage_ExpectAnyArgs();
+  OS_WakeUpThreadWaitingForResponse_ExpectAnyArgs();
   OS_UnlockParser_Expect();
   size_t n = GSM_ModemParse(&modem, ibuf, ilen);
 

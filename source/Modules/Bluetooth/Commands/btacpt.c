@@ -74,6 +74,15 @@ static
   return n;
 }
 
+#if !defined(TEST)
+static
+#endif
+void BtAcptTimeout(void *p)
+{
+  BtAcpt_t *obj = (BtAcpt_t *)p;
+  obj->response.status = AT_CMD_TIMEOUT;
+}
+
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
@@ -83,7 +92,8 @@ void BtAcptObjectInit(BtAcpt_t *this)
   this->atcmd.obj       = this;
   this->atcmd.serialize = BtAcptSerialize;
   this->atcmd.parse     = BtAcptParse;
-  this->atcmd.timeout   = TIMEOUT_IN_SEC;
+  this->atcmd.timeout     = BtAcptTimeout;
+  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
 }
 
 void BtAcptSetupRequest(BtAcpt_t *this, uint8_t mode)

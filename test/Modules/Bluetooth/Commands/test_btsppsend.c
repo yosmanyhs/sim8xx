@@ -22,7 +22,8 @@ void test_BtSppSendObjectInit(void)
   TEST_ASSERT_EQUAL(&btsppsend, btsppsend.atcmd.obj);
   TEST_ASSERT_EQUAL_PTR(BtSppSendSerialize, btsppsend.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(BtSppSendParse, btsppsend.atcmd.parse);
-  TEST_ASSERT_EQUAL(10, btsppsend.atcmd.timeout);
+  TEST_ASSERT_EQUAL_PTR(BtSppSendTimeout, btsppsend.atcmd.timeout);
+  TEST_ASSERT_EQUAL(10, btsppsend.atcmd.timeoutInSec);
 }
 
 void test_BtSppSendSetCommandMode(void)
@@ -209,4 +210,14 @@ void test_BtSppSendParse_Unexpected_Status(void)
 
   TEST_ASSERT_EQUAL(AT_CMD_INVALID, btsppsend.response.status);
   TEST_ASSERT_EQUAL(0, n);
+}
+
+void test_BtSppSendTimeout(void)
+{
+  BtSppSend_t btsppsend;
+  BtSppSendObjectInit(&btsppsend);
+
+  BtSppSendTimeout(&btsppsend);
+
+  TEST_ASSERT_EQUAL(AT_CMD_TIMEOUT, btsppsend.response.status);
 }

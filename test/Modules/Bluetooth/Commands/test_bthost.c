@@ -22,7 +22,8 @@ void test_BtHostObjectInit(void)
   TEST_ASSERT_EQUAL(&bthost, bthost.atcmd.obj);
   TEST_ASSERT_EQUAL_PTR(BtHostSerialize, bthost.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(BtHostParse, bthost.atcmd.parse);
-  TEST_ASSERT_EQUAL(5, bthost.atcmd.timeout);
+  TEST_ASSERT_EQUAL_PTR(BtHostTimeout, bthost.atcmd.timeout);
+  TEST_ASSERT_EQUAL(5, bthost.atcmd.timeoutInSec);
 }
 
 void test_BtHostSetupRequest(void)
@@ -45,7 +46,7 @@ void test_BtHostGetAtCommand(void)
   TEST_ASSERT_EQUAL(&bthost, atcmd->obj);
   TEST_ASSERT_EQUAL_PTR(BtHostSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(BtHostParse, atcmd->parse);
-  TEST_ASSERT_EQUAL(5, atcmd->timeout);
+  TEST_ASSERT_EQUAL(5, atcmd->timeoutInSec);
 }
 
 void test_BtHostSerialize(void)
@@ -105,4 +106,14 @@ void test_BtHostParse_InvalidStatus(void)
 
   TEST_ASSERT_EQUAL(AT_CMD_INVALID, bthost.response.status);
   TEST_ASSERT_EQUAL(0, n);
+}
+
+void test_BtHostTimeout(void)
+{
+  BtHost_t bthost;
+  BtHostObjectInit(&bthost);
+
+  BtHostTimeout(&bthost);
+
+  TEST_ASSERT_EQUAL(AT_CMD_TIMEOUT, bthost.response.status);
 }

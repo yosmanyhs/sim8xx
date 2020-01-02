@@ -1,12 +1,12 @@
 /**
- * @file At.c
+ * @file ate.c
  * @brief
  */
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "Ate.h"
+#include "ate.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -81,6 +81,16 @@ static
 
   return n;
 }
+
+#if !defined(TEST)
+static
+#endif
+void AteTimeout(void *p)
+{
+  Ate_t *obj = (Ate_t *)p;
+  obj->response.status = AT_CMD_TIMEOUT;
+}
+
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
@@ -94,7 +104,8 @@ void AteObjectInit(Ate_t *this)
   this->atcmd.obj       = this;
   this->atcmd.serialize = AteSerialize;
   this->atcmd.parse     = AteParse;
-  this->atcmd.timeout   = TIMEOUT_IN_SEC;
+  this->atcmd.timeout   = AteTimeout;
+  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
 }
 
 void AteSetupRequest(Ate_t *this, uint8_t mode)

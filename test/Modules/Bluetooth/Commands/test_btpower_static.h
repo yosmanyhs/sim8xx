@@ -5,5 +5,6 @@
 
 size_t BtPowerSerialize(void *obj, char *obuf, size_t length);
 size_t BtPowerParse(void *obj, const char *ibuf, size_t length);
+void BtPowerTimeout(void *p);
 
 #endif

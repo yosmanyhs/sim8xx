@@ -1,4 +1,4 @@
-#include "At.h"
+#include "at.h"
 #include "test_At_static.h"
 #include "unity.h"
 
@@ -23,7 +23,8 @@ void test_AtObjectInit(void)
   TEST_ASSERT_EQUAL(&at, at.atcmd.obj);
   TEST_ASSERT_EQUAL_PTR(AtSerialize, at.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(AtParse, at.atcmd.parse);
-  TEST_ASSERT_EQUAL(5, at.atcmd.timeout);
+  TEST_ASSERT_EQUAL_PTR(AtTimeout, at.atcmd.timeout);
+  TEST_ASSERT_EQUAL(2, at.atcmd.timeoutInSec);
 }
 
 void test_AtGetAtCommand(void)
@@ -36,7 +37,8 @@ void test_AtGetAtCommand(void)
   TEST_ASSERT_EQUAL(&at, atcmd->obj);
   TEST_ASSERT_EQUAL_PTR(AtSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(AtParse, atcmd->parse);
-  TEST_ASSERT_EQUAL(5, atcmd->timeout);
+  TEST_ASSERT_EQUAL_PTR(AtTimeout, at.atcmd.timeout);
+  TEST_ASSERT_EQUAL(2, atcmd->timeoutInSec);
 }
 
 void test_AtSerialize(void)
@@ -108,4 +110,13 @@ void test_AtParse_InvalidStatus(void)
 
   TEST_ASSERT_EQUAL(AT_CMD_INVALID, at.response.status);
   TEST_ASSERT_EQUAL(0, n);
+}
+
+void test_AtTimeout(void)
+{
+  At_t at;
+  AtObjectInit(&at);
+
+  AtTimeout(&at);
+  TEST_ASSERT_EQUAL(AT_CMD_TIMEOUT, at.response.status);
 }

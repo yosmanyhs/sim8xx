@@ -197,6 +197,15 @@ static
   return n;
 }
 
+#if !defined(TEST)
+static
+#endif
+void BtConnectTimeout(void *p)
+{
+  BtConnect_t *obj = (BtConnect_t *)p;
+  obj->response.status = AT_CMD_TIMEOUT;
+}
+
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
@@ -206,7 +215,8 @@ void BtConnectObjectInit(BtConnect_t *this)
   this->atcmd.obj       = this;
   this->atcmd.serialize = BtConnectSerialize;
   this->atcmd.parse     = BtConnectParse;
-  this->atcmd.timeout   = TIMEOUT_IN_SEC;
+  this->atcmd.timeout   = BtConnectTimeout;
+  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
 }
 
 void BtConnectSetupRequest(BtConnect_t *this, uint32_t deviceId, uint32_t profileId)

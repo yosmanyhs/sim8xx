@@ -22,7 +22,8 @@ void test_BtPaircfgObjectInit(void)
   TEST_ASSERT_EQUAL(&btpaircfg, btpaircfg.atcmd.obj);
   TEST_ASSERT_EQUAL_PTR(BtPaircfgSerialize, btpaircfg.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(BtPaircfgParse, btpaircfg.atcmd.parse);
-  TEST_ASSERT_EQUAL(2, btpaircfg.atcmd.timeout);
+  TEST_ASSERT_EQUAL_PTR(BtPaircfgTimeout, btpaircfg.atcmd.timeout);
+  TEST_ASSERT_EQUAL(2, btpaircfg.atcmd.timeoutInSec);
 }
 
 void test_BtPaircfgSetupRequest_Mode0(void)
@@ -139,4 +140,14 @@ void test_BtPaircfgParse_InvalidStatus(void)
 
   TEST_ASSERT_EQUAL(AT_CMD_INVALID, btpaircfg.response.status);
   TEST_ASSERT_EQUAL(0, n);
+}
+
+void test_BtPaircfgTimeout(void)
+{
+  BtPaircfg_t btpaircfg;
+  BtPaircfgObjectInit(&btpaircfg);
+
+  BtPaircfgTimeout(&btpaircfg);
+
+  TEST_ASSERT_EQUAL(AT_CMD_TIMEOUT, btpaircfg.response.status);
 }

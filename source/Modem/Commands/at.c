@@ -1,12 +1,12 @@
 /**
- * @file At.c
+ * @file at.c
  * @brief
  */
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "At.h"
+#include "at.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -14,7 +14,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 5
+#define TIMEOUT_IN_SEC 2
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -75,6 +75,16 @@ static
 
   return n;
 }
+
+#if !defined(TEST)
+static
+#endif
+void AtTimeout(void *p)
+{
+  At_t *obj = (At_t *)p;
+  obj->response.status = AT_CMD_TIMEOUT;
+}
+
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
@@ -88,7 +98,8 @@ void AtObjectInit(At_t *this)
   this->atcmd.obj       = this;
   this->atcmd.serialize = AtSerialize;
   this->atcmd.parse     = AtParse;
-  this->atcmd.timeout   = TIMEOUT_IN_SEC;
+  this->atcmd.timeout   = AtTimeout;
+  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
 }
 
 void AtSetupRequest(At_t *this)
@@ -100,7 +111,7 @@ AT_Command_t *AtGetAtCommand(At_t *this)
   return &this->atcmd;
 }
 
-At_response_t AtGetResponse(At_t *this)
+At_Response_t AtGetResponse(At_t *this)
 {
   return this->response;
 }

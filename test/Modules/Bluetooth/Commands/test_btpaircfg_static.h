@@ -5,5 +5,6 @@
 
 size_t BtPaircfgSerialize(void *obj, char *obuf, size_t length);
 size_t BtPaircfgParse(void *obj, const char *ibuf, size_t length);
+void BtPaircfgTimeout(void *p);
 
 #endif

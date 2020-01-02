@@ -5,5 +5,6 @@
 
 size_t BtHostSerialize(void *obj, char *obuf, size_t length);
 size_t BtHostParse(void *obj, const char *ibuf, size_t length);
+void BtHostTimeout(void *p);
 
 #endif

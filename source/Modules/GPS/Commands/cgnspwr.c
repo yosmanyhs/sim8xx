@@ -70,6 +70,15 @@ static
   return n;
 }
 
+#if !defined(TEST)
+static
+#endif
+void CgnsPwrTimeout(void *p)
+{
+  CgnsPwr_t *obj = (CgnsPwr_t *)p; 
+  obj->response.status = AT_CMD_TIMEOUT;
+}
+
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
@@ -79,7 +88,8 @@ void CgnsPwrObjectInit(CgnsPwr_t *this)
   this->atcmd.obj       = this;
   this->atcmd.serialize = CgnsPwrSerialize;
   this->atcmd.parse     = CgnsPwrParse;
-  this->atcmd.timeout   = TIMEOUT_IN_SEC;
+  this->atcmd.timeout   = CgnsPwrTimeout;
+  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
 }
 
 void CgnsPwrSetupRequest(CgnsPwr_t *this, uint8_t mode)

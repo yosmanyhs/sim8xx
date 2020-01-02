@@ -280,6 +280,15 @@ static
   return offset;
 }
 
+#if !defined(TEST)
+static
+#endif
+void CgnsInfTimeout(void *p)
+{
+  CgnsInf_t *obj = (CgnsInf_t *)p;
+  obj->response.status = AT_CMD_TIMEOUT;
+}
+
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
@@ -289,7 +298,8 @@ void CgnsInfObjectInit(CgnsInf_t *this)
   this->atcmd.obj       = this;
   this->atcmd.serialize = CgnsInfSerialize;
   this->atcmd.parse     = CgnsInfParse;
-  this->atcmd.timeout   = TIMEOUT_IN_SEC;
+  this->atcmd.timeout   = CgnsInfTimeout;
+  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
 }
 
 AT_Command_t *CgnsInfGetAtCommand(CgnsInf_t *this)

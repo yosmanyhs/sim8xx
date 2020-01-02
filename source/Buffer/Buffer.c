@@ -40,10 +40,12 @@
 /*****************************************************************************/
 void GSM_BufferObjectInit(GSM_Buffer_t *this)
 {
+  OS_LockBuffer();
   memset(this, 0, sizeof(*this));
+  OS_UnlockBuffer();
 }
 
-bool GSM_BufferPutChar(GSM_Buffer_t *this, char c)
+bool GSM_BufferPushChar(GSM_Buffer_t *this, char c)
 {
   OS_LockBuffer();
 
@@ -78,7 +80,7 @@ GSM_BufferData_t GSM_BufferGetData(GSM_Buffer_t *this)
   return data;
 }
 
-bool GSM_BufferClearData(GSM_Buffer_t *this, size_t length)
+bool GSM_BufferPopData(GSM_Buffer_t *this, size_t length)
 {
   OS_LockBuffer();
   
@@ -91,6 +93,20 @@ bool GSM_BufferClearData(GSM_Buffer_t *this, size_t length)
   OS_UnlockBuffer();
 
   return result;
+}
+
+size_t GSM_BufferGetLength(GSM_Buffer_t *this)
+{
+  size_t n = 0;
+
+  OS_LockBuffer();
+
+  if (this->rdindex <= this->wrindex)
+    n = this->wrindex - this->rdindex;
+
+  OS_UnlockBuffer();
+
+  return n;
 }
 
 /****************************** END OF FILE **********************************/

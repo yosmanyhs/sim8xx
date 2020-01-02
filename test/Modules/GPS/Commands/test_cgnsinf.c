@@ -23,7 +23,8 @@ void test_CgnsInfObjectInit(void)
   TEST_ASSERT_EQUAL(&cgnsinf, cgnsinf.atcmd.obj);
   TEST_ASSERT_EQUAL_PTR(CgnsInfSerialize, cgnsinf.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(CgnsInfParse, cgnsinf.atcmd.parse);
-  TEST_ASSERT_EQUAL(10, cgnsinf.atcmd.timeout);
+  TEST_ASSERT_EQUAL_PTR(CgnsInfTimeout, cgnsinf.atcmd.timeout);
+  TEST_ASSERT_EQUAL(10, cgnsinf.atcmd.timeoutInSec);
 }
 
 void test_CgnsInfGetAtCommand(void)
@@ -36,7 +37,8 @@ void test_CgnsInfGetAtCommand(void)
   TEST_ASSERT_EQUAL(&cgnsinf, atcmd->obj);
   TEST_ASSERT_EQUAL_PTR(CgnsInfSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(CgnsInfParse, atcmd->parse);
-  TEST_ASSERT_EQUAL(10, atcmd->timeout);
+  TEST_ASSERT_EQUAL_PTR(CgnsInfTimeout, cgnsinf.atcmd.timeout);
+  TEST_ASSERT_EQUAL(10, atcmd->timeoutInSec);
 }
 
 void test_CgnsInfSerialize(void)
@@ -112,4 +114,14 @@ void test_CgnsInfParse_InvalidStatus(void)
 
   TEST_ASSERT_EQUAL(AT_CMD_INVALID, cgnsinf.response.status);
   TEST_ASSERT_EQUAL(0, n);
+}
+
+void test_CgnsInfTimeout(void)
+{
+  CgnsInf_t cgnsinf;
+  CgnsInfObjectInit(&cgnsinf);
+
+  CgnsInfTimeout(&cgnsinf);
+
+  TEST_ASSERT_EQUAL(AT_CMD_TIMEOUT, cgnsinf.response.status);
 }

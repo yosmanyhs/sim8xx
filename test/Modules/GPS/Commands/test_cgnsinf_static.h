@@ -5,5 +5,6 @@
 
 size_t CgnsInfSerialize(void *obj, char *obuf, size_t length);
 size_t CgnsInfParse(void *obj, const char *ibuf, size_t length);
+void CgnsInfTimeout(void *p);
 
 #endif

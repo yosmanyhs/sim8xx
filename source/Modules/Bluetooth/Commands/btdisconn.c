@@ -94,6 +94,7 @@ size_t BtDisconn_parseBtDisconn(BtDisconn_DisconnectedURC_t *urc, const char *ib
     
     return offset;
 }
+
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/

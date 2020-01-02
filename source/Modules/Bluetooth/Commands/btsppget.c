@@ -94,6 +94,7 @@ size_t BtSppGet_parseSppData(BtSppGetDataURC_t *urc, const char *ibuf, size_t le
     
     return offset;
 }
+
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/

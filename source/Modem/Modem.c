@@ -7,6 +7,8 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Modem.h"
+#include "Commands/at.h"
+#include "Commands/ate.h"
 
 #include "Interface/Os.h"
 
@@ -62,6 +64,28 @@ bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb)
   return GSM_BluetoothRegisterCallback(&this->bluetooth, cb);
 }
 
+// TODO Add test for GSM_ModemIsAlive.
+bool GSM_ModemIsAlive(GSM_Modem_t *this)
+{
+  At_t at;
+  AtObjectInit(&at);
+  AtSetupRequest(&at);
+  GSM_ModemExecuteAtCommand(this, AtGetAtCommand(&at));
+
+  return (AT_CMD_OK == AtGetResponseStatus(&at));
+}
+
+// TODO Add test for GSM_ModemDisableEcho.
+bool GSM_ModemDisableEcho(GSM_Modem_t *this)
+{
+  Ate_t ate;
+  AteObjectInit(&ate);
+  AteSetupRequest(&ate, 0);
+  GSM_ModemExecuteAtCommand(this, AteGetAtCommand(&ate));
+
+  return (AT_CMD_OK == AteGetResponseStatus(&ate));
+}
+
 void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
 {
   OS_LockModem();
@@ -81,11 +105,14 @@ void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
   this->currentAt = atcmd;
   OS_UnlockParser();
 
-  OS_WaitForMessageWithTimeout(atcmd->timeout);
+  OS_Error_t error = OS_WaitForResponseWithTimeout(atcmd->timeoutInSec);
 
   OS_LockParser();
   this->currentAt = NULL;
   OS_UnlockParser();
+
+  if (OS_TIMEOUT == error)
+    atcmd->timeout(atcmd->obj);
 
   OS_UnlockModem();
 }
@@ -99,7 +126,7 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
     AT_Parse_t parser = this->currentAt->parse;
     offset            = parser(this->currentAt->obj, ibuf, ilen);
     if (offset) {
-      OS_WakeUpThreadWaitingForMessage();
+      OS_WakeUpThreadWaitingForResponse();
     }
   }
 

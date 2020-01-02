@@ -5,5 +5,6 @@
 
 size_t BtConnectSerialize(void *obj, char *obuf, size_t length);
 size_t BtConnectParse(void *obj, const char *ibuf, size_t length);
+void BtConnectTimeout(void *p);
 
 #endif

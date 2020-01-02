@@ -1,5 +1,5 @@
 /**
- * @file At.h
+ * @file at.h
  * @brief
  */
 
@@ -27,10 +27,10 @@
 /*****************************************************************************/
 typedef struct At_response_s {
   AT_CommandStatus_t status;
-} At_response_t;
+} At_Response_t;
 
 typedef struct At_s {
-  At_response_t response;
+  At_Response_t response;
   AT_Command_t atcmd;
 } At_t;
 
@@ -47,7 +47,7 @@ void AtSetupRequest(At_t *this);
 
 AT_Command_t *AtGetAtCommand(At_t *this);
 
-At_response_t AtGetResponse(At_t *this);
+At_Response_t AtGetResponse(At_t *this);
 
 AT_CommandStatus_t AtGetResponseStatus(At_t *this);
 
