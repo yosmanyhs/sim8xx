@@ -54,6 +54,18 @@ void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
 
 size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
 
+bool GSM_ModemBluetoothSetup(GSM_Modem_t *this, const char *name, const char *pin);
+
+bool GSM_ModemBluetoothStart(GSM_Modem_t *this);
+
+bool GSM_ModemBluetoothStop(GSM_Modem_t *this);
+
+bool GSM_ModemGpsStart(GSM_Modem_t *this);
+
+bool GSM_ModemGpsStop(GSM_Modem_t *this);
+
+bool GSM_ModemGpsRead(GSM_Modem_t *this, GPS_Data_t *data);
+
 #endif /* MODEM_H */
 
 /****************************** END OF FILE **********************************/

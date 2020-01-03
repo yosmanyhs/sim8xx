@@ -139,4 +139,34 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
   return offset;
 }
 
+bool GSM_ModemBluetoothSetup(GSM_Modem_t *this, const char *name, const char *pin)
+{
+  return GSM_BluetoothSetup(&this->bluetooth, name, pin);
+}
+
+bool GSM_ModemBluetoothStart(GSM_Modem_t *this)
+{
+  return GSM_BluetoothStart(&this->bluetooth);
+}
+
+bool GSM_ModemBluetoothStop(GSM_Modem_t *this)
+{
+  return GSM_BluetoothStop(&this->bluetooth);
+}
+
+bool GSM_ModemGpsStart(GSM_Modem_t *this)
+{
+  return GSM_GpsStart(&this->gps);
+}
+
+bool GSM_ModemGpsStop(GSM_Modem_t *this)
+{
+  return GSM_GpsStop(&this->gps);
+}
+
+bool GSM_ModemGpsRead(GSM_Modem_t *this, GPS_Data_t *data)
+{
+  return GSM_GpsRead(&this->gps, data);
+}
+
 /****************************** END OF FILE **********************************/

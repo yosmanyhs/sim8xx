@@ -114,20 +114,20 @@ GSM_STATIC void GSM_bluetoothHandleBtSppGetURC(BtSppGetURC_t *urc, GSM_Bluetooth
   }
 }
 
-GSM_STATIC void GSM_bluetoothHandleBtDisconnURC(BtDisconnURC_t *urc, GSM_Bluetooth_t *blt)
+GSM_STATIC void GSM_bluetoothHandleBtDisconnURC(BtDisconnURC_t *urc, GSM_Bluetooth_t *pbt)
 {
   switch(urc->type) {
     case BTDISCONN_DISCONNECTED: {
-      blt->event.type = GSM_BT_DISCONNECTED;
+      pbt->event.type = GSM_BT_DISCONNECTED;
       const char *src = urc->payload.disconn.name;
-      char *dst = blt->event.payload.disconnected.name;
-      size_t buflength = sizeof(blt->event.payload.disconnected.name);
+      char *dst = pbt->event.payload.disconnected.name;
+      size_t buflength = sizeof(pbt->event.payload.disconnected.name);
       size_t length = sizeof(urc->payload.disconn.name);
       length = (length < buflength) ? length : buflength;
       memcpy(dst, src, length);
 
-      if (blt->notify) {
-        blt->notify(&blt->event);
+      if (pbt->notify) {
+        pbt->notify(&pbt->event);
       }
       break;
     }
@@ -151,7 +151,7 @@ bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb_t cb)
 {
   bool result = false;
 
-  if (!this->notify) {
+  if (!this->notify && cb) {
     this->notify = cb;
     result       = true;
   }

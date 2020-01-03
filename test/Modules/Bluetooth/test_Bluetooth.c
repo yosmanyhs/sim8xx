@@ -34,11 +34,6 @@ void test_GSM_BluetoothObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(NULL, bluetooth.notify);
 }
 
-void bluetoothCallback(GSM_BluetoothEvent_t *p)
-{
-
-}
-
 void test_GSM_BluetoothRegisterCallback(void)
 {
   GSM_Modem_t modem;
@@ -50,17 +45,15 @@ void test_GSM_BluetoothRegisterCallback(void)
   TEST_ASSERT_EQUAL_PTR(BTcallback, bluetooth.notify);
 }
 
-void test_GSM_BluetoothRegisterCallback_SecondAttemptFails(void)
+void test_GSM_BluetoothRegisterCallback_RegisterNULL(void)
 {
   GSM_Modem_t modem;
   GSM_Bluetooth_t bluetooth;
   GSM_BluetoothObjectInit(&bluetooth, &modem);
-  bool result = GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
-  TEST_ASSERT_EQUAL_PTR(BTcallback, bluetooth.notify);
-  TEST_ASSERT(result);
-
-  result = GSM_BluetoothRegisterCallback(&bluetooth, BTcallback);
+  bool result = GSM_BluetoothRegisterCallback(&bluetooth, NULL);
+  
   TEST_ASSERT_FALSE(result);
+  TEST_ASSERT_EQUAL_PTR(NULL, bluetooth.notify);
 }
 
 void test_GSM_BluetoothURCParse_URC_BTCONNECTING(void)

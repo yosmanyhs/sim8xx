@@ -84,4 +84,34 @@ void SIM_Parse(Sim8xx_t *this)
   } while (msglen && GSM_BufferGetLength(&this->buffer));
 }
 
+bool SIM_BluetoothSetup(Sim8xx_t *this, const char *name, const char *pin)
+{
+  return GSM_ModemBluetoothSetup(&this->modem, name, pin);
+}
+
+bool SIM_BluetoothStart(Sim8xx_t *this)
+{
+  return GSM_ModemBluetoothStart(&this->modem);
+}
+
+bool SIM_BluetoothStop(Sim8xx_t *this)
+{
+  return GSM_ModemBluetoothStop(&this->modem);
+}
+
+bool SIM_GpsStart(Sim8xx_t *this)
+{
+  return GSM_ModemGpsStart(&this->modem);
+}
+
+bool SIM_GpsStop(Sim8xx_t *this)
+{
+  return GSM_ModemGpsStop(&this->modem);
+}
+
+bool SIM_GpsReadPosition(Sim8xx_t *this, GPS_Data_t *data)
+{
+  return GSM_ModemGpsRead(&this->modem, data);
+}
+
 /****************************** END OF FILE **********************************/
