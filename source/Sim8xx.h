@@ -3,16 +3,16 @@
  * @brief
  */
 
-#ifndef SIM_8XX_H
-#define SIM_8XX_H
+#ifndef SIM8XX_H
+#define SIM8XX_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Buffer/Buffer.h"
 #include "Modem/Modem.h"
-#include "Modules/Bluetooth/BluetoothEvent.h"
-#include "Modules/GPS/GpsData.h"
+#include "Modules/Bluetooth/Bluetooth.h"
+#include "Modules/GPS/Gps.h"
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -72,6 +72,6 @@ bool SIM_GpsStop(Sim8xx_t *this);
 
 bool SIM_GpsReadPosition(Sim8xx_t *this, GPS_Data_t *data);
 
-#endif /* SIM_8_XX_H */
+#endif /* SIM8XX_H */
 
 /****************************** END OF FILE **********************************/
