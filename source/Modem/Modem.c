@@ -154,6 +154,16 @@ bool GSM_ModemBluetoothStop(GSM_Modem_t *this)
   return GSM_BluetoothStop(&this->bluetooth);
 }
 
+bool GSM_ModemBluetoothAcceptConnection(GSM_Modem_t *this)
+{
+  return GSM_BluetoothAcceptConnection(&this->bluetooth);
+}
+
+bool GSM_ModemBluetoothSendSppData(GSM_Modem_t *this, const char data[], size_t length)
+{
+  return GSM_BluetoothSendSPPData(&this->bluetooth, data, length);
+}
+
 bool GSM_ModemGpsStart(GSM_Modem_t *this)
 {
   return GSM_GpsStart(&this->gps);

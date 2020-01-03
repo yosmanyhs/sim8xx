@@ -99,6 +99,16 @@ bool SIM_BluetoothStop(Sim8xx_t *this)
   return GSM_ModemBluetoothStop(&this->modem);
 }
 
+bool SIM_BluetoothAcceptConnection(Sim8xx_t *this)
+{
+  return GSM_ModemBluetoothAcceptConnection(&this->modem);
+}
+
+bool SIM_BluetoothSendSppData(Sim8xx_t *this, const char data[], size_t length)
+{
+  return GSM_ModemBluetoothSendSppData(&this->modem, data, length);
+}
+
 bool SIM_GpsStart(Sim8xx_t *this)
 {
   return GSM_ModemGpsStart(&this->modem);

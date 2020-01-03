@@ -60,6 +60,10 @@ bool GSM_ModemBluetoothStart(GSM_Modem_t *this);
 
 bool GSM_ModemBluetoothStop(GSM_Modem_t *this);
 
+bool GSM_ModemBluetoothAcceptConnection(GSM_Modem_t *this);
+
+bool GSM_ModemBluetoothSendSppData(GSM_Modem_t *this, const char data[], size_t length);
+
 bool GSM_ModemGpsStart(GSM_Modem_t *this);
 
 bool GSM_ModemGpsStop(GSM_Modem_t *this);

@@ -62,6 +62,10 @@ bool SIM_BluetoothStart(Sim8xx_t *this);
 
 bool SIM_BluetoothStop(Sim8xx_t *this);
 
+bool SIM_BluetoothAcceptConnection(Sim8xx_t *this);
+
+bool SIM_BluetoothSendSppData(Sim8xx_t *this, const char data[], size_t length);
+
 bool SIM_GpsStart(Sim8xx_t *this);
 
 bool SIM_GpsStop(Sim8xx_t *this);
