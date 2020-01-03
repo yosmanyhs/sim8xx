@@ -1,5 +1,5 @@
 #include "ate.h"
-#include "test_Ate_static.h"
+#include "test_ate_static.h"
 #include "unity.h"
 
 #include <string.h>
