@@ -6,6 +6,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "btacpt.h"
+#include "Env.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -36,11 +37,7 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtAcptSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t BtAcptSerialize(void *p, char *obuf, size_t length)
 {
   memset(obuf, 0, length);
 
@@ -55,11 +52,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtAcptParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t BtAcptParse(void *p, const char *ibuf, size_t length)
 {
   BtAcpt_t *obj             = (BtAcpt_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
@@ -74,10 +67,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-void BtAcptTimeout(void *p)
+GSM_STATIC void BtAcptTimeout(void *p)
 {
   BtAcpt_t *obj = (BtAcpt_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;

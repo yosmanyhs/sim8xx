@@ -7,6 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "btsppget.h"
+#include "Env.h"
 #include "Utils/Utils.h"
 
 #include <string.h>
@@ -35,19 +36,13 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-bool BtSppGetIsSppGet(const char *ibuf, size_t length)
+GSM_STATIC bool BtSppGetIsSppGet(const char *ibuf, size_t length)
 {
     const char *tag = "\r\n+BTSPPDATA:";    
     return (0 == strncasecmp(ibuf, tag, strlen(tag)));
 }
 
-#if !defined(TEST)
-static
-#endif
-size_t BtSppGet_parseSppData(BtSppGetDataURC_t *urc, const char *ibuf, size_t length)
+GSM_STATIC size_t BtSppGet_parseSppData(BtSppGetDataURC_t *urc, const char *ibuf, size_t length)
 {
     size_t offset = 0;
     memset(urc, 0, sizeof(*urc));

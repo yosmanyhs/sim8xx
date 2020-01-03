@@ -7,6 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Gps.h"
+#include "Env.h"
 #include "Modem/Modem.h"
 #include "Commands/cgnspwr.h"
 #include "Commands/cgnsinf.h"
@@ -37,10 +38,7 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-bool GSM_gpsConvertRawDateTimeToGpsDateTime(GPS_Time_t *time, char *ibuf, size_t ilen)
+GSM_STATIC bool GSM_gpsConvertRawDateTimeToGpsDateTime(GPS_Time_t *time, char *ibuf, size_t ilen)
 {
   if (18 != ilen)
     return false;

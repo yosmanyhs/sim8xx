@@ -31,7 +31,7 @@ CompactNamespaces: 'false'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
 Cpp11BracedListStyle: 'true'
 FixNamespaceComments: 'false'
-IncludeBlocks: Regroup
+IncludeBlocks: Preserve
 IndentCaseLabels: 'false'
 IndentPPDirectives: None
 IndentWidth: '2'

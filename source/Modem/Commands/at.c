@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "at.h"
-
+#include "Env.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -31,11 +31,7 @@
 /*****************************************************************************/
 /* DECLARATION OF LOCAL FUNCTIONS                                            */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-    size_t
-    AtSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t AtSerialize(void *p, char *obuf, size_t length)
 {
   memset(obuf, 0, length);
 
@@ -49,11 +45,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-    size_t
-    AtParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t AtParse(void *p, const char *ibuf, size_t length)
 {
   At_t *obj             = (At_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
@@ -76,10 +68,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-void AtTimeout(void *p)
+GSM_STATIC void AtTimeout(void *p)
 {
   At_t *obj = (At_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;

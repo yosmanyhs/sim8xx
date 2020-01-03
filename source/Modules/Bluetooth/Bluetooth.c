@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Bluetooth.h"
-
+#include "Env.h"
 
 #include "Modem/Modem.h"
 #include "Common/AtCommand.h"
@@ -47,10 +47,7 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-void GSM_bluetoothHandleBtConnectURC(BtConnectURC_t *urc, GSM_Bluetooth_t *blt)
+GSM_STATIC void GSM_bluetoothHandleBtConnectURC(BtConnectURC_t *urc, GSM_Bluetooth_t *blt)
 {
   switch(urc->type) {
     case BTCONNECT_CONNECTING: {
@@ -94,10 +91,7 @@ void GSM_bluetoothHandleBtConnectURC(BtConnectURC_t *urc, GSM_Bluetooth_t *blt)
   }
 }
 
-#if !defined(TEST)
-static
-#endif
-void GSM_bluetoothHandleBtSppGetURC(BtSppGetURC_t *urc, GSM_Bluetooth_t *blt)
+GSM_STATIC void GSM_bluetoothHandleBtSppGetURC(BtSppGetURC_t *urc, GSM_Bluetooth_t *blt)
 {
   switch(urc->type) {
     case BTSPPGET_SPPDATA: {
@@ -120,10 +114,7 @@ void GSM_bluetoothHandleBtSppGetURC(BtSppGetURC_t *urc, GSM_Bluetooth_t *blt)
   }
 }
 
-#if !defined(TEST)
-static
-#endif
-void GSM_bluetoothHandleBtDisconnURC(BtDisconnURC_t *urc, GSM_Bluetooth_t *blt)
+GSM_STATIC void GSM_bluetoothHandleBtDisconnURC(BtDisconnURC_t *urc, GSM_Bluetooth_t *blt)
 {
   switch(urc->type) {
     case BTDISCONN_DISCONNECTED: {

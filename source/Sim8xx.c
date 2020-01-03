@@ -6,7 +6,9 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
+#include "Interface/Os.h"
 #include "Sim8xx.h"
+
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -40,6 +42,7 @@ void SIM_Init(Sim8xx_t *this, Sim8xxConfig_t *config)
   GSM_ModemObjectInit(&this->modem);
   GSM_ModemRegisterPutFunction(&this->modem, config->put);
   GSM_BufferObjectInit(&this->buffer);
+  OS_Init();
 }
 
 bool SIM_Start(Sim8xx_t *this)
@@ -49,7 +52,7 @@ bool SIM_Start(Sim8xx_t *this)
   if (GSM_ModemIsAlive(&this->modem)) {
     result = GSM_ModemDisableEcho(&this->modem);
   }
-  
+
   return result;
 }
 
@@ -73,8 +76,8 @@ void SIM_Parse(Sim8xx_t *this)
   size_t msglen = 0;
   do {
     GSM_BufferData_t ibuf = GSM_BufferGetData(&this->buffer);
-    msglen = GSM_ModemParse(&this->modem, ibuf.data, ibuf.length);
-    
+    msglen                = GSM_ModemParse(&this->modem, ibuf.data, ibuf.length);
+
     if (0 < msglen) {
       GSM_BufferPopData(&this->buffer, msglen);
     }

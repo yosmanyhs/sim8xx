@@ -11,6 +11,7 @@
 
 #include <string.h>
 
+
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
@@ -50,8 +51,8 @@ bool GSM_BufferPushChar(GSM_Buffer_t *this, char c)
   OS_LockBuffer();
 
   if (this->rdindex == this->wrindex) {
-      this->rdindex = 0;
-      this->wrindex = 0;
+    this->rdindex = 0;
+    this->wrindex = 0;
   }
 
   bool result = false;
@@ -72,7 +73,7 @@ GSM_BufferData_t GSM_BufferGetData(GSM_Buffer_t *this)
 
   OS_LockBuffer();
   if (this->rdindex <= this->wrindex) {
-    data.data = &this->buffer[this->rdindex];
+    data.data   = &this->buffer[this->rdindex];
     data.length = this->wrindex - this->rdindex;
   }
   OS_UnlockBuffer();
@@ -83,13 +84,13 @@ GSM_BufferData_t GSM_BufferGetData(GSM_Buffer_t *this)
 bool GSM_BufferPopData(GSM_Buffer_t *this, size_t length)
 {
   OS_LockBuffer();
-  
+
   bool result = false;
   if ((this->rdindex + length) <= this->wrindex) {
     this->rdindex += length;
     result = true;
   }
-    
+
   OS_UnlockBuffer();
 
   return result;

@@ -1,9 +1,9 @@
-#include "Buffer.h"
 #include "unity.h"
 
-#include <string.h>
-
+#include "Buffer.h"
 #include "mock_Os.h"
+
+#include <string.h>
 
 void setUp(void)
 {
@@ -16,6 +16,9 @@ void tearDown(void)
 void test_GSM_BufferObjectInit(void)
 {
   GSM_Buffer_t buffer;
+
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
   TEST_ASSERT_EQUAL(0, buffer.rdindex);
@@ -25,6 +28,9 @@ void test_GSM_BufferObjectInit(void)
 void test_GSM_BufferPutChar(void)
 {
   GSM_Buffer_t buffer;
+
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -48,6 +54,9 @@ void test_GSM_BufferPutChar(void)
 void test_GSM_BufferPutChar_Overflow(void)
 {
   GSM_Buffer_t buffer;
+
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -70,6 +79,9 @@ void test_GSM_BufferPutChar_Overflow(void)
 void test_GSM_BufferGetData(void)
 {
   GSM_Buffer_t buffer;
+
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -95,10 +107,12 @@ void test_GSM_BufferGetData(void)
   TEST_ASSERT_EQUAL(15, buffer.wrindex);
 }
 
-
 void test_GSM_BufferGetData_InternalError(void)
 {
   GSM_Buffer_t buffer;
+
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
   buffer.rdindex = 16;
@@ -117,6 +131,9 @@ void test_GSM_BufferGetData_InternalError(void)
 void test_GSM_BufferPopData(void)
 {
   GSM_Buffer_t buffer;
+
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -142,6 +159,9 @@ void test_GSM_BufferPopData(void)
 void test_GSM_BufferPopData_InvalidLength(void)
 {
   GSM_Buffer_t buffer;
+
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -167,6 +187,9 @@ void test_GSM_BufferPopData_InvalidLength(void)
 void test_GSM_BufferGetLength(void)
 {
   GSM_Buffer_t buffer;
+
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
   size_t i;
@@ -177,6 +200,8 @@ void test_GSM_BufferGetLength(void)
     GSM_BufferPushChar(&buffer, c);
   }
 
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   size_t length = GSM_BufferGetLength(&buffer);
 
   TEST_ASSERT_EQUAL(15, length);
@@ -185,11 +210,16 @@ void test_GSM_BufferGetLength(void)
 void test_GSM_BufferGetLength_InternalError(void)
 {
   GSM_Buffer_t buffer;
+
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
   buffer.wrindex = 15;
   buffer.rdindex = 16;
 
+  OS_LockBuffer_Expect();
+  OS_UnlockBuffer_Expect();
   size_t length = GSM_BufferGetLength(&buffer);
 
   TEST_ASSERT_EQUAL(0, length);

@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "bthost.h"
-
+#include "Env.h"
 #include <string.h>
 
 /*****************************************************************************/
@@ -34,11 +34,7 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtHostSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t BtHostSerialize(void *p, char *obuf, size_t length)
 {
   BtHost_t *obj = (BtHost_t *)p;
   size_t n      = 0;
@@ -51,11 +47,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtHostParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t BtHostParse(void *p, const char *ibuf, size_t length)
 {
   BtHost_t *obj             = (BtHost_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
@@ -70,10 +62,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-void BtHostTimeout(void *p)
+GSM_STATIC void BtHostTimeout(void *p)
 {
   BtHost_t *obj = (BtHost_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;

@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "btsppsend.h"
-
+#include "Env.h"
 #include <string.h>
 
 /*****************************************************************************/
@@ -34,11 +34,7 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtSppSendSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t BtSppSendSerialize(void *p, char *obuf, size_t length)
 {
   BtSppSend_t *obj = (BtSppSend_t *)p;
   size_t n         = 0;
@@ -54,11 +50,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtSppSendParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t BtSppSendParse(void *p, const char *ibuf, size_t length)
 {
   BtSppSend_t *obj          = (BtSppSend_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
@@ -82,10 +74,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-void BtSppSendTimeout(void *p)
+GSM_STATIC void BtSppSendTimeout(void *p)
 {
   BtSppSend_t *obj = (BtSppSend_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;

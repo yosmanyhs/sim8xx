@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "btpaircfg.h"
-
+#include "Env.h"
 #include <string.h>
 
 /*****************************************************************************/
@@ -34,11 +34,7 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtPaircfgSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t BtPaircfgSerialize(void *p, char *obuf, size_t length)
 {
   BtPaircfg_t *obj = (BtPaircfg_t *)p;
   uint8_t mode     = obj->request.mode;
@@ -63,11 +59,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtPaircfgParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t BtPaircfgParse(void *p, const char *ibuf, size_t length)
 {
   BtPaircfg_t *obj          = (BtPaircfg_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
@@ -82,10 +74,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-void BtPaircfgTimeout(void *p)
+GSM_STATIC void BtPaircfgTimeout(void *p)
 {
   BtPaircfg_t *obj = (BtPaircfg_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;

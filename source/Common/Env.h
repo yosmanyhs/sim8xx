@@ -1,24 +1,23 @@
 /**
- * @file Sim8xx.h
+ * @file Env.h
  * @brief
  */
 
-#ifndef SIM_8XX_H
-#define SIM_8XX_H
+#ifndef ENV_H
+#define ENV_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "Buffer/Buffer.h"
-#include "Modem/Modem.h"
-#include "Modules/Bluetooth/BluetoothEvent.h"
-
-#include <stdbool.h>
-#include <stddef.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
+#if defined(TEST)
+#define GSM_STATIC
+#else
+#define GSM_STATIC static
+#endif
 
 /*****************************************************************************/
 /* MACRO DEFINITIONS                                                         */
@@ -27,14 +26,6 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct Sim8xxConfig_s {
-  GSM_SerialPut_t put;
-} Sim8xxConfig_t;
-
-typedef struct Sim8xx_s {
-  GSM_Modem_t modem;
-  GSM_Buffer_t buffer;
-} Sim8xx_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -43,18 +34,7 @@ typedef struct Sim8xx_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void SIM_Init(Sim8xx_t *this, Sim8xxConfig_t *config);
 
-bool SIM_Start(Sim8xx_t *this);
-
-bool SIM_RegisterBluetoothCallback(Sim8xx_t *this, GSM_BluetoothCb_t cb);
-
-bool SIM_IsAlive(Sim8xx_t *this);
-
-bool SIM_ProcessChar(Sim8xx_t *this, char c);
-
-void SIM_Parse(Sim8xx_t *this);
-
-#endif /* SIM_8_XX_H */
+#endif /* ENV_H */
 
 /****************************** END OF FILE **********************************/

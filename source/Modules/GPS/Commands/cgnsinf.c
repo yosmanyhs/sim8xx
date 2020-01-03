@@ -7,6 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "cgnsinf.h"
+#include "Env.h"
 #include "Utils/Utils.h"
 
 #include <string.h>
@@ -35,11 +36,7 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-    size_t
-    CgnsInfSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t CgnsInfSerialize(void *p, char *obuf, size_t length)
 {
   (void)p;
   size_t n = 0;
@@ -51,11 +48,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-    size_t
-    CgnsInfParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t CgnsInfParse(void *p, const char *ibuf, size_t length)
 {
   const char *tag = "\r\n+CGNSINF:";
   if (length < 11)
@@ -280,10 +273,7 @@ static
   return offset;
 }
 
-#if !defined(TEST)
-static
-#endif
-void CgnsInfTimeout(void *p)
+GSM_STATIC void CgnsInfTimeout(void *p)
 {
   CgnsInf_t *obj = (CgnsInf_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;

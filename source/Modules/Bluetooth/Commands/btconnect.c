@@ -7,6 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "btconnect.h"
+#include "Env.h"
 #include "Utils/Utils.h"
 
 #include <string.h>
@@ -36,19 +37,13 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-#if !defined(TEST)
-static
-#endif
-bool BtConnect_isBtConnecting(const char *ibuf, size_t length)
+GSM_STATIC bool BtConnect_isBtConnecting(const char *ibuf, size_t length)
 {   
     const char *tag = "\r\n+BTCONNECTING:";
     return (0 == strncasecmp(ibuf, tag, strlen(tag)));
 }
 
-#if !defined(TEST)
-static
-#endif
-size_t BtConnect_parseBtConnecting(BtConnect_ConnectingURC_t *urc, const char *ibuf, size_t length)
+GSM_STATIC size_t BtConnect_parseBtConnecting(BtConnect_ConnectingURC_t *urc, const char *ibuf, size_t length)
 {
     size_t offset = 0;
     memset(urc, 0, sizeof(*urc));
@@ -87,19 +82,13 @@ size_t BtConnect_parseBtConnecting(BtConnect_ConnectingURC_t *urc, const char *i
     return offset;
 }
 
-#if !defined(TEST)
-static
-#endif
-bool BtConnect_isBtConnect(const char *ibuf, size_t length)
+GSM_STATIC bool BtConnect_isBtConnect(const char *ibuf, size_t length)
 {   
     const char *tag = "\r\n+BTCONNECT:";
     return (0 == strncasecmp(ibuf, tag, strlen(tag)));
 }
 
-#if !defined(TEST)
-static
-#endif
-size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *ibuf, size_t length)
+GSM_STATIC size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *ibuf, size_t length)
 {
     size_t offset = 0;
     memset(urc, 0, sizeof(*urc));
@@ -156,11 +145,7 @@ size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *ibuf, size_
     return offset;
 }
 
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtConnectSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t BtConnectSerialize(void *p, char *obuf, size_t length)
 {
   BtConnect_t *obj = (BtConnect_t *)p;
   size_t n      = 0;
@@ -177,11 +162,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-    size_t
-    BtConnectParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t BtConnectParse(void *p, const char *ibuf, size_t length)
 {
   BtConnect_t *obj          = (BtConnect_t *)p;
 
@@ -197,10 +178,7 @@ static
   return n;
 }
 
-#if !defined(TEST)
-static
-#endif
-void BtConnectTimeout(void *p)
+GSM_STATIC void BtConnectTimeout(void *p)
 {
   BtConnect_t *obj = (BtConnect_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;
