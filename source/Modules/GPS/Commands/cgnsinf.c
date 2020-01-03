@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "cgnsinf.h"
-#include "Env.h"
+#include "Common/Env.h"
 #include "Utils/Utils.h"
 
 #include <string.h>

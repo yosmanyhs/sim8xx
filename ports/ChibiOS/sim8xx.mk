@@ -14,7 +14,7 @@ SIMSRC = $(SIM8XX)/source/Sim8xx.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btpower.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btsppget.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btsppsend.c \
-         $(SIM8XX)/source/Modules/GPS.c \
+         $(SIM8XX)/source/Modules/GPS/Gps.c \
          $(SIM8XX)/source/Modules/GPS/Commands/cgnsinf.c \
          $(SIM8XX)/source/Modules/GPS/Commands/cgnspwr.c \
          $(SIM8XX)/source/Utils/Utils.c \

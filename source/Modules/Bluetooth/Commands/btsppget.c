@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "btsppget.h"
-#include "Env.h"
+#include "Common/Env.h"
 #include "Utils/Utils.h"
 
 #include <string.h>
@@ -39,7 +39,7 @@
 GSM_STATIC bool BtSppGetIsSppGet(const char *ibuf, size_t length)
 {
     const char *tag = "\r\n+BTSPPDATA:";    
-    return (0 == strncasecmp(ibuf, tag, strlen(tag)));
+    return (0 == strncasecmp(ibuf, tag, length));
 }
 
 GSM_STATIC size_t BtSppGet_parseSppData(BtSppGetDataURC_t *urc, const char *ibuf, size_t length)
@@ -53,7 +53,7 @@ GSM_STATIC size_t BtSppGet_parseSppData(BtSppGetDataURC_t *urc, const char *ibuf
     const char *next = ibuf;
     const char *end = ibuf + length;
 
-    size_t n = GSM_UtilsGetInt(next, end - next, (int*)&urc->id, ' ', ',');
+    size_t n = GSM_UtilsGetInt(next, end - next, (int32_t*)&urc->id, ' ', ',');
     if (n) {
         offset += n;
         next += n;
@@ -62,7 +62,7 @@ GSM_STATIC size_t BtSppGet_parseSppData(BtSppGetDataURC_t *urc, const char *ibuf
         return 0;
     }
 
-    n = GSM_UtilsGetInt(next, end - next, (int*)&urc->length, ',', ',');
+    n = GSM_UtilsGetInt(next, end - next, (int32_t*)&urc->length, ',', ',');
     if (n) {
         offset += n;
         next += n;

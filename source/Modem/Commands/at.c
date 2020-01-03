@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "at.h"
-#include "Env.h"
+#include "Common/Env.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -93,6 +93,7 @@ void AtObjectInit(At_t *this)
 
 void AtSetupRequest(At_t *this)
 {
+  (void)this;
 }
 
 AT_Command_t *AtGetAtCommand(At_t *this)

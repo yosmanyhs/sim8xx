@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "btdisconn.h"
-#include "Env.h"
+#include "Common/Env.h"
 #include "Utils/Utils.h"
 
 #include <string.h>
@@ -39,7 +39,7 @@
 GSM_STATIC bool BtDisconnIsBtDisconn(const char *ibuf, size_t length)
 {
     const char *tag = "\r\n+BTDISCONN:";    
-    return (0 == strncasecmp(ibuf, tag, strlen(tag)));
+    return (0 == strncasecmp(ibuf, tag, length));
 }
 
 GSM_STATIC size_t BtDisconn_parseBtDisconn(BtDisconn_DisconnectedURC_t *urc, const char *ibuf, size_t length)

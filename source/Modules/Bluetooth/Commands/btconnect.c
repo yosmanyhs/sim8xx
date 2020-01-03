@@ -7,7 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "btconnect.h"
-#include "Env.h"
+#include "Common/Env.h"
 #include "Utils/Utils.h"
 
 #include <string.h>
@@ -40,7 +40,7 @@
 GSM_STATIC bool BtConnect_isBtConnecting(const char *ibuf, size_t length)
 {   
     const char *tag = "\r\n+BTCONNECTING:";
-    return (0 == strncasecmp(ibuf, tag, strlen(tag)));
+    return (0 == strncasecmp(ibuf, tag, length));
 }
 
 GSM_STATIC size_t BtConnect_parseBtConnecting(BtConnect_ConnectingURC_t *urc, const char *ibuf, size_t length)
@@ -85,7 +85,7 @@ GSM_STATIC size_t BtConnect_parseBtConnecting(BtConnect_ConnectingURC_t *urc, co
 GSM_STATIC bool BtConnect_isBtConnect(const char *ibuf, size_t length)
 {   
     const char *tag = "\r\n+BTCONNECT:";
-    return (0 == strncasecmp(ibuf, tag, strlen(tag)));
+    return (0 == strncasecmp(ibuf, tag, length));
 }
 
 GSM_STATIC size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *ibuf, size_t length)
