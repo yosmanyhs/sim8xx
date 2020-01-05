@@ -48,6 +48,8 @@ void SIM_Init(Sim8xx_t *this, Sim8xxConfig_t *config);
 
 bool SIM_Start(Sim8xx_t *this);
 
+bool SIM_Stop(Sim8xx_t *this);
+
 bool SIM_RegisterBluetoothCallback(Sim8xx_t *this, GSM_BluetoothCb_t cb);
 
 bool SIM_IsAlive(Sim8xx_t *this);

@@ -56,6 +56,11 @@ bool SIM_Start(Sim8xx_t *this)
   return result;
 }
 
+bool SIM_Stop(Sim8xx_t *this)
+{
+  return true;
+}
+
 bool SIM_RegisterBluetoothCallback(Sim8xx_t *this, GSM_BluetoothCb_t cb)
 {
   return GSM_ModemRegisterBluetoothCallback(&this->modem, cb);
