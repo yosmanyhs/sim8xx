@@ -23,7 +23,7 @@ void test_CgnsPwrObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(CgnsPwrSerialize, btpower.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(CgnsPwrParse, btpower.atcmd.parse);
   TEST_ASSERT_EQUAL_PTR(CgnsPwrTimeout, btpower.atcmd.timeout);
-  TEST_ASSERT_EQUAL(10, btpower.atcmd.timeoutInSec);
+  TEST_ASSERT_EQUAL(10000, btpower.atcmd.timeoutInMilliSec);
 }
 
 void test_CgnsPwrSetupRequest_Mode0(void)
@@ -55,7 +55,7 @@ void test_CgnsPwrGetAtCommand(void)
   TEST_ASSERT_EQUAL_PTR(CgnsPwrSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(CgnsPwrParse, atcmd->parse);
   TEST_ASSERT_EQUAL_PTR(CgnsPwrTimeout, btpower.atcmd.timeout);
-  TEST_ASSERT_EQUAL(10, atcmd->timeoutInSec);
+  TEST_ASSERT_EQUAL(10000, atcmd->timeoutInMilliSec);
 }
 
 void test_CgnsPwrSerialize_Mode0(void)

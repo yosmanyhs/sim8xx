@@ -16,7 +16,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 5
+#define TIMEOUT_IN_MSEC 5000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -198,7 +198,7 @@ void BtConnectObjectInit(BtConnect_t *this)
   this->atcmd.serialize    = BtConnectSerialize;
   this->atcmd.parse        = BtConnectParse;
   this->atcmd.timeout      = BtConnectTimeout;
-  this->atcmd.timeoutInSec = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
 void BtConnectSetupRequest(BtConnect_t *this, uint32_t deviceId, uint32_t profileId)

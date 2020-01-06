@@ -39,10 +39,10 @@
 /*****************************************************************************/
 void SIM_Init(Sim8xx_t *this, Sim8xxConfig_t *config)
 {
+  OS_Init();
   GSM_ModemObjectInit(&this->modem);
   GSM_ModemRegisterPutFunction(&this->modem, config->put);
   GSM_BufferObjectInit(&this->buffer);
-  OS_Init();
 }
 
 bool SIM_Start(Sim8xx_t *this)

@@ -15,7 +15,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 10
+#define TIMEOUT_IN_MSEC 10000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -289,7 +289,7 @@ void CgnsInfObjectInit(CgnsInf_t *this)
   this->atcmd.serialize = CgnsInfSerialize;
   this->atcmd.parse     = CgnsInfParse;
   this->atcmd.timeout   = CgnsInfTimeout;
-  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
 AT_Command_t *CgnsInfGetAtCommand(CgnsInf_t *this)

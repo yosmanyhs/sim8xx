@@ -23,7 +23,7 @@ void test_BtSppSendObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(BtSppSendSerialize, btsppsend.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(BtSppSendParse, btsppsend.atcmd.parse);
   TEST_ASSERT_EQUAL_PTR(BtSppSendTimeout, btsppsend.atcmd.timeout);
-  TEST_ASSERT_EQUAL(10, btsppsend.atcmd.timeoutInSec);
+  TEST_ASSERT_EQUAL(10000, btsppsend.atcmd.timeoutInMilliSec);
 }
 
 void test_BtSppSendSetCommandMode(void)

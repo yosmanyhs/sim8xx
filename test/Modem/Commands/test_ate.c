@@ -24,7 +24,7 @@ void test_AteObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(AteSerialize, ate.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(AteParse, ate.atcmd.parse);
   TEST_ASSERT_EQUAL_PTR(AteTimeout, ate.atcmd.timeout);
-  TEST_ASSERT_EQUAL(5, ate.atcmd.timeoutInSec);
+  TEST_ASSERT_EQUAL(5000, ate.atcmd.timeoutInMilliSec);
 }
 
 void test_AteGetAtCommand(void)
@@ -38,7 +38,7 @@ void test_AteGetAtCommand(void)
   TEST_ASSERT_EQUAL_PTR( AteSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR( AteParse, atcmd->parse);
   TEST_ASSERT_EQUAL_PTR(AteTimeout, ate.atcmd.timeout);
-  TEST_ASSERT_EQUAL(5, atcmd->timeoutInSec);
+  TEST_ASSERT_EQUAL(5000, atcmd->timeoutInMilliSec);
 }
 
 void test_AteSetupRequest_Mode0(void)

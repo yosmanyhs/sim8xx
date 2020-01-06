@@ -16,7 +16,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 5
+#define TIMEOUT_IN_MSEC 5000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -83,7 +83,7 @@ void BtAcptObjectInit(BtAcpt_t *this)
   this->atcmd.serialize = BtAcptSerialize;
   this->atcmd.parse     = BtAcptParse;
   this->atcmd.timeout     = BtAcptTimeout;
-  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
 void BtAcptSetupRequest(BtAcpt_t *this, uint8_t mode)

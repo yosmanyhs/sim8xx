@@ -13,7 +13,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 10
+#define TIMEOUT_IN_MSEC 10000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -80,7 +80,7 @@ void BtPowerObjectInit(BtPower_t *this)
   this->atcmd.serialize = BtPowerSerialize;
   this->atcmd.parse     = BtPowerParse;
   this->atcmd.timeout   = BtPowerTimeout;
-  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
 void BtPowerSetupRequest(BtPower_t *this, uint8_t mode)

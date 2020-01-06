@@ -13,7 +13,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 2
+#define TIMEOUT_IN_MSEC 2000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -92,7 +92,7 @@ void BtPaircfgObjectInit(BtPaircfg_t *this)
   this->atcmd.serialize = BtPaircfgSerialize;
   this->atcmd.parse     = BtPaircfgParse;
   this->atcmd.timeout   = BtPaircfgTimeout;
-  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
 void BtPaircfgSetupRequest(BtPaircfg_t *this, uint8_t mode, const char *pin)

@@ -24,7 +24,7 @@ void test_AtObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(AtSerialize, at.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(AtParse, at.atcmd.parse);
   TEST_ASSERT_EQUAL_PTR(AtTimeout, at.atcmd.timeout);
-  TEST_ASSERT_EQUAL(2, at.atcmd.timeoutInSec);
+  TEST_ASSERT_EQUAL(2000, at.atcmd.timeoutInMilliSec);
 }
 
 void test_AtGetAtCommand(void)
@@ -38,7 +38,7 @@ void test_AtGetAtCommand(void)
   TEST_ASSERT_EQUAL_PTR(AtSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(AtParse, atcmd->parse);
   TEST_ASSERT_EQUAL_PTR(AtTimeout, at.atcmd.timeout);
-  TEST_ASSERT_EQUAL(2, atcmd->timeoutInSec);
+  TEST_ASSERT_EQUAL(2000, atcmd->timeoutInMilliSec);
 }
 
 void test_AtSerialize(void)

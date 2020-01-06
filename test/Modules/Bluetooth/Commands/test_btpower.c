@@ -23,7 +23,7 @@ void test_BtPowerObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(BtPowerSerialize, btpower.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(BtPowerParse, btpower.atcmd.parse);
   TEST_ASSERT_EQUAL_PTR(BtPowerTimeout, btpower.atcmd.timeout);
-  TEST_ASSERT_EQUAL(10, btpower.atcmd.timeoutInSec);
+  TEST_ASSERT_EQUAL(10000, btpower.atcmd.timeoutInMilliSec);
 }
 
 void test_BtPowerSetupRequest_Mode0(void)
@@ -55,7 +55,7 @@ void test_BtPowerGetAtCommand(void)
   TEST_ASSERT_EQUAL_PTR(BtPowerSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(BtPowerParse, atcmd->parse);
   TEST_ASSERT_EQUAL_PTR(BtPowerTimeout, btpower.atcmd.timeout);
-  TEST_ASSERT_EQUAL(10, atcmd->timeoutInSec);
+  TEST_ASSERT_EQUAL(10000, atcmd->timeoutInMilliSec);
 }
 
 void test_BtPowerSerialize_Mode0(void)

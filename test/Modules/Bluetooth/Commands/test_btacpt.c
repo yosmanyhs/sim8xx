@@ -25,7 +25,7 @@ void test_BtAcptObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(BtAcptSerialize, btacpt.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(BtAcptParse, btacpt.atcmd.parse);
   TEST_ASSERT_EQUAL_PTR(BtAcptTimeout, btacpt.atcmd.timeout);
-  TEST_ASSERT_EQUAL(5, btacpt.atcmd.timeoutInSec);
+  TEST_ASSERT_EQUAL(5000, btacpt.atcmd.timeoutInMilliSec);
 }
 
 void test_BtAcptSetupRequest(void)
@@ -48,7 +48,7 @@ void test_BtAcptGetAtCommand(void)
   TEST_ASSERT_EQUAL_PTR(BtAcptSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(BtAcptParse, atcmd->parse);
   TEST_ASSERT_EQUAL_PTR(BtAcptTimeout, btacpt.atcmd.timeout);
-  TEST_ASSERT_EQUAL(5, atcmd->timeoutInSec);
+  TEST_ASSERT_EQUAL(5000, atcmd->timeoutInMilliSec);
 }
 
 void test_BtAcptSerialize_Mode0(void)

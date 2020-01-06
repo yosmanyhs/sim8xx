@@ -78,10 +78,10 @@ void OS_UnlockBuffer(void)
   chMtxUnlock(&bufferLock);
 }
 
-OS_Error_t OS_WaitForResponseWithTimeout(uint32_t timeoutInMs)
+OS_Error_t OS_WaitForResponseWithTimeout(uint32_t timeoutInMsec)
 {
   chSysLock();
-  msg_t msg    = chThdSuspendTimeoutS(&writer, chTimeMS2I(timeoutInMs));
+  msg_t msg    = chThdSuspendTimeoutS(&writer, chTimeMS2I(timeoutInMsec));
   writer = NULL;
   chSysUnlock();
 

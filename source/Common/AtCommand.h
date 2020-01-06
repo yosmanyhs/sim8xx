@@ -54,7 +54,7 @@ typedef struct AT_Command_s {
   AT_Serialize_t serialize;
   AT_Parse_t parse;
   AT_Timeout timeout;
-  uint32_t timeoutInSec;
+  uint32_t timeoutInMilliSec;
 } AT_Command_t;
 
 /*****************************************************************************/

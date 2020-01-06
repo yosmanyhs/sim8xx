@@ -13,7 +13,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 5
+#define TIMEOUT_IN_MSEC 5000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -80,7 +80,7 @@ void BtHostObjectInit(BtHost_t *this)
   this->atcmd.serialize = BtHostSerialize;
   this->atcmd.parse     = BtHostParse;
   this->atcmd.timeout   = BtHostTimeout;
-  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
 void BtHostSetupRequest(BtHost_t *this, const char *name)

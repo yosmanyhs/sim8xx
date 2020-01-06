@@ -14,7 +14,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 5
+#define TIMEOUT_IN_MSEC 2000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -94,7 +94,7 @@ void AteObjectInit(Ate_t *this)
   this->atcmd.serialize = AteSerialize;
   this->atcmd.parse     = AteParse;
   this->atcmd.timeout   = AteTimeout;
-  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec   = TIMEOUT_IN_MSEC;
 }
 
 void AteSetupRequest(Ate_t *this, uint8_t mode)

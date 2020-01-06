@@ -13,7 +13,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 10
+#define TIMEOUT_IN_MSEC 10000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -78,7 +78,7 @@ void CgnsPwrObjectInit(CgnsPwr_t *this)
   this->atcmd.serialize = CgnsPwrSerialize;
   this->atcmd.parse     = CgnsPwrParse;
   this->atcmd.timeout   = CgnsPwrTimeout;
-  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
 void CgnsPwrSetupRequest(CgnsPwr_t *this, uint8_t mode)

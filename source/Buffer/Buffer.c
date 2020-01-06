@@ -53,6 +53,7 @@ bool GSM_BufferPushChar(GSM_Buffer_t *this, char c)
   if (this->rdindex == this->wrindex) {
     this->rdindex = 0;
     this->wrindex = 0;
+    memset(this->buffer, 0, sizeof(this->buffer));
   }
 
   bool result = false;

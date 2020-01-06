@@ -13,7 +13,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 10
+#define TIMEOUT_IN_MSEC 10000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -90,7 +90,7 @@ void BtSppSendObjectInit(BtSppSend_t *this)
   this->atcmd.serialize = BtSppSendSerialize;
   this->atcmd.parse     = BtSppSendParse;
   this->atcmd.timeout   = BtSppSendTimeout;
-  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
 void BtSppSendSetCommandMode(BtSppSend_t *this)

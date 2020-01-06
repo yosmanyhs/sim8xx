@@ -14,7 +14,7 @@
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
-#define TIMEOUT_IN_SEC 2
+#define TIMEOUT_IN_MSEC 2000
 
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
@@ -88,7 +88,7 @@ void AtObjectInit(At_t *this)
   this->atcmd.serialize = AtSerialize;
   this->atcmd.parse     = AtParse;
   this->atcmd.timeout   = AtTimeout;
-  this->atcmd.timeoutInSec   = TIMEOUT_IN_SEC;
+  this->atcmd.timeoutInMilliSec   = TIMEOUT_IN_MSEC;
 }
 
 void AtSetupRequest(At_t *this)
