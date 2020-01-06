@@ -113,7 +113,7 @@ bool GSM_GpsRead(GSM_Gps_t *this, GPS_Data_t *data)
     size_t datelength = strlen(date);
 
     if (GSM_gpsConvertRawDateTimeToGpsDateTime(&data->time, date, datelength)) {
-      data->fixStatus = cgnsinf.response.fixStatus;
+      data->isLocked = (1 == cgnsinf.response.fixStatus);
       data->latitude = cgnsinf.response.latitude;
       data->longitude = cgnsinf.response.longitude;
       data->altitude = cgnsinf.response.altitude;

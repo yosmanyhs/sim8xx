@@ -10,6 +10,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include <stdint.h>
+#include <stdbool.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -33,8 +34,8 @@ typedef struct GPS_Time_s {
 } GPS_Time_t;
 
 typedef struct GPS_Position_s {
-  int32_t fixStatus;
   GPS_Time_t time;
+  bool isLocked;
   double latitude;
   double longitude;
   double altitude;

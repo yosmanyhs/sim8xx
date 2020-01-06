@@ -58,6 +58,7 @@ bool SIM_Start(Sim8xx_t *this)
 
 bool SIM_Stop(Sim8xx_t *this)
 {
+  (void)this;
   return true;
 }
 

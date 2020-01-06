@@ -36,22 +36,24 @@
 /*****************************************************************************/
 GSM_STATIC size_t BtPaircfgSerialize(void *p, char *obuf, size_t length)
 {
+  memset(obuf, 0, length);
+
   BtPaircfg_t *obj = (BtPaircfg_t *)p;
   uint8_t mode     = obj->request.mode;
   const char *pin  = obj->request.pin;
 
   size_t n = 0;
   if (20 < length) {
-    char c = '0';
+    char modestr[2] = {0};
     if ((0 == mode) || (1 == mode) || (2 == mode))
-      c += mode;
+      modestr[0] = mode + '0';
 
-    strncat(obuf, "AT+BTPAIRCFG=", 13);
-    obuf[13] = c;
-    obuf[14] = '\0';
+    strncat(obuf, "AT+BTPAIRCFG=", length - 1);
+    strncat(obuf, modestr, length - 1 - 13);
+
     if (pin && (1 == mode)) {
-      strncat(obuf, ",", 1);
-      strncat(obuf, pin, 4);
+      strncat(obuf, ",", length - 1 - 14);
+      strncat(obuf, pin, length - 1 - 15);
     }
     n = strlen(obuf);
   }
