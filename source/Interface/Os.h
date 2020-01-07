@@ -48,6 +48,10 @@ void OS_LockBuffer(void);
 
 void OS_UnlockBuffer(void);
 
+void OS_WaitGuardTimeToPass(void);
+
+void OS_StartGuardTimer(void);
+
 OS_Error_t OS_WaitForResponseWithTimeout(uint32_t timeoutInMs);
 
 void OS_WakeUpThreadWaitingForResponse(void);

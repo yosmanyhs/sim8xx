@@ -89,6 +89,7 @@ bool GSM_ModemDisableEcho(GSM_Modem_t *this)
 void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
 {
   OS_LockModem();
+  OS_WaitGuardTimeToPass();
 
   char obuf[128] = {0};
   size_t olen    = sizeof(obuf);
@@ -132,6 +133,10 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
 
   if (0 == offset) {
     offset = GSM_BluetoothURCParse(&this->bluetooth, ibuf, ilen);
+  }
+
+  if (offset) {
+    OS_StartGuardTimer();
   }
 
   OS_UnlockParser();
