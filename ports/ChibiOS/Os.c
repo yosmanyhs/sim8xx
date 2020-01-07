@@ -42,8 +42,10 @@ static thread_reference_t writer;
 void OS_guardTimerCallback(void *p)
 {
   (void)p;
-  chSemReset(&guardSync, 1);
-  chVTSet(&guardTimer, TIME_MS2I(GUARD_TIME_IN_MSEC), OS_guardTimerCallback, NULL);
+  chSysLockFromISR();
+  chSemResetI(&guardSync, 1);
+  chVTSetI(&guardTimer, TIME_MS2I(GUARD_TIME_IN_MSEC), OS_guardTimerCallback, NULL);
+  chSysUnlockFromISR();
 }
 
 /*****************************************************************************/
