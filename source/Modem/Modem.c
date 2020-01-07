@@ -135,10 +135,6 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
     offset = GSM_BluetoothURCParse(&this->bluetooth, ibuf, ilen);
   }
 
-  if (offset) {
-    OS_StartGuardTimer();
-  }
-
   OS_UnlockParser();
 
   return offset;
