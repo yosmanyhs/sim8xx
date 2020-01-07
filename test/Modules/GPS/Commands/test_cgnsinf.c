@@ -49,7 +49,7 @@ void test_CgnsInfSerialize(void)
   char obuf[32] = {0};
   size_t n      = CgnsInfSerialize(&cgnsinf, obuf, sizeof(obuf));
 
-  const char *expected = "AT+CGNSINF";
+  const char *expected = "AT+CGNSINF\r";
   size_t expectedLength = strlen(expected);
 
   TEST_ASSERT_EQUAL_STRING(expected, obuf);

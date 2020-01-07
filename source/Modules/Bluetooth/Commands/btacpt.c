@@ -46,6 +46,7 @@ GSM_STATIC size_t BtAcptSerialize(void *p, char *obuf, size_t length)
   if (12 < length) {
     strncpy(obuf, "AT+BTACPT=", length);
     GSM_UtilsItoA(obuf + 10, length - 10, (int)obj->request.mode);
+    strncat(obuf, "\r", length - strlen(obuf));
     n = strlen(obuf);
   }
 

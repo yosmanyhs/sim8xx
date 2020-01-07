@@ -41,6 +41,7 @@ GSM_STATIC size_t CgnsPwrSerialize(void *p, char *obuf, size_t length)
   if (13 < length) {
     strncat(obuf, "AT+CGNSPWR=", length - 2);
     strncat(obuf, obj->request.mode == 1 ? "1" : "0", 1);
+    strncat(obuf, "\r", length - strlen(obuf));
     n = strlen(obuf);
   }
 

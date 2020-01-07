@@ -24,7 +24,7 @@ void test_AteObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(AteSerialize, ate.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(AteParse, ate.atcmd.parse);
   TEST_ASSERT_EQUAL_PTR(AteTimeout, ate.atcmd.timeout);
-  TEST_ASSERT_EQUAL(5000, ate.atcmd.timeoutInMilliSec);
+  TEST_ASSERT_EQUAL(2000, ate.atcmd.timeoutInMilliSec);
 }
 
 void test_AteGetAtCommand(void)
@@ -38,7 +38,7 @@ void test_AteGetAtCommand(void)
   TEST_ASSERT_EQUAL_PTR( AteSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR( AteParse, atcmd->parse);
   TEST_ASSERT_EQUAL_PTR(AteTimeout, ate.atcmd.timeout);
-  TEST_ASSERT_EQUAL(5000, atcmd->timeoutInMilliSec);
+  TEST_ASSERT_EQUAL(2000, atcmd->timeoutInMilliSec);
 }
 
 void test_AteSetupRequest_Mode0(void)
@@ -68,7 +68,7 @@ void test_AteSerialize_Mode0(void)
   char obuf[32] = {0};
   size_t n      =  AteSerialize(&ate, obuf, sizeof(obuf));
 
-  const char *expected = "ATE0";
+  const char *expected = "ATE0\r";
   size_t expectedLength = strlen(expected);
 
   TEST_ASSERT_EQUAL_STRING(expected, obuf);
@@ -84,7 +84,7 @@ void test_AteSerialize_Mode1(void)
   char obuf[32] = {0};
   size_t n      =  AteSerialize(&ate, obuf, sizeof(obuf));
 
-  const char *expected = "ATE1";
+  const char *expected = "ATE1\r";
   size_t expectedLength = strlen(expected);
 
   TEST_ASSERT_EQUAL_STRING(expected, obuf);

@@ -10,6 +10,7 @@ SIMSRC = $(SIM8XX)/source/Sim8xx.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btconnect.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btdisconn.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/bthost.c \
+         $(SIM8XX)/source/Modules/Bluetooth/Commands/btpair.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btpaircfg.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btpower.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btsppget.c \

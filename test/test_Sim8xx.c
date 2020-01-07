@@ -28,19 +28,19 @@ static Sim8xxConfig_t config = {
 
 void test_SIM_Init(void)
 {
+  OS_Init_Expect();
   GSM_ModemObjectInit_Expect(&sim8xx.modem);
   GSM_ModemRegisterPutFunction_ExpectAndReturn(&sim8xx.modem, serialPut, true);
   GSM_BufferObjectInit_Expect(&sim8xx.buffer);
-  OS_Init_Expect();
   SIM_Init(&sim8xx, &config);
 }
 
 void test_SIM_Start(void)
 {
+  OS_Init_Expect();
   GSM_ModemObjectInit_Expect(&sim8xx.modem);
   GSM_ModemRegisterPutFunction_ExpectAndReturn(&sim8xx.modem, serialPut, true);
   GSM_BufferObjectInit_Expect(&sim8xx.buffer);
-  OS_Init_Expect();
   SIM_Init(&sim8xx, &config);
 
   GSM_ModemIsAlive_ExpectAndReturn(&sim8xx.modem, true);
@@ -52,10 +52,10 @@ void test_SIM_Start(void)
 
 void test_SIM_Start_NotAlive(void)
 {
+  OS_Init_Expect();
   GSM_ModemObjectInit_Expect(&sim8xx.modem);
   GSM_ModemRegisterPutFunction_ExpectAndReturn(&sim8xx.modem, serialPut, true);
   GSM_BufferObjectInit_Expect(&sim8xx.buffer);
-  OS_Init_Expect();
   SIM_Init(&sim8xx, &config);
 
   GSM_ModemIsAlive_ExpectAndReturn(&sim8xx.modem, false);
@@ -66,10 +66,10 @@ void test_SIM_Start_NotAlive(void)
 
 void test_SIM_Start_DisableEchoFails(void)
 {
+  OS_Init_Expect();
   GSM_ModemObjectInit_Expect(&sim8xx.modem);
   GSM_ModemRegisterPutFunction_ExpectAndReturn(&sim8xx.modem, serialPut, true);
   GSM_BufferObjectInit_Expect(&sim8xx.buffer);
-  OS_Init_Expect();
   SIM_Init(&sim8xx, &config);
 
   GSM_ModemIsAlive_ExpectAndReturn(&sim8xx.modem, true);
@@ -91,10 +91,10 @@ void test_SIM_BluetoothRegisterCallback(void)
 
 void test_SIM_Parse(void)
 {
+  OS_Init_Expect();
   GSM_ModemObjectInit_Expect(&sim8xx.modem);
   GSM_ModemRegisterPutFunction_ExpectAndReturn(&sim8xx.modem, serialPut, true);
   GSM_BufferObjectInit_Expect(&sim8xx.buffer);
-  OS_Init_Expect();
   SIM_Init(&sim8xx, &config);
 
   GSM_BufferData_t ibuf = {

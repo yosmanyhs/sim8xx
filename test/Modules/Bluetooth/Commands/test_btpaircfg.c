@@ -66,7 +66,7 @@ void test_BtPaircfgSerialize_Mode0(void)
   char obuf[32] = {0};
   size_t n      = BtPaircfgSerialize(&btpaircfg, obuf, sizeof(obuf));
 
-  const char *expected = "AT+BTPAIRCFG=0";
+  const char *expected = "AT+BTPAIRCFG=0\r";
   TEST_ASSERT_EQUAL_STRING(expected, obuf);
   TEST_ASSERT_EQUAL(strlen(expected), n);
 }
@@ -81,7 +81,7 @@ void test_BtPaircfgSerialize_Mode1(void)
   char obuf[32] = {0};
   size_t n      = BtPaircfgSerialize(&btpaircfg, obuf, sizeof(obuf));
 
-  const char *expected = "AT+BTPAIRCFG=1,2019";
+  const char *expected = "AT+BTPAIRCFG=1,2019\r";
   TEST_ASSERT_EQUAL_STRING(expected, obuf);
   TEST_ASSERT_EQUAL(strlen(expected), n);
 }
@@ -95,7 +95,7 @@ void test_BtPaircfgSerialize_Mode2(void)
   char obuf[32] = {0};
   size_t n      = BtPaircfgSerialize(&btpaircfg, obuf, sizeof(obuf));
 
-  const char *expected = "AT+BTPAIRCFG=2";
+  const char *expected = "AT+BTPAIRCFG=2\r";
   TEST_ASSERT_EQUAL_STRING(expected, obuf);
   TEST_ASSERT_EQUAL(strlen(expected), n);
 }

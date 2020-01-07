@@ -12,6 +12,7 @@ TEST_FILE("btpower.c");
 TEST_FILE("bthost.c");
 TEST_FILE("btsppget.c");
 TEST_FILE("btsppsend.c");
+TEST_FILE("btpair.c");
 TEST_FILE("btpaircfg.c");
 TEST_FILE("AtCommand.c");
 TEST_FILE("Utils.c");

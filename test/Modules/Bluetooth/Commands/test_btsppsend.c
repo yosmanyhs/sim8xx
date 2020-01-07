@@ -72,7 +72,7 @@ void test_BtSppSendSerialize_CommandMode(void)
   char obuf[32] = {0};
   size_t n      = BtSppSendSerialize(&btsppsend, obuf, sizeof(obuf));
 
-  const char *expected = "AT+BTSPPSEND";
+  const char *expected = "AT+BTSPPSEND\r";
   size_t expectedLength = strlen(expected);
 
   TEST_ASSERT_EQUAL_STRING(expected, obuf);
@@ -92,8 +92,11 @@ void test_BtSppSendSerialize_DataMode(void)
   char obuf[32] = {0};
   size_t n      = BtSppSendSerialize(&btsppsend, obuf, sizeof(obuf));
 
-  TEST_ASSERT_EQUAL_STRING(data, obuf);
-  TEST_ASSERT_EQUAL(length, n);
+  const char expected[] = "Test SPP message.\x1A";
+  size_t expectedLength = strlen(expected);
+
+  TEST_ASSERT_EQUAL_STRING(expected, obuf);
+  TEST_ASSERT_EQUAL(expectedLength, n);
 }
 
 void test_BtSppSendParse(void)
@@ -143,13 +146,13 @@ void test_BtSppSendParse_WAIT_USER_DATA(void)
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
 
-  const char *ibuf = "\r\n> \r\n.";
+  const char *ibuf = "\r\n> ";
   size_t length    = strlen(ibuf);
 
   size_t n = BtSppSendParse(&btsppsend, ibuf, length);
 
   TEST_ASSERT_EQUAL(AT_CMD_WAIT_FOR_USER_DATA, btsppsend.response.status);
-  TEST_ASSERT_EQUAL(2, n);
+  TEST_ASSERT_EQUAL(length, n);
 }
 
 void test_BtSppSendParse_SEND_OK(void)

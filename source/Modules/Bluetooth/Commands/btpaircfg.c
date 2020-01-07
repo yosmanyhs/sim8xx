@@ -56,6 +56,8 @@ GSM_STATIC size_t BtPaircfgSerialize(void *p, char *obuf, size_t length)
       strncat(obuf, pin, length - 1 - 15);
     }
     n = strlen(obuf);
+    strncat(obuf, "\r", length - n);
+    n = strlen(obuf);
   }
 
   return n;

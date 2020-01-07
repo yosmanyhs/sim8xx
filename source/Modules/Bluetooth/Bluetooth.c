@@ -15,6 +15,7 @@
 #include "Commands/btconnect.h"
 #include "Commands/btdisconn.h"
 #include "Commands/bthost.h"
+#include "Commands/btpair.h"
 #include "Commands/btpaircfg.h"
 #include "Commands/btpower.h"
 #include "Commands/btsppsend.h"
@@ -49,6 +50,8 @@
 /*****************************************************************************/
 GSM_STATIC void GSM_bluetoothHandleBtConnectURC(BtConnectURC_t *urc, GSM_Bluetooth_t *blt)
 {
+  memset(&blt->event, 0, sizeof(blt->event));
+
   switch(urc->type) {
     case BTCONNECT_CONNECTING: {
       blt->event.type = GSM_BT_CONNECTING;
@@ -93,6 +96,8 @@ GSM_STATIC void GSM_bluetoothHandleBtConnectURC(BtConnectURC_t *urc, GSM_Bluetoo
 
 GSM_STATIC void GSM_bluetoothHandleBtSppGetURC(BtSppGetURC_t *urc, GSM_Bluetooth_t *blt)
 {
+  memset(&blt->event, 0, sizeof(blt->event));
+
   switch(urc->type) {
     case BTSPPGET_SPPDATA: {
       blt->event.type = GSM_BT_INCOMING_DATA;
@@ -114,20 +119,22 @@ GSM_STATIC void GSM_bluetoothHandleBtSppGetURC(BtSppGetURC_t *urc, GSM_Bluetooth
   }
 }
 
-GSM_STATIC void GSM_bluetoothHandleBtDisconnURC(BtDisconnURC_t *urc, GSM_Bluetooth_t *pbt)
+GSM_STATIC void GSM_bluetoothHandleBtDisconnURC(BtDisconnURC_t *urc, GSM_Bluetooth_t *blt)
 {
+  memset(&blt->event, 0, sizeof(blt->event));
+
   switch(urc->type) {
     case BTDISCONN_DISCONNECTED: {
-      pbt->event.type = GSM_BT_DISCONNECTED;
+      blt->event.type = GSM_BT_DISCONNECTED;
       const char *src = urc->payload.disconn.name;
-      char *dst = pbt->event.payload.disconnected.name;
-      size_t buflength = sizeof(pbt->event.payload.disconnected.name);
+      char *dst = blt->event.payload.disconnected.name;
+      size_t buflength = sizeof(blt->event.payload.disconnected.name);
       size_t length = sizeof(urc->payload.disconn.name);
       length = (length < buflength) ? length : buflength;
       memcpy(dst, src, length);
 
-      if (pbt->notify) {
-        pbt->notify(&pbt->event);
+      if (blt->notify) {
+        blt->notify(&blt->event);
       }
       break;
     }
@@ -248,6 +255,11 @@ size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t length)
     BtDisconnURC_t urc = {0};
     offset = BtDisconnParseURC(&urc, ibuf, length);
     GSM_bluetoothHandleBtDisconnURC(&urc, blt);
+  } 
+  else if (BtPairIsURC(ibuf, length)) {
+    BtPairURC_t urc = {0};
+    offset = BtPairParseURC(&urc, ibuf, length);
+    // Skip this URC
   } else {
     ;
   }

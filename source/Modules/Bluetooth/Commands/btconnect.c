@@ -154,13 +154,15 @@ GSM_STATIC size_t BtConnectSerialize(void *p, char *obuf, size_t length)
   BtConnect_t *obj = (BtConnect_t *)p;
   size_t n         = 0;
 
-  if (18 < length) {
+  if (19 < length) {
     strncpy(obuf, "AT+BTCONNECT=", length);
     n = strlen(obuf);
     n += GSM_UtilsItoA(obuf + n, length - n, obj->request.deviceId);
     strncat(obuf, ",", length - n);
     ++n;
     n += GSM_UtilsItoA(obuf + n, length - n, obj->request.profileId);
+    strncat(obuf, "\r", length - n);
+    n = strlen(obuf);
   }
 
   return n;

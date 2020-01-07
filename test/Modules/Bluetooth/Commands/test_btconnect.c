@@ -61,7 +61,7 @@ void test_BtConnectSerialize(void)
 
   BtConnectSerialize(&btconnect, obuf, olen);
 
-  TEST_ASSERT_EQUAL_STRING("AT+BTCONNECT=3,9", obuf);
+  TEST_ASSERT_EQUAL_STRING("AT+BTCONNECT=3,9\r", obuf);
 }
 
 void test_BtConnectParse_OK(void)

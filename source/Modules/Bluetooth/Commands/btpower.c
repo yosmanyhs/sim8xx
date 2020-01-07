@@ -44,6 +44,8 @@ GSM_STATIC size_t BtPowerSerialize(void *p, char *obuf, size_t length)
     strncat(obuf, "AT+BTPOWER=", length - 2);
     strcat(obuf, obj->request.mode == 1 ? "1" : "0");
     n = strlen(obuf);
+    strncat(obuf, "\r", length - n);
+    n = strlen(obuf);
   }
 
   return n;

@@ -37,10 +37,13 @@ GSM_STATIC size_t AteSerialize(void *p, char *obuf, size_t length)
 
   Ate_t *obj = (Ate_t *)p;
   size_t n = 0;
-  if (4 < length) {
+  if (6 < length) {
     strncpy(obuf, "ATE", length);
-    const char *mode = (0 == obj->request.mode) ? "0" : "1";
-    strncat(obuf, mode, 1);
+    if (0 == obj->request.mode) {
+      strncat(obuf, "0\r", length - 3);
+    } else {
+      strncat(obuf, "1\r", length - 3);
+    }
     n = strlen(obuf);
   }
 
@@ -54,12 +57,12 @@ GSM_STATIC size_t AteParse(void *p, const char *ibuf, size_t length)
 
   size_t n = 0;
 
-  if (5 < length) {
-    char echo[5] = {0};
+  if (6 <= length) {
+    char echo[10] = {0};
     size_t elen = AteSerialize(p, echo, sizeof(echo));
 
     if (0 == strncasecmp(ibuf, echo, elen)) {
-      n += elen + 1;
+      n += elen;
     }
 
     n += AT_CommandStatusParse(ibuf + n, length - n, &status);

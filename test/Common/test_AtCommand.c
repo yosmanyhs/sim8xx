@@ -123,7 +123,7 @@ void test_At_Parse_PROCEEDING(void)
 
 void test_At_Parse_WAIT_FOR_USER_DATA(void)
 {
-  const char *input         = "> ";
+  const char *input         = "\r\n> ";
   AT_CommandStatus_t status = AT_CMD_INVALID;
 
   size_t n = AT_CommandStatusParse(input, strlen(input), &status);

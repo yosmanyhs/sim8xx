@@ -37,8 +37,8 @@ GSM_STATIC size_t AtSerialize(void *p, char *obuf, size_t length)
 
   (void)p;
   size_t n      = 0;
-  if (2 < length) {
-    strncpy(obuf, "AT", length);
+  if (3 < length) {
+    strncpy(obuf, "AT\r", length);
     n = strlen(obuf);
   }
 

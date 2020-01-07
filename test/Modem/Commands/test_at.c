@@ -49,7 +49,7 @@ void test_AtSerialize(void)
   char obuf[32] = {0};
   size_t n      = AtSerialize(&at, obuf, sizeof(obuf));
 
-  const char *expected = "AT";
+  const char *expected = "AT\r";
   size_t expectedLength = strlen(expected);
 
   TEST_ASSERT_EQUAL_STRING(expected, obuf);

@@ -41,7 +41,7 @@ GSM_STATIC size_t CgnsInfSerialize(void *p, char *obuf, size_t length)
   (void)p;
   size_t n = 0;
   if (11 < length) {
-    strncat(obuf, "AT+CGNSINF", length - 1);
+    strncat(obuf, "AT+CGNSINF\r", length - 1);
     n = strlen(obuf);
   }
 

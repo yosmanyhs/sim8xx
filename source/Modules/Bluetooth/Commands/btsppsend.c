@@ -41,8 +41,9 @@ GSM_STATIC size_t BtSppSendSerialize(void *p, char *obuf, size_t length)
 
   if (BT_SPP_SEND_STATE_DATA == obj->state) {
     strncat(obuf, obj->request.data, length);
+    strncat(obuf, "\x1A", length - strlen(obuf));
   } else {
-    strncat(obuf, "AT+BTSPPSEND", length);
+    strncat(obuf, "AT+BTSPPSEND\r", length);
   }
 
   n = strlen(obuf);

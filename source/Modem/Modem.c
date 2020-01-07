@@ -99,8 +99,6 @@ void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
     this->put(obuf[i]);
   }
 
-  this->put('\r');
-
   OS_LockParser();
   this->currentAt = atcmd;
   OS_UnlockParser();

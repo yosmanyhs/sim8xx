@@ -37,7 +37,7 @@ static const char *StatusStrings[] = {
     [AT_CMD_PROCEEDING]         = "PROCEEDING",
     [AT_CMD_SEND_OK]            = "SEND OK",
     [AT_CMD_SEND_FAIL]          = "SEND FAIL",
-    [AT_CMD_WAIT_FOR_USER_DATA] = "> ",
+    [AT_CMD_WAIT_FOR_USER_DATA] = "\r\n> ",
 };
 
 static const size_t StatusStringLength[] = {
@@ -53,7 +53,7 @@ static const size_t StatusStringLength[] = {
     [AT_CMD_PROCEEDING]         = 10,
     [AT_CMD_SEND_OK]            = 7,
     [AT_CMD_SEND_FAIL]          = 9,
-    [AT_CMD_WAIT_FOR_USER_DATA] = 2,
+    [AT_CMD_WAIT_FOR_USER_DATA] = 4,
 };
 
 /*****************************************************************************/
@@ -65,7 +65,7 @@ static const size_t StatusStringLength[] = {
 /*****************************************************************************/
 static bool AT_isStatus(AT_CommandStatus_t st, const char *ibuf, size_t length)
 {
-  if ((2 == length) && (AT_CMD_WAIT_FOR_USER_DATA == st)) {
+  if ((4 == length) && (AT_CMD_WAIT_FOR_USER_DATA == st)) {
     return 0 == strncasecmp(ibuf, StatusStrings[st], StatusStringLength[st]);
   }
 

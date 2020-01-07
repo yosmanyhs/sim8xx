@@ -44,6 +44,8 @@ GSM_STATIC size_t BtHostSerialize(void *p, char *obuf, size_t length)
     strncat(obuf, "AT+BTHOST=", length - 1);
     strncat(obuf, obj->request.name, length - 1 - 10);
     n = strlen(obuf);
+    strncat(obuf, "\r", length - n);
+    n = strlen(obuf);
   }
 
   return n;

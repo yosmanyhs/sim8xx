@@ -67,7 +67,7 @@ void test_BtPowerSerialize_Mode0(void)
   char obuf[32] = {0};
   size_t n      = BtPowerSerialize(&btpower, obuf, sizeof(obuf));
 
-  const char *expected = "AT+BTPOWER=0";
+  const char *expected = "AT+BTPOWER=0\r";
   size_t expectedLength = strlen(expected);
 
   TEST_ASSERT_EQUAL_STRING(expected, obuf);
@@ -83,7 +83,7 @@ void test_BtPowerSerialize_Mode1(void)
   char obuf[32] = {0};
   size_t n      = BtPowerSerialize(&btpower, obuf, sizeof(obuf));
 
-  const char *expected = "AT+BTPOWER=1";
+  const char *expected = "AT+BTPOWER=1\r";
   size_t expectedLength = strlen(expected);
 
   TEST_ASSERT_EQUAL_STRING(expected, obuf);
