@@ -11,7 +11,6 @@
 
 #include <string.h>
 
-
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
@@ -63,6 +62,7 @@ bool GSM_BufferPushChar(GSM_Buffer_t *this, char c)
     result = true;
   }
 
+  OS_StartGuardTimer();
   OS_UnlockBuffer();
 
   return result;
