@@ -84,7 +84,9 @@ bool GSM_GpsStart(GSM_Gps_t *this)
   CgnsPwrObjectInit(&cgnspwr);
   CgnsPwrSetupRequest(&cgnspwr, 1);
 
+  GSM_ModemLock(this->parent);
   GSM_ModemExecuteAtCommand(this->parent, &cgnspwr.atcmd);
+  GSM_ModemUnlock(this->parent);
 
   return AT_CMD_OK == CgnsPwrGetResponseStatus(&cgnspwr);
 }
@@ -95,7 +97,9 @@ bool GSM_GpsStop(GSM_Gps_t *this)
   CgnsPwrObjectInit(&cgnspwr);
   CgnsPwrSetupRequest(&cgnspwr, 0);
 
+  GSM_ModemLock(this->parent);
   GSM_ModemExecuteAtCommand(this->parent, &cgnspwr.atcmd);
+  GSM_ModemUnlock(this->parent);
 
   return AT_CMD_OK == CgnsPwrGetResponseStatus(&cgnspwr);
 }
@@ -105,7 +109,9 @@ bool GSM_GpsRead(GSM_Gps_t *this, GPS_Data_t *data)
   CgnsInf_t cgnsinf;
   CgnsInfObjectInit(&cgnsinf);
 
+  GSM_ModemLock(this->parent);
   GSM_ModemExecuteAtCommand(this->parent, &cgnsinf.atcmd);
+  GSM_ModemUnlock(this->parent);
 
   bool result = false;
   if (AT_CMD_OK == CgnsInfGetResponseStatus(&cgnsinf)) {

@@ -81,14 +81,17 @@ void test_GSM_ModemExecuteAtCommand(void)
   BtPowerSetupRequest(&btpower, 1);
 
   OS_LockModem_Expect();
+  GSM_ModemLock(&modem);
+  
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
   OS_WaitForResponseWithTimeout_ExpectAnyArgsAndReturn(OS_NO_ERROR);
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
-  OS_UnlockModem_Expect();
-
   GSM_ModemExecuteAtCommand(&modem, &btpower.atcmd);
+
+  OS_UnlockModem_Expect();
+  GSM_ModemUnlock(&modem);
 }
 
 void test_GSM_ModemExecuteAtCommand_Timeout(void)
@@ -103,14 +106,17 @@ void test_GSM_ModemExecuteAtCommand_Timeout(void)
   BtPowerSetupRequest(&btpower, 1);
 
   OS_LockModem_Expect();
+  GSM_ModemLock(&modem);
+
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
   OS_WaitForResponseWithTimeout_ExpectAnyArgsAndReturn(OS_TIMEOUT);
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
-  OS_UnlockModem_Expect();
-
   GSM_ModemExecuteAtCommand(&modem, &btpower.atcmd);
+
+  OS_UnlockModem_Expect();
+  GSM_ModemUnlock(&modem);
 
   TEST_ASSERT_EQUAL(AT_CMD_TIMEOUT, BtPowerGetResponseStatus(&btpower));
 }

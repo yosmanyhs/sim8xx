@@ -37,6 +37,7 @@ void test_GSM_BufferPutChar(void)
   for (i = 0; i < 15; ++i) {
     char c = 'A' + i;
     OS_LockBuffer_Expect();
+    OS_StartGuardTimer_Expect();
     OS_UnlockBuffer_Expect();
     bool result = GSM_BufferPushChar(&buffer, c);
     TEST_ASSERT(result);
@@ -62,12 +63,14 @@ void test_GSM_BufferPutChar_Overflow(void)
   size_t i;
   for (i = 0; i < SIM8XX_INPUT_BUFFER_LENGTH; ++i) {
     OS_LockBuffer_Expect();
+    OS_StartGuardTimer_Expect();
     OS_UnlockBuffer_Expect();
     bool result = GSM_BufferPushChar(&buffer, 'A');
     TEST_ASSERT(result);
   }
 
   OS_LockBuffer_Expect();
+  OS_StartGuardTimer_Expect();
   OS_UnlockBuffer_Expect();
   bool result = GSM_BufferPushChar(&buffer, 'B');
   TEST_ASSERT_FALSE(result);
@@ -88,6 +91,7 @@ void test_GSM_BufferGetData(void)
   for (i = 0; i < 15; ++i) {
     char c = 'A' + i;
     OS_LockBuffer_Expect();
+    OS_StartGuardTimer_Expect();
     OS_UnlockBuffer_Expect();
     GSM_BufferPushChar(&buffer, c);
   }
@@ -140,6 +144,7 @@ void test_GSM_BufferPopData(void)
   for (i = 0; i < 15; ++i) {
     char c = 'A' + i;
     OS_LockBuffer_Expect();
+    OS_StartGuardTimer_Expect();
     OS_UnlockBuffer_Expect();
     GSM_BufferPushChar(&buffer, c);
   }
@@ -168,6 +173,7 @@ void test_GSM_BufferPopData_InvalidLength(void)
   for (i = 0; i < 15; ++i) {
     char c = 'A' + i;
     OS_LockBuffer_Expect();
+    OS_StartGuardTimer_Expect();
     OS_UnlockBuffer_Expect();
     GSM_BufferPushChar(&buffer, c);
   }
@@ -196,6 +202,7 @@ void test_GSM_BufferGetLength(void)
   for (i = 0; i < 15; ++i) {
     char c = 'A' + i;
     OS_LockBuffer_Expect();
+    OS_StartGuardTimer_Expect();
     OS_UnlockBuffer_Expect();
     GSM_BufferPushChar(&buffer, c);
   }

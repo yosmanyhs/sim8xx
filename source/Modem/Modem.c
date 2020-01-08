@@ -70,7 +70,9 @@ bool GSM_ModemIsAlive(GSM_Modem_t *this)
   At_t at;
   AtObjectInit(&at);
   AtSetupRequest(&at);
+  GSM_ModemLock(this);
   GSM_ModemExecuteAtCommand(this, AtGetAtCommand(&at));
+  GSM_ModemUnlock(this);
 
   return (AT_CMD_OK == AtGetResponseStatus(&at));
 }
@@ -81,17 +83,30 @@ bool GSM_ModemDisableEcho(GSM_Modem_t *this)
   Ate_t ate;
   AteObjectInit(&ate);
   AteSetupRequest(&ate, 0);
+  GSM_ModemLock(this);
   GSM_ModemExecuteAtCommand(this, AteGetAtCommand(&ate));
+  GSM_ModemUnlock(this);
 
   return (AT_CMD_OK == AteGetResponseStatus(&ate));
 }
 
+void GSM_ModemLock(GSM_Modem_t *this)
+{
+  (void)this;
+  OS_LockModem();
+}
+
+void GSM_ModemUnlock(GSM_Modem_t *this)
+{
+  (void)this;
+  OS_UnlockModem();
+}
+
 void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
 {
-  OS_LockModem();
   OS_WaitGuardTimeToPass();
 
-  char obuf[128] = {0};
+  char obuf[512] = {0};
   size_t olen    = sizeof(obuf);
   size_t n       = atcmd->serialize(atcmd->obj, obuf, olen);
 
@@ -112,8 +127,6 @@ void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
 
   if (OS_TIMEOUT == error)
     atcmd->timeout(atcmd->obj);
-
-  OS_UnlockModem();
 }
 
 size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)

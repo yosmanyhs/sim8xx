@@ -50,6 +50,10 @@ bool GSM_ModemIsAlive(GSM_Modem_t *this);
 
 bool GSM_ModemDisableEcho(GSM_Modem_t *this);
 
+void GSM_ModemLock(GSM_Modem_t *this);
+
+void GSM_ModemUnlock(GSM_Modem_t *this);
+
 void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
 
 size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
