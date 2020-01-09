@@ -60,21 +60,14 @@ void test_GSM_BufferPutChar_Overflow(void)
   OS_UnlockBuffer_Expect();
   GSM_BufferObjectInit(&buffer);
 
-  size_t i;
-  for (i = 0; i < SIM8XX_INPUT_BUFFER_LENGTH; ++i) {
-    OS_LockBuffer_Expect();
-    OS_StartGuardTimer_Expect();
-    OS_UnlockBuffer_Expect();
-    bool result = GSM_BufferPushChar(&buffer, 'A');
-    TEST_ASSERT(result);
-  }
+  buffer.wrindex = SIM8XX_INPUT_BUFFER_LENGTH;
 
   OS_LockBuffer_Expect();
   OS_StartGuardTimer_Expect();
   OS_UnlockBuffer_Expect();
   bool result = GSM_BufferPushChar(&buffer, 'B');
-  TEST_ASSERT_FALSE(result);
 
+  TEST_ASSERT_FALSE(result);
   TEST_ASSERT_EQUAL(0, buffer.rdindex);
   TEST_ASSERT_EQUAL(SIM8XX_INPUT_BUFFER_LENGTH, buffer.wrindex);
 }

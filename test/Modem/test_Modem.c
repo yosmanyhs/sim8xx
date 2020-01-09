@@ -9,7 +9,6 @@
 #include "btconnect.h"
 #include "btpower.h"
 
-
 TEST_FILE("at.c")
 TEST_FILE("ate.c")
 TEST_FILE("btacpt.c");
@@ -82,7 +81,8 @@ void test_GSM_ModemExecuteAtCommand(void)
 
   OS_LockModem_Expect();
   GSM_ModemLock(&modem);
-  
+
+  OS_WaitGuardTimeToPass_Expect();
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
   OS_WaitForResponseWithTimeout_ExpectAnyArgsAndReturn(OS_NO_ERROR);
@@ -108,6 +108,7 @@ void test_GSM_ModemExecuteAtCommand_Timeout(void)
   OS_LockModem_Expect();
   GSM_ModemLock(&modem);
 
+  OS_WaitGuardTimeToPass_Expect();
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
   OS_WaitForResponseWithTimeout_ExpectAnyArgsAndReturn(OS_TIMEOUT);
