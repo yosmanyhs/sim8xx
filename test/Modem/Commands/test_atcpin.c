@@ -104,6 +104,34 @@ void test_AtParse_OK(void)
   TEST_ASSERT_EQUAL(ilen, n);
 }
 
+void test_AtParse_CME_ERROR(void)
+{
+  AtCpin_t atcpin;
+  AtCpinObjectInit(&atcpin);
+
+  const char *ibuf = "\r\n+CME ERROR: 24\r\n";
+  size_t ilen      = strlen(ibuf);
+
+  size_t n = AtCpinParse(&atcpin, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(AT_CMD_ERROR, atcpin.response.status);
+  TEST_ASSERT_EQUAL(ilen, n);
+}
+
+void test_AtParse_InvalidResponse(void)
+{
+  AtCpin_t atcpin;
+  AtCpinObjectInit(&atcpin);
+
+  const char *ibuf = "\r\n+INVALID: 24\r\n";
+  size_t ilen      = strlen(ibuf);
+
+  size_t n = AtCpinParse(&atcpin, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(AT_CMD_INVALID, atcpin.response.status);
+  TEST_ASSERT_EQUAL(0, n);
+}
+
 void test_AtTimeout(void)
 {
   AtCpin_t atcpin;
@@ -123,7 +151,7 @@ void test_AtCpinIsURC(void)
   TEST_ASSERT(result);
 }
 
-void test_AtCpinParseURC(void)
+void test_AtCpinParseURC_READY(void)
 {
   const char *ibuf = "\r\n+CPIN: READY\r\n";
   size_t ilen      = strlen(ibuf);
@@ -134,4 +162,82 @@ void test_AtCpinParseURC(void)
   TEST_ASSERT_EQUAL(ilen, n);
   TEST_ASSERT_EQUAL(ATCPIN_INFO, urc.type);
   TEST_ASSERT_EQUAL(ATCPIN_READY, urc.payload.info.code);
+}
+
+void test_AtCpinParseURC_SIM_PIN(void)
+{
+  const char *ibuf = "\r\n+CPIN: SIM PIN\r\n";
+  size_t ilen      = strlen(ibuf);
+
+  AtCpinURC_t urc = {0};
+  size_t n = AtCpinParseURC(&urc, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(ilen, n);
+  TEST_ASSERT_EQUAL(ATCPIN_INFO, urc.type);
+  TEST_ASSERT_EQUAL(ATCPIN_SIM_PIN, urc.payload.info.code);
+}
+
+void test_AtCpinParseURC_SIM_PUK(void)
+{
+  const char *ibuf = "\r\n+CPIN: SIM PUK\r\n";
+  size_t ilen      = strlen(ibuf);
+
+  AtCpinURC_t urc = {0};
+  size_t n = AtCpinParseURC(&urc, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(ilen, n);
+  TEST_ASSERT_EQUAL(ATCPIN_INFO, urc.type);
+  TEST_ASSERT_EQUAL(ATCPIN_SIM_PUK, urc.payload.info.code);
+}
+
+void test_AtCpinParseURC_PH_SIM_PIN(void)
+{
+  const char *ibuf = "\r\n+CPIN: PH_SIM PIN\r\n";
+  size_t ilen      = strlen(ibuf);
+
+  AtCpinURC_t urc = {0};
+  size_t n = AtCpinParseURC(&urc, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(ilen, n);
+  TEST_ASSERT_EQUAL(ATCPIN_INFO, urc.type);
+  TEST_ASSERT_EQUAL(ATCPIN_PH_SIM_PIN, urc.payload.info.code);
+}
+
+void test_AtCpinParseURC_PH_SIM_PUK(void)
+{
+  const char *ibuf = "\r\n+CPIN: PH_SIM PUK\r\n";
+  size_t ilen      = strlen(ibuf);
+
+  AtCpinURC_t urc = {0};
+  size_t n = AtCpinParseURC(&urc, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(ilen, n);
+  TEST_ASSERT_EQUAL(ATCPIN_INFO, urc.type);
+  TEST_ASSERT_EQUAL(ATCPIN_PH_SIM_PUK, urc.payload.info.code);
+}
+
+void test_AtCpinParseURC_SIM_PIN2(void)
+{
+  const char *ibuf = "\r\n+CPIN: SIM PIN2\r\n";
+  size_t ilen      = strlen(ibuf);
+
+  AtCpinURC_t urc = {0};
+  size_t n = AtCpinParseURC(&urc, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(ilen, n);
+  TEST_ASSERT_EQUAL(ATCPIN_INFO, urc.type);
+  TEST_ASSERT_EQUAL(ATCPIN_SIM_PIN2, urc.payload.info.code);
+}
+
+void test_AtCpinParseURC_SIM_PUK2(void)
+{
+  const char *ibuf = "\r\n+CPIN: SIM PUK2\r\n";
+  size_t ilen      = strlen(ibuf);
+
+  AtCpinURC_t urc = {0};
+  size_t n = AtCpinParseURC(&urc, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(ilen, n);
+  TEST_ASSERT_EQUAL(ATCPIN_INFO, urc.type);
+  TEST_ASSERT_EQUAL(ATCPIN_SIM_PUK2, urc.payload.info.code);
 }

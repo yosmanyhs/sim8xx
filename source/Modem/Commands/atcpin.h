@@ -54,8 +54,8 @@ typedef struct AtCpinURC_s {
 } AtCpinURC_t;
 
 typedef struct AtCpin_Request_s {
-  char pin[5];
-  char pin2[5];
+  const char *pin;
+  const char *pin2;
 } AtCpin_Request_t;
 
 typedef struct AtCpin_Response_s {
@@ -85,9 +85,9 @@ AtCpin_Response_t AtCpinGetResponse(AtCpin_t *this);
 
 AT_CommandStatus_t AtCpinGetResponseStatus(AtCpin_t *this);
 
-bool AtCpinIsURC(const char *ibuf, size_t length);
+bool AtCpinIsURC(const char *ibuf, size_t ilen);
 
-size_t AtCpinParseURC(AtCpinURC_t *urc, const char *ibuf, size_t length);
+size_t AtCpinParseURC(AtCpinURC_t *urc, const char *ibuf, size_t ilen);
 
 #endif /* ATCPIN_H */
 
