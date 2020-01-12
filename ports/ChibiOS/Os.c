@@ -28,6 +28,7 @@
 static mutex_t modemLock;
 static mutex_t parserLock;
 static mutex_t bufferLock;
+static semaphore_t modemReady;
 static semaphore_t guardSync;
 static virtual_timer_t guardTimer;
 static thread_reference_t writer;
@@ -56,6 +57,7 @@ void OS_Init(void)
   chMtxObjectInit(&modemLock);
   chMtxObjectInit(&parserLock);
   chMtxObjectInit(&bufferLock);
+  chSemObjectInit(&modemReady, 1);
   chSemObjectInit(&guardSync, 1);
   chVTObjectInit(&guardTimer);
   writer = NULL;
@@ -69,6 +71,27 @@ void OS_LockModem(void)
 void OS_UnlockModem(void)
 {
   chMtxUnlock(&modemLock);
+}
+
+void OS_WaitIfModemIsNotReady(void)
+{
+  while(MSG_OK != chSemWait(&modemReady))
+    ;
+  chSemSignal(&modemReady);
+}
+
+void OS_ModemIsReady(void)
+{
+  chSemReset(&modemReady, 1);
+}
+
+void OS_ModemIsNotReady(void)
+{
+  chSysLock();
+  chSemResetI(&modemReady, 0);
+  chVTResetI(&guardTimer);
+  chSemResetI(&guardSync, 1);
+  chSysUnlock();
 }
 
 void OS_LockParser(void)

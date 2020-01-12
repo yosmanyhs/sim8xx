@@ -33,6 +33,7 @@ typedef enum {
 
 typedef enum {
   ATCPIN_INVALID_CODE,
+  ATCPIN_NOT_INSERTED,
   ATCPIN_READY,
   ATCPIN_SIM_PIN,
   ATCPIN_SIM_PUK,

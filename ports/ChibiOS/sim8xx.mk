@@ -4,6 +4,8 @@ SIMSRC = $(SIM8XX)/source/Sim8xx.c \
          $(SIM8XX)/source/Common/AtCommand.c \
          $(SIM8XX)/source/Modem/Modem.c \
          $(SIM8XX)/source/Modem/Commands/at.c \
+         $(SIM8XX)/source/Modem/Commands/atcfun.c \
+         $(SIM8XX)/source/Modem/Commands/atcpin.c \
          $(SIM8XX)/source/Modem/Commands/ate.c \
          $(SIM8XX)/source/Modules/Bluetooth/Bluetooth.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btacpt.c \

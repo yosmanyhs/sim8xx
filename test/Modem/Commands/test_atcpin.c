@@ -151,6 +151,19 @@ void test_AtCpinIsURC(void)
   TEST_ASSERT(result);
 }
 
+void test_AtCpinParseURC_NOT_INSERTED(void)
+{
+  const char *ibuf = "\r\n+CPIN: NOT INSERTED\r\n";
+  size_t ilen      = strlen(ibuf);
+
+  AtCpinURC_t urc = {0};
+  size_t n = AtCpinParseURC(&urc, ibuf, ilen);
+
+  TEST_ASSERT_EQUAL(ilen, n);
+  TEST_ASSERT_EQUAL(ATCPIN_INFO, urc.type);
+  TEST_ASSERT_EQUAL(ATCPIN_NOT_INSERTED, urc.payload.info.code);
+}
+
 void test_AtCpinParseURC_READY(void)
 {
   const char *ibuf = "\r\n+CPIN: READY\r\n";

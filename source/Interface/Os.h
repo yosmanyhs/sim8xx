@@ -40,6 +40,12 @@ void OS_LockModem(void);
 
 void OS_UnlockModem(void);
 
+void OS_WaitIfModemIsNotReady(void);
+
+void OS_ModemIsReady(void);
+
+void OS_ModemIsNotReady(void);
+
 void OS_LockParser(void);
 
 void OS_UnlockParser(void);

@@ -186,9 +186,9 @@ size_t GSM_UtilsSkipReserved(const char input[], size_t ilen, char delim, size_t
   return offset;
 }
 
-size_t GSM_UtilsItoA(char obuf[], size_t olen, int n)
+size_t GSM_UtilsItoA(char obuf[], size_t olen, int32_t n)
 {
-  int sign = n;
+  int32_t sign = n;
 
   if (n < 0)
     n = -n;

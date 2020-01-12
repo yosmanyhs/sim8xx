@@ -8,9 +8,12 @@
 /*****************************************************************************/
 #include "Modem.h"
 #include "Commands/at.h"
+#include "Commands/atcfun.h"
+#include "Commands/atcpin.h"
 #include "Commands/ate.h"
-
 #include "Interface/Os.h"
+
+#include <string.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -71,10 +74,37 @@ bool GSM_ModemIsAlive(GSM_Modem_t *this)
   AtObjectInit(&at);
   AtSetupRequest(&at);
   GSM_ModemLock(this);
-  GSM_ModemExecuteAtCommand(this, AtGetAtCommand(&at));
+
+  AT_Command_t *atcmd = AtGetAtCommand(&at);
+  char msg[10] = {0};
+  size_t n = atcmd->serialize(atcmd->obj, msg, sizeof(msg));
+
+  size_t i;
+  for (i = 0; i < n; ++i) {
+    this->put(msg[i]);
+  }
+
+  OS_LockParser();
+  this->currentAt = atcmd;
+  OS_UnlockParser();
+
+  OS_Error_t error = OS_WaitForResponseWithTimeout(atcmd->timeoutInMilliSec);
+
+  OS_LockParser();
+  this->currentAt = NULL;
+  OS_UnlockParser();
+
+  if (OS_TIMEOUT == error) {
+    atcmd->timeout(atcmd->obj);
+  }
+
   GSM_ModemUnlock(this);
 
-  return (AT_CMD_OK == AtGetResponseStatus(&at));
+  bool isAlive = (AT_CMD_OK == AtGetResponseStatus(&at));
+  if (!isAlive)
+    OS_ModemIsNotReady();
+
+  return isAlive; 
 }
 
 // TODO Add test for GSM_ModemDisableEcho.
@@ -104,6 +134,7 @@ void GSM_ModemUnlock(GSM_Modem_t *this)
 
 void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
 {
+  OS_WaitIfModemIsNotReady();
   OS_WaitGuardTimeToPass();
 
   char obuf[512] = {0};
@@ -125,8 +156,9 @@ void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
   this->currentAt = NULL;
   OS_UnlockParser();
 
-  if (OS_TIMEOUT == error)
+  if (OS_TIMEOUT == error) {
     atcmd->timeout(atcmd->obj);
+  }
 }
 
 size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
@@ -144,6 +176,23 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
 
   if (0 == offset) {
     offset = GSM_BluetoothURCParse(&this->bluetooth, ibuf, ilen);
+  }
+
+  if (0 == offset) {
+    AtCfunURC_t urc = {0};
+    offset = AtCfunParseURC(&urc, ibuf, ilen);
+  }
+
+  if (0 == offset) {
+    AtCpinURC_t urc = {0};
+    offset = AtCpinParseURC(&urc, ibuf, ilen);
+  }
+
+  if (0 == offset) {
+    if (0 == strncasecmp(ibuf, "\r\nRDY\r\n", 7)) {
+      offset = strlen("\r\nRDY\r\n");
+      OS_ModemIsReady();
+    }
   }
 
   OS_UnlockParser();

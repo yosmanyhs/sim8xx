@@ -9,7 +9,7 @@
 #include "atcpin.h"
 
 #include "Common/Env.h"
-#include "Utils.h"
+#include "Utils/Utils.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -18,6 +18,7 @@
 /* DEFINED CONSTANTS                                                         */
 /*****************************************************************************/
 #define TIMEOUT_IN_MSEC 5000
+
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
@@ -109,6 +110,8 @@ GSM_STATIC AtCpinCode_t AtCpin_convertStringToCode(const char ibuf[], size_t ile
     code = ATCPIN_SIM_PIN2;
   } else if ((8 == ilen) && (0 == strncasecmp(ibuf, "SIM PUK2", ilen))) {
     code = ATCPIN_SIM_PUK2;
+  } else if ((12 == ilen) && (0 == strncasecmp(ibuf, "NOT INSERTED", ilen))) {
+    code = ATCPIN_NOT_INSERTED;
   } else {
     code = ATCPIN_INVALID_CODE;
   }
