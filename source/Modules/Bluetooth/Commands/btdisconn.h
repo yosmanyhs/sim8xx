@@ -50,9 +50,9 @@ typedef struct BtDisconnURC_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-bool BtDisconnIsURC(const char *ibuf, size_t length);
+bool BtDisconnIsURC(const char *ibuf, size_t ilen);
 
-size_t BtDisconnParseURC(BtDisconnURC_t *urc, const char *ibuf, size_t length);
+size_t BtDisconnParseURC(BtDisconnURC_t *urc, const char *ibuf, size_t ilen);
 
 #endif /* BTDISCONN_H */
 

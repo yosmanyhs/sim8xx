@@ -36,22 +36,22 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-GSM_STATIC size_t CgnsInfSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t CgnsInfSerialize(void *p, char *obuf, size_t olen)
 {
   (void)p;
-  size_t n = 0;
-  if (11 < length) {
-    strncat(obuf, "AT+CGNSINF\r", length - 1);
-    n = strlen(obuf);
+  memset(obuf, 0, olen);
+
+  if (11 < olen) {
+    strncpy(obuf, "AT+CGNSINF\r", olen - 1);
   }
 
-  return n;
+  return strlen(obuf);
 }
 
-GSM_STATIC size_t CgnsInfParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t CgnsInfParse(void *p, const char *ibuf, size_t ilen)
 {
   const char *tag = "\r\n+CGNSINF:";
-  if (length < 11)
+  if (ilen < 11)
     return 0;
 
   if (strncasecmp(ibuf, tag, 11))
@@ -59,7 +59,7 @@ GSM_STATIC size_t CgnsInfParse(void *p, const char *ibuf, size_t length)
 
   CgnsInf_t *obj            = (CgnsInf_t *)p;
   const char *next = ibuf;
-  const char *end = ibuf + length;
+  const char *end = ibuf + ilen;
 
   size_t offset = 0;
   size_t n = GSM_UtilsGetInt(next, end - next, &obj->response.runStatus, ' ', ',');

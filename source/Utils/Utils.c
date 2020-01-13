@@ -35,9 +35,9 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-static double GSM_utilsAscii2Double(const char ibuf[], size_t length)
+static double GSM_utilsAscii2Double(const char ibuf[], size_t ilen)
 {
-  if (0 == length)
+  if (0 == ilen)
     return 0.0;
 
   double result = 0.0;
@@ -45,16 +45,16 @@ static double GSM_utilsAscii2Double(const char ibuf[], size_t length)
   bool isNegative = ('-' == ibuf[0]);
 
   size_t i;
-  for (i = isNegative ? 1 : 0; i < length && ibuf[i] != '.'; ++i) {
+  for (i = isNegative ? 1 : 0; i < ilen && ibuf[i] != '.'; ++i) {
     result = 10 * result + (ibuf[i] - '0');
   }
 
-  if (i == length)
+  if (i == ilen)
     return result * (isNegative ? (-1) : 1);
   i++;
 
   double fract = 1.0;
-  while (i < length) {
+  while (i < ilen) {
     fract *= 0.1;
     result += fract * (ibuf[i++] - '0');
   }

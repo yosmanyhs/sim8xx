@@ -6,8 +6,8 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "btsppsend.h"
 #include "Common/Env.h"
+#include "btsppsend.h"
 #include <string.h>
 
 /*****************************************************************************/
@@ -34,50 +34,68 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-GSM_STATIC size_t BtSppSendSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t BtSppSendSerialize(void *p, char *obuf, size_t olen)
 {
   BtSppSend_t *obj = (BtSppSend_t *)p;
-  size_t n         = 0;
+  memset(obuf, 0, olen);
 
-  if (BT_SPP_SEND_STATE_DATA == obj->state) {
-    strncat(obuf, obj->request.data, length);
-    strncat(obuf, "\x1A", length - strlen(obuf));
+  if (BT_SPP_SEND_STATE_COMMAND == obj->state) {
+    strncpy(obuf, "AT+BTSPPSEND\r", olen - 1);
+  } else if (BT_SPP_SEND_STATE_DATA == obj->state) {
+    strncpy(obuf, obj->request.data, olen - 2);
+    strncat(obuf, "\x1A", olen - 1 - strlen(obuf));
   } else {
-    strncat(obuf, "AT+BTSPPSEND\r", length);
+    ;
   }
 
-  n = strlen(obuf);
-
-  return n;
+  return strlen(obuf);
 }
 
-GSM_STATIC size_t BtSppSendParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t BtSppSendParse(void *p, const char *ibuf, size_t ilen)
 {
   BtSppSend_t *obj          = (BtSppSend_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
-  size_t n                  = AT_CommandStatusParse(ibuf, length, &status);
+  size_t n                  = AT_CommandStatusParse(ibuf, ilen, &status);
 
-  if (BT_SPP_SEND_STATE_DATA == obj->state) {
-    if (n &&
-        ((AT_CMD_SEND_OK == status) || (AT_CMD_SEND_FAIL == status) || (AT_CMD_ERROR == status))) {
+  size_t offset = 0;
+  if (BT_SPP_SEND_STATE_COMMAND == obj->state) {
+    switch (status) {
+    case AT_CMD_WAIT_FOR_USER_DATA: {
       obj->response.status = status;
-    } else {
-      n = 0;
+      offset               = n;
+      break;
+    }
+    default: {
+      obj->response.status = AT_CMD_INVALID;
+      offset               = 0;
+      break;
+    }
+    }
+  } else if (BT_SPP_SEND_STATE_DATA == obj->state) {
+    switch (status) {
+    case AT_CMD_SEND_OK:
+    case AT_CMD_SEND_FAIL:
+    case AT_CMD_ERROR: {
+      obj->response.status = status;
+      offset               = n;
+      break;
+    }
+    default: {
+      obj->response.status = AT_CMD_INVALID;
+      offset               = 0;
+      break;
+    }
     }
   } else {
-    if (n && (AT_CMD_WAIT_FOR_USER_DATA == status)) {
-      obj->response.status = status;
-    } else {
-      n = 0;
-    }
+    ;
   }
 
-  return n;
+  return offset;
 }
 
 GSM_STATIC void BtSppSendTimeout(void *p)
 {
-  BtSppSend_t *obj = (BtSppSend_t *)p;
+  BtSppSend_t *obj     = (BtSppSend_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;
 }
 
@@ -87,10 +105,10 @@ GSM_STATIC void BtSppSendTimeout(void *p)
 void BtSppSendObjectInit(BtSppSend_t *this)
 {
   memset(this, 0, sizeof(*this));
-  this->atcmd.obj       = this;
-  this->atcmd.serialize = BtSppSendSerialize;
-  this->atcmd.parse     = BtSppSendParse;
-  this->atcmd.timeout   = BtSppSendTimeout;
+  this->atcmd.obj               = this;
+  this->atcmd.serialize         = BtSppSendSerialize;
+  this->atcmd.parse             = BtSppSendParse;
+  this->atcmd.timeout           = BtSppSendTimeout;
   this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 

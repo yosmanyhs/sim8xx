@@ -43,9 +43,9 @@ typedef enum {
   AT_CMD_SEND_FAIL,
 } AT_CommandStatus_t;
 
-typedef size_t (*AT_Serialize_t)(void *p, char *obuf, size_t length);
+typedef size_t (*AT_Serialize_t)(void *p, char *obuf, size_t olen);
 
-typedef size_t (*AT_Parse_t)(void *p, const char *ibuf, size_t length);
+typedef size_t (*AT_Parse_t)(void *p, const char *ibuf, size_t ilen);
 
 typedef void (*AT_Timeout)(void *p);
 
@@ -64,7 +64,7 @@ typedef struct AT_Command_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-size_t AT_CommandStatusParse(const char *ibuf, size_t length, AT_CommandStatus_t *status);
+size_t AT_CommandStatusParse(const char *ibuf, size_t ilen, AT_CommandStatus_t *status);
 
 #endif /* ATCOMMAND_H */
 

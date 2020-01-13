@@ -56,7 +56,7 @@ void test_BtConnectSerialize(void)
   BtConnectObjectInit(&btconnect);
   BtConnectSetupRequest(&btconnect, 3, 9); 
 
-  char obuf[20];
+  char obuf[23];
   size_t olen = sizeof(obuf);
 
   BtConnectSerialize(&btconnect, obuf, olen);

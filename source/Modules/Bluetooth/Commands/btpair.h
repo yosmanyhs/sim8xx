@@ -49,9 +49,9 @@ typedef struct BtPairURC_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-bool BtPairIsURC(const char *ibuf, size_t length);
+bool BtPairIsURC(const char *ibuf, size_t ilen);
 
-size_t BtPairParseURC(BtPairURC_t *urc, const char *ibuf, size_t length);
+size_t BtPairParseURC(BtPairURC_t *urc, const char *ibuf, size_t ilen);
 
 #endif /* BTPAIR_H */
 

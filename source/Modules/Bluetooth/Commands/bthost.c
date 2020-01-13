@@ -6,8 +6,8 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "bthost.h"
 #include "Common/Env.h"
+#include "bthost.h"
 #include <string.h>
 
 /*****************************************************************************/
@@ -34,41 +34,48 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-GSM_STATIC size_t BtHostSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t BtHostSerialize(void *p, char *obuf, size_t olen)
 {
-  memset(obuf, 0, length);
-  
   BtHost_t *obj = (BtHost_t *)p;
-  size_t n      = 0;
-  if (28 < length) {
-    strncat(obuf, "AT+BTHOST=", length - 1);
-    strncat(obuf, obj->request.name, length - 1 - 10);
-    n = strlen(obuf);
-    strncat(obuf, "\r", length - n);
+  memset(obuf, 0, olen);
+
+  size_t n = 0;
+  if (28 < olen) {
+    strncat(obuf, "AT+BTHOST=", olen - 1);
+    strncat(obuf, obj->request.name, olen - 1 - strlen(obuf));
+    strncat(obuf, "\r", olen - 1 - strlen(obuf));
     n = strlen(obuf);
   }
 
   return n;
 }
 
-GSM_STATIC size_t BtHostParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t BtHostParse(void *p, const char *ibuf, size_t ilen)
 {
   BtHost_t *obj             = (BtHost_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
-  size_t n                  = AT_CommandStatusParse(ibuf, length, &status);
+  size_t n                  = AT_CommandStatusParse(ibuf, ilen, &status);
 
-  if (n && ((AT_CMD_OK == status) || (AT_CMD_ERROR == status))) {
+  size_t offset = 0;
+
+  switch (status) {
+  case AT_CMD_OK:
+  case AT_CMD_ERROR:
     obj->response.status = status;
-  } else {
-    n = 0;
+    offset               = n;
+    break;
+  default:
+    obj->response.status = AT_CMD_INVALID;
+    offset               = 0;
+    break;
   }
 
-  return n;
+  return offset;
 }
 
 GSM_STATIC void BtHostTimeout(void *p)
 {
-  BtHost_t *obj = (BtHost_t *)p;
+  BtHost_t *obj        = (BtHost_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;
 }
 
@@ -78,10 +85,10 @@ GSM_STATIC void BtHostTimeout(void *p)
 void BtHostObjectInit(BtHost_t *this)
 {
   memset(this, 0, sizeof(*this));
-  this->atcmd.obj       = this;
-  this->atcmd.serialize = BtHostSerialize;
-  this->atcmd.parse     = BtHostParse;
-  this->atcmd.timeout   = BtHostTimeout;
+  this->atcmd.obj               = this;
+  this->atcmd.serialize         = BtHostSerialize;
+  this->atcmd.parse             = BtHostParse;
+  this->atcmd.timeout           = BtHostTimeout;
   this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 

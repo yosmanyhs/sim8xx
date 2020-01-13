@@ -84,9 +84,9 @@ BtConnect_response_t BtConnectGetResponse(BtConnect_t *this);
 
 AT_CommandStatus_t BtConnectGetResponseStatus(BtConnect_t *this);
 
-bool BtConnectIsURC(const char *ibuf, size_t length);
+bool BtConnectIsURC(const char *ibuf, size_t ilen);
 
-size_t BtConnectParseURC(BtConnectURC_t *urc, const char *ibuf, size_t length);
+size_t BtConnectParseURC(BtConnectURC_t *urc, const char *ibuf, size_t ilen);
 
 #endif /* BTCONNECT_H */
 

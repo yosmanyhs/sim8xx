@@ -37,25 +37,31 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-GSM_STATIC bool BtConnect_isBtConnecting(const char *ibuf, size_t length)
+GSM_STATIC bool BtConnect_isBtConnecting(const char *ibuf, size_t ilen)
 {
-  (void)length;
   const char *tag = "\r\n+BTCONNECTING:";
-  return (0 == strncasecmp(ibuf, tag, strlen(tag)));
+  size_t tlen     = strlen(tag);
+
+  bool result = false;
+  if (tlen < ilen) {
+    result = (0 == strncasecmp(ibuf, tag, tlen));
+  }
+
+  return result;
 }
 
 GSM_STATIC size_t BtConnect_parseBtConnecting(BtConnect_ConnectingURC_t *urc,
                                               const char *ibuf,
-                                              size_t length)
+                                              size_t ilen)
 {
   size_t offset = 0;
   memset(urc, 0, sizeof(*urc));
 
-  if (!BtConnect_isBtConnecting(ibuf, length))
+  if (!BtConnect_isBtConnecting(ibuf, ilen))
     return 0;
 
   const char *next = ibuf;
-  const char *end  = ibuf + length;
+  const char *end  = ibuf + ilen;
 
   size_t n = GSM_UtilsGetString(next, end - next, urc->address, sizeof(urc->address), '"', '"');
   if (n) {
@@ -85,23 +91,29 @@ GSM_STATIC size_t BtConnect_parseBtConnecting(BtConnect_ConnectingURC_t *urc,
   return offset;
 }
 
-GSM_STATIC bool BtConnect_isBtConnect(const char *ibuf, size_t length)
+GSM_STATIC bool BtConnect_isBtConnect(const char *ibuf, size_t ilen)
 {
-  (void)length;
   const char *tag = "\r\n+BTCONNECT:";
-  return (0 == strncasecmp(ibuf, tag, strlen(tag)));
+  size_t tlen     = strlen(tag);
+
+  bool result = false;
+  if (tlen < ilen) {
+    result = (0 == strncasecmp(ibuf, tag, tlen));
+  }
+
+  return result;
 }
 
-GSM_STATIC size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *ibuf, size_t length)
+GSM_STATIC size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *ibuf, size_t ilen)
 {
   size_t offset = 0;
   memset(urc, 0, sizeof(*urc));
 
-  if (!BtConnect_isBtConnect(ibuf, length))
+  if (!BtConnect_isBtConnect(ibuf, ilen))
     return 0;
 
   const char *next = ibuf;
-  const char *end  = ibuf + length;
+  const char *end  = ibuf + ilen;
 
   size_t n = GSM_UtilsGetInt(next, end - next, &urc->id, ' ', ',');
   if (n) {
@@ -149,26 +161,27 @@ GSM_STATIC size_t BtConnect_parseBtConnect(BtConnect_Result_t *urc, const char *
   return offset;
 }
 
-GSM_STATIC size_t BtConnectSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t BtConnectSerialize(void *p, char *obuf, size_t olen)
 {
   BtConnect_t *obj = (BtConnect_t *)p;
+  memset(obuf, 0, olen);
   size_t n         = 0;
 
-  if (19 < length) {
-    strncpy(obuf, "AT+BTCONNECT=", length);
+  if (22 < olen) {
+    strncpy(obuf, "AT+BTCONNECT=", olen - 1);
     n = strlen(obuf);
-    n += GSM_UtilsItoA(obuf + n, length - n, obj->request.deviceId);
-    strncat(obuf, ",", length - n);
+    n += GSM_UtilsItoA(obuf + n, olen - 1 - n, obj->request.deviceId);
+    strncat(obuf, ",", olen - 1 - n);
     ++n;
-    n += GSM_UtilsItoA(obuf + n, length - n, obj->request.profileId);
-    strncat(obuf, "\r", length - n);
+    n += GSM_UtilsItoA(obuf + n, olen - 1 - n, obj->request.profileId);
+    strncat(obuf, "\r", olen - 1 - n);
     n = strlen(obuf);
   }
 
   return n;
 }
 
-GSM_STATIC size_t BtConnectParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t BtConnectParse(void *p, const char *ibuf, size_t ilen)
 {
   BtConnect_t *obj = (BtConnect_t *)p;
 
@@ -177,7 +190,7 @@ GSM_STATIC size_t BtConnectParse(void *p, const char *ibuf, size_t length)
     n                    = 17;
     obj->response.status = AT_CMD_ERROR;
   } else {
-    n                    = BtConnect_parseBtConnect(&obj->response.result, ibuf, length);
+    n                    = BtConnect_parseBtConnect(&obj->response.result, ibuf, ilen);
     obj->response.status = (0 < n) ? AT_CMD_OK : AT_CMD_INVALID;
   }
 
@@ -224,24 +237,24 @@ AT_CommandStatus_t BtConnectGetResponseStatus(BtConnect_t *this)
   return this->response.status;
 }
 
-bool BtConnectIsURC(const char *ibuf, size_t length)
+bool BtConnectIsURC(const char *ibuf, size_t ilen)
 {
-  bool isConnecting = BtConnect_isBtConnecting(ibuf, length);
-  bool isConnect    = BtConnect_isBtConnect(ibuf, length);
+  bool isConnecting = BtConnect_isBtConnecting(ibuf, ilen);
+  bool isConnect    = BtConnect_isBtConnect(ibuf, ilen);
 
   return isConnect || isConnecting;
 }
 
-size_t BtConnectParseURC(BtConnectURC_t *urc, const char *ibuf, size_t length)
+size_t BtConnectParseURC(BtConnectURC_t *urc, const char *ibuf, size_t ilen)
 {
   size_t offset = 0;
 
-  if (BtConnect_isBtConnecting(ibuf, length)) {
+  if (BtConnect_isBtConnecting(ibuf, ilen)) {
     urc->type = BTCONNECT_CONNECTING;
-    offset    = BtConnect_parseBtConnecting(&urc->payload.connecting, ibuf, length);
-  } else if (BtConnect_isBtConnect(ibuf, length)) {
+    offset    = BtConnect_parseBtConnecting(&urc->payload.connecting, ibuf, ilen);
+  } else if (BtConnect_isBtConnect(ibuf, ilen)) {
     urc->type = BTCONNECT_CONNECT;
-    offset    = BtConnect_parseBtConnect(&urc->payload.connect, ibuf, length);
+    offset    = BtConnect_parseBtConnect(&urc->payload.connect, ibuf, ilen);
   } else {
     urc->type = BTCONNECT_NO_URC;
   }

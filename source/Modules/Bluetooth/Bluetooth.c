@@ -250,26 +250,26 @@ bool GSM_BluetoothSendSPPData(GSM_Bluetooth_t *this, const char *data, size_t le
   return (AT_CMD_SEND_OK == BtSppSendGetResponseStatus(&btsppsend));
 }
 
-size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t length)
+size_t GSM_BluetoothURCParse(void *p, const char *ibuf, size_t ilen)
 {
   GSM_Bluetooth_t *blt = (GSM_Bluetooth_t *)p;
   size_t offset        = 0;
 
-  if (BtConnectIsURC(ibuf, length)) {
+  if (BtConnectIsURC(ibuf, ilen)) {
     BtConnectURC_t urc = {0};
-    offset             = BtConnectParseURC(&urc, ibuf, length);
+    offset             = BtConnectParseURC(&urc, ibuf, ilen);
     GSM_bluetoothHandleBtConnectURC(&urc, blt);
-  } else if (BtSppGetIsURC(ibuf, length)) {
+  } else if (BtSppGetIsURC(ibuf, ilen)) {
     BtSppGetURC_t urc = {0};
-    offset            = BtSppGetParseURC(&urc, ibuf, length);
+    offset            = BtSppGetParseURC(&urc, ibuf, ilen);
     GSM_bluetoothHandleBtSppGetURC(&urc, blt);
-  } else if (BtDisconnIsURC(ibuf, length)) {
+  } else if (BtDisconnIsURC(ibuf, ilen)) {
     BtDisconnURC_t urc = {0};
-    offset             = BtDisconnParseURC(&urc, ibuf, length);
+    offset             = BtDisconnParseURC(&urc, ibuf, ilen);
     GSM_bluetoothHandleBtDisconnURC(&urc, blt);
-  } else if (BtPairIsURC(ibuf, length)) {
+  } else if (BtPairIsURC(ibuf, ilen)) {
     BtPairURC_t urc = {0};
-    offset          = BtPairParseURC(&urc, ibuf, length);
+    offset          = BtPairParseURC(&urc, ibuf, ilen);
     // Skip this URC
   } else {
     ;

@@ -6,9 +6,10 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "btpower.h"
 #include "Common/Env.h"
+#include "btpower.h"
 #include <string.h>
+
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -34,41 +35,48 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-GSM_STATIC size_t BtPowerSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t BtPowerSerialize(void *p, char *obuf, size_t olen)
 {
-  memset(obuf, 0, length);
-
   BtPower_t *obj = (BtPower_t *)p;
-  size_t n       = 0;
-  if (13 < length) {
-    strncat(obuf, "AT+BTPOWER=", length - 2);
-    strcat(obuf, obj->request.mode == 1 ? "1" : "0");
-    n = strlen(obuf);
-    strncat(obuf, "\r", length - n);
+  memset(obuf, 0, olen);
+
+  size_t n = 0;
+  if (13 < olen) {
+    strncpy(obuf, "AT+BTPOWER=", olen - 2);
+    strncat(obuf, obj->request.mode == 1 ? "1" : "0", olen - 1 - strlen(obuf));
+    strncat(obuf, "\r", olen - 1 - strlen(obuf));
     n = strlen(obuf);
   }
 
   return n;
 }
 
-GSM_STATIC size_t BtPowerParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t BtPowerParse(void *p, const char *ibuf, size_t ilen)
 {
   BtPower_t *obj            = (BtPower_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
-  size_t n                  = AT_CommandStatusParse(ibuf, length, &status);
+  size_t n                  = AT_CommandStatusParse(ibuf, ilen, &status);
 
-  if (n && ((AT_CMD_OK == status) || (AT_CMD_ERROR == status))) {
+  size_t offset = 0;
+
+  switch (status) {
+  case AT_CMD_OK:
+  case AT_CMD_ERROR:
     obj->response.status = status;
-  } else {
-    n = 0;
+    offset               = n;
+    break;
+  default:
+    obj->response.status = AT_CMD_INVALID;
+    offset               = 0;
+    break;
   }
 
-  return n;
+  return offset;
 }
 
 GSM_STATIC void BtPowerTimeout(void *p)
 {
-  BtPower_t *obj = (BtPower_t *)p;
+  BtPower_t *obj       = (BtPower_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;
 }
 
@@ -78,10 +86,10 @@ GSM_STATIC void BtPowerTimeout(void *p)
 void BtPowerObjectInit(BtPower_t *this)
 {
   memset(this, 0, sizeof(*this));
-  this->atcmd.obj       = this;
-  this->atcmd.serialize = BtPowerSerialize;
-  this->atcmd.parse     = BtPowerParse;
-  this->atcmd.timeout   = BtPowerTimeout;
+  this->atcmd.obj               = this;
+  this->atcmd.serialize         = BtPowerSerialize;
+  this->atcmd.parse             = BtPowerParse;
+  this->atcmd.timeout           = BtPowerTimeout;
   this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 

@@ -145,6 +145,7 @@ void test_BtSppSendParse_WAIT_USER_DATA(void)
 {
   BtSppSend_t btsppsend;
   BtSppSendObjectInit(&btsppsend);
+  BtSppSendSetCommandMode(&btsppsend);
 
   const char *ibuf = "\r\n> ";
   size_t length    = strlen(ibuf);

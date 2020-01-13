@@ -34,33 +34,40 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-GSM_STATIC size_t CgnsPwrSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t CgnsPwrSerialize(void *p, char *obuf, size_t olen)
 {
   CgnsPwr_t *obj = (CgnsPwr_t *)p;
-  size_t n       = 0;
-  if (13 < length) {
-    strncat(obuf, "AT+CGNSPWR=", length - 2);
-    strncat(obuf, obj->request.mode == 1 ? "1" : "0", 1);
-    strncat(obuf, "\r", length - strlen(obuf));
-    n = strlen(obuf);
+  
+  if (13 < olen) {
+    strncpy(obuf, "AT+CGNSPWR=", olen - 3);
+    strncat(obuf, obj->request.mode == 1 ? "1" : "0", olen - 2 - strlen(obuf));
+    strncat(obuf, "\r", olen - 1 - strlen(obuf));
   }
 
-  return n;
+  return strlen(obuf);
 }
 
-GSM_STATIC size_t CgnsPwrParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t CgnsPwrParse(void *p, const char *ibuf, size_t ilen)
 {
   CgnsPwr_t *obj            = (CgnsPwr_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
-  size_t n                  = AT_CommandStatusParse(ibuf, length, &status);
+  size_t n                  = AT_CommandStatusParse(ibuf, ilen, &status);
 
-  if (n && ((AT_CMD_OK == status) || (AT_CMD_ERROR == status))) {
+  size_t offset = 0;
+
+  switch (status) {
+  case AT_CMD_OK:
+  case AT_CMD_ERROR:
     obj->response.status = status;
-  } else {
-    n = 0;
+    offset               = n;
+    break;
+  default:
+    obj->response.status = AT_CMD_INVALID;
+    offset               = 0;
+    break;
   }
 
-  return n;
+  return offset;
 }
 
 GSM_STATIC void CgnsPwrTimeout(void *p)

@@ -49,9 +49,9 @@ typedef struct BtSppGetURC_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-bool BtSppGetIsURC(const char *ibuf, size_t length);
+bool BtSppGetIsURC(const char *ibuf, size_t ilen);
 
-size_t BtSppGetParseURC(BtSppGetURC_t *urc, const char *ibuf, size_t length);
+size_t BtSppGetParseURC(BtSppGetURC_t *urc, const char *ibuf, size_t ilen);
 
 #endif /* BT_SPP_GET_H */
 

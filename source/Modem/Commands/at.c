@@ -31,41 +31,46 @@
 /*****************************************************************************/
 /* DECLARATION OF LOCAL FUNCTIONS                                            */
 /*****************************************************************************/
-GSM_STATIC size_t AtSerialize(void *p, char *obuf, size_t length)
+GSM_STATIC size_t AtSerialize(void *p, char *obuf, size_t olen)
 {
-  memset(obuf, 0, length);
-
   (void)p;
-  size_t n      = 0;
-  if (3 < length) {
-    strncpy(obuf, "AT\r", length);
-    n = strlen(obuf);
+  memset(obuf, 0, olen);
+
+  if (3 < olen) {
+    strncpy(obuf, "AT\r", olen - 1);
   }
 
-  return n;
+  return strlen(obuf);
 }
 
-GSM_STATIC size_t AtParse(void *p, const char *ibuf, size_t length)
+GSM_STATIC size_t AtParse(void *p, const char *ibuf, size_t ilen)
 {
   At_t *obj             = (At_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
 
   size_t n = 0;
-  if (3 < length) {
+  if (3 < ilen) {
     if (0 == strncasecmp(ibuf, "AT\r", 3)) {
       n += 3;
     }
     
-    n += AT_CommandStatusParse(ibuf + n, length - n, &status);
+    n += AT_CommandStatusParse(ibuf + n, ilen - n, &status);
   } 
 
-  if (n && (AT_CMD_OK == status)) {
+  size_t offset = 0;
+
+  switch (status) {
+  case AT_CMD_OK:
     obj->response.status = status;
-  } else {
-    n = 0;
+    offset               = n;
+    break;
+  default:
+    obj->response.status = AT_CMD_INVALID;
+    offset               = 0;
+    break;
   }
 
-  return n;
+  return offset;
 }
 
 GSM_STATIC void AtTimeout(void *p)

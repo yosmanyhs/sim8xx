@@ -36,25 +36,31 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-GSM_STATIC bool BtDisconnIsBtDisconn(const char *ibuf, size_t length)
+GSM_STATIC bool BtDisconnIsBtDisconn(const char *ibuf, size_t ilen)
 {
-  (void)length;
   const char *tag = "\r\n+BTDISCONN:";
-  return (0 == strncasecmp(ibuf, tag, strlen(tag)));
+  size_t tlen     = strlen(tag);
+
+  bool result = false;
+  if (tlen < ilen) {
+    result = (0 == strncasecmp(ibuf, tag, tlen));
+  }
+
+  return result;
 }
 
 GSM_STATIC size_t BtDisconn_parseBtDisconn(BtDisconn_DisconnectedURC_t *urc,
                                            const char *ibuf,
-                                           size_t length)
+                                           size_t ilen)
 {
   size_t offset = 0;
   memset(urc, 0, sizeof(*urc));
 
-  if (!BtDisconnIsBtDisconn(ibuf, length))
+  if (!BtDisconnIsBtDisconn(ibuf, ilen))
     return 0;
 
   const char *next = ibuf;
-  const char *end  = ibuf + length;
+  const char *end  = ibuf + ilen;
 
   size_t n = GSM_UtilsGetString(next, end - next, urc->name, sizeof(urc->name), '"', '"');
   if (n) {
@@ -96,18 +102,18 @@ GSM_STATIC size_t BtDisconn_parseBtDisconn(BtDisconn_DisconnectedURC_t *urc,
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-bool BtDisconnIsURC(const char *ibuf, size_t length)
+bool BtDisconnIsURC(const char *ibuf, size_t ilen)
 {
-  return BtDisconnIsBtDisconn(ibuf, length);
+  return BtDisconnIsBtDisconn(ibuf, ilen);
 }
 
-size_t BtDisconnParseURC(BtDisconnURC_t *urc, const char *ibuf, size_t length)
+size_t BtDisconnParseURC(BtDisconnURC_t *urc, const char *ibuf, size_t ilen)
 {
   size_t offset = 0;
 
-  if (BtDisconnIsBtDisconn(ibuf, length)) {
+  if (BtDisconnIsBtDisconn(ibuf, ilen)) {
     urc->type = BTDISCONN_DISCONNECTED;
-    offset    = BtDisconn_parseBtDisconn(&urc->payload.disconn, ibuf, length);
+    offset    = BtDisconn_parseBtDisconn(&urc->payload.disconn, ibuf, ilen);
   } else {
     urc->type = BTDISCONN_NO_URC;
   }

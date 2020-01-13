@@ -36,20 +36,26 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-GSM_STATIC bool BtPairIsBtPairPassiveSuccess(const char *ibuf, size_t length)
+GSM_STATIC bool BtPairIsBtPairPassiveSuccess(const char *ibuf, size_t ilen)
 {
-  (void)length;
   const char *tag = "\r\n+BTPAIR:";
-  return (0 == strncasecmp(ibuf, tag, strlen(tag)));
+  size_t tlen     = strlen(tag);
+
+  bool result = false;
+  if (tlen < ilen) {
+    result = (0 == strncasecmp(ibuf, tag, tlen));
+  }
+
+  return result;
 }
 
-GSM_STATIC size_t BtPair_parsePassiveSuccessUrc(BtPairPassiveSuccess_t *urc, const char *ibuf, size_t length)
+GSM_STATIC size_t BtPair_parsePassiveSuccessUrc(BtPairPassiveSuccess_t *urc, const char *ibuf, size_t ilen)
 {
   size_t offset = 0;
   memset(urc, 0, sizeof(*urc));
   
   const char *next = ibuf;
-  const char *end  = ibuf + length;
+  const char *end  = ibuf + ilen;
 
   size_t n = GSM_UtilsGetInt(next, end - next, &urc->id, ' ', ',');
   if (n) {
@@ -91,18 +97,18 @@ GSM_STATIC size_t BtPair_parsePassiveSuccessUrc(BtPairPassiveSuccess_t *urc, con
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-bool BtPairIsURC(const char *ibuf, size_t length)
+bool BtPairIsURC(const char *ibuf, size_t ilen)
 {
-  return BtPairIsBtPairPassiveSuccess(ibuf, length);
+  return BtPairIsBtPairPassiveSuccess(ibuf, ilen);
 }
 
-size_t BtPairParseURC(BtPairURC_t *urc, const char *ibuf, size_t length)
+size_t BtPairParseURC(BtPairURC_t *urc, const char *ibuf, size_t ilen)
 {
   size_t offset = 0;
 
-  if (BtPairIsBtPairPassiveSuccess(ibuf, length)) {
+  if (BtPairIsBtPairPassiveSuccess(ibuf, ilen)) {
     urc->type = BTPAIR_PASSIVE_MODE_WITH_SUCCESS;
-    offset = BtPair_parsePassiveSuccessUrc(&urc->payload.passiveSuccess, ibuf, length);
+    offset = BtPair_parsePassiveSuccessUrc(&urc->payload.passiveSuccess, ibuf, ilen);
   } else {
     urc->type = BTPAIR_NO_URC;  
   }
