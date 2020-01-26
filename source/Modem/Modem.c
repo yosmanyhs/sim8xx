@@ -76,8 +76,8 @@ bool GSM_ModemIsAlive(GSM_Modem_t *this)
   GSM_ModemLock(this);
 
   AT_Command_t *atcmd = AtGetAtCommand(&at);
-  char msg[10] = {0};
-  size_t n = atcmd->serialize(atcmd->obj, msg, sizeof(msg));
+  char msg[10]        = {0};
+  size_t n            = atcmd->serialize(atcmd->obj, msg, sizeof(msg));
 
   size_t i;
   for (i = 0; i < n; ++i) {
@@ -104,7 +104,7 @@ bool GSM_ModemIsAlive(GSM_Modem_t *this)
   if (!isAlive)
     OS_ModemIsNotReady();
 
-  return isAlive; 
+  return isAlive;
 }
 
 // TODO Add test for GSM_ModemDisableEcho.
@@ -152,11 +152,10 @@ void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd)
 
   OS_Error_t error = OS_WaitForResponseWithTimeout(atcmd->timeoutInMilliSec);
 
-  OS_LockParser();
-  this->currentAt = NULL;
-  OS_UnlockParser();
-
   if (OS_TIMEOUT == error) {
+    OS_LockParser();
+    this->currentAt = NULL;
+    OS_UnlockParser();
     atcmd->timeout(atcmd->obj);
   }
 }
@@ -171,6 +170,7 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
     offset            = parser(this->currentAt->obj, ibuf, ilen);
     if (offset) {
       OS_WakeUpThreadWaitingForResponse();
+      this->currentAt = NULL;
     }
   }
 
@@ -180,12 +180,12 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
 
   if (0 == offset) {
     AtCfunURC_t urc = {0};
-    offset = AtCfunParseURC(&urc, ibuf, ilen);
+    offset          = AtCfunParseURC(&urc, ibuf, ilen);
   }
 
   if (0 == offset) {
     AtCpinURC_t urc = {0};
-    offset = AtCpinParseURC(&urc, ibuf, ilen);
+    offset          = AtCpinParseURC(&urc, ibuf, ilen);
   }
 
   if (0 == offset) {
