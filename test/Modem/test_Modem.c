@@ -89,8 +89,6 @@ void test_GSM_ModemExecuteAtCommand(void)
   OS_LockParser_Expect();
   OS_UnlockParser_Expect();
   OS_WaitForResponseWithTimeout_ExpectAnyArgsAndReturn(OS_NO_ERROR);
-  OS_LockParser_Expect();
-  OS_UnlockParser_Expect();
   GSM_ModemExecuteAtCommand(&modem, &btpower.atcmd);
 
   OS_UnlockModem_Expect();
