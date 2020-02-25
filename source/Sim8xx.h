@@ -74,6 +74,22 @@ bool SIM_GpsStop(Sim8xx_t *this);
 
 bool SIM_GpsReadPosition(Sim8xx_t *this, GPS_Data_t *data);
 
+bool SIM_GsmGprsRegisterCallback(Sim8xx_t *this, GPRS_EventCb_t cb);
+
+bool SIM_GsmStart(Sim8xx_t *this, const char *pin);
+
+bool SIM_GsmStop(Sim8xx_t *this);
+
+bool SIM_GsmGprsStart(Sim8xx_t *this, const char *apn, const char *user, const char *passwd);
+
+bool SIM_GsmGprsOpenTcpPort(Sim8xx_t *this, const char *host, int32_t port);
+
+bool SIM_GsmGprsSend(Sim8xx_t *this, const char *data, size_t dlen);
+
+bool SIM_GsmGprsCloseTcpPort(Sim8xx_t *this);
+
+bool SIM_GsmGprsStop(Sim8xx_t *this);
+
 #endif /* SIM8XX_H */
 
 /****************************** END OF FILE **********************************/

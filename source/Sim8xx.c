@@ -130,4 +130,44 @@ bool SIM_GpsReadPosition(Sim8xx_t *this, GPS_Data_t *data)
   return GSM_ModemGpsRead(&this->modem, data);
 }
 
+bool SIM_GsmGprsRegisterCallback(Sim8xx_t *this, GPRS_EventCb_t cb)
+{
+  return GSM_ModemGprsRegisterCallback(&this->modem, cb);
+}
+
+bool SIM_GsmStart(Sim8xx_t *this, const char *pin)
+{
+  return GSM_ModemStart(&this->modem, pin);
+}
+
+bool SIM_GsmStop(Sim8xx_t *this)
+{
+  return GSM_ModemStop(&this->modem);
+}
+
+bool SIM_GsmGprsStart(Sim8xx_t *this, const char *apn, const char *user, const char *passwd)
+{
+  return GSM_ModemGprsStart(&this->modem, apn, user, passwd);
+}
+
+bool SIM_GsmGprsOpenTcpPort(Sim8xx_t *this, const char *host, int32_t port)
+{
+  return GSM_ModemGprsOpenTcpPort(&this->modem, host, port);
+}
+
+bool SIM_GsmGprsSend(Sim8xx_t *this, const char *data, size_t dlen)
+{
+  return GSM_ModemGprsSend(&this->modem, data, dlen);
+}
+
+bool SIM_GsmGprsCloseTcpPort(Sim8xx_t *this)
+{
+  return GSM_ModemGprsCloseTcpPort(&this->modem);
+}
+
+bool SIM_GsmGprsStop(Sim8xx_t *this)
+{
+  return GSM_ModemGprsStop(&this->modem);
+}
+
 /****************************** END OF FILE **********************************/

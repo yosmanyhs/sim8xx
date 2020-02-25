@@ -76,6 +76,22 @@ bool GSM_ModemGpsStop(GSM_Modem_t *this);
 
 bool GSM_ModemGpsRead(GSM_Modem_t *this, GPS_Data_t *data);
 
+bool GSM_ModemGprsRegisterCallback(GSM_Modem_t *this, GPRS_EventCb_t cb);
+
+bool GSM_ModemStart(GSM_Modem_t *this, const char *pin);
+
+bool GSM_ModemStop(GSM_Modem_t *this);
+
+bool GSM_ModemGprsStart(GSM_Modem_t *this, const char *apn, const char *user, const char *passwd);
+
+bool GSM_ModemGprsOpenTcpPort(GSM_Modem_t *this, const char *host, int32_t port);
+
+bool GSM_ModemGprsSend(GSM_Modem_t *this, const char *data, size_t dlen);
+
+bool GSM_ModemGprsCloseTcpPort(GSM_Modem_t *this);
+
+bool GSM_ModemGprsStop(GSM_Modem_t *this);
+
 #endif /* MODEM_H */
 
 /****************************** END OF FILE **********************************/

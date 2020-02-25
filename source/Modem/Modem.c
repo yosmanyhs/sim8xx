@@ -231,4 +231,44 @@ bool GSM_ModemGpsRead(GSM_Modem_t *this, GPS_Data_t *data)
   return GSM_GpsRead(&this->gps, data);
 }
 
+bool GSM_ModemGprsRegisterCallback(GSM_Modem_t *this, GPRS_EventCb_t cb)
+{
+  return GSM_GsmGprsRegisterCallback(&this->gsm, cb);
+}
+
+bool GSM_ModemStart(GSM_Modem_t *this, const char *pin)
+{
+  return GSM_GsmStart(&this->gsm, pin);
+}
+
+bool GSM_ModemStop(GSM_Modem_t *this)
+{
+  return GSM_GsmStop(&this->gsm);
+}
+
+bool GSM_ModemGprsStart(GSM_Modem_t *this, const char *apn, const char *user, const char *passwd)
+{
+  return GSM_GsmGprsStart(&this->gsm, apn, user, passwd);
+}
+
+bool GSM_ModemGprsOpenTcpPort(GSM_Modem_t *this, const char *host, int32_t port)
+{
+  return GSM_GsmGprsOpenTcpPort(&this->gsm, host, port);
+}
+
+bool GSM_ModemGprsSend(GSM_Modem_t *this, const char *data, size_t dlen)
+{
+  return GSM_GsmGprsSend(&this->gsm, data, dlen);
+}
+
+bool GSM_ModemGprsCloseTcpPort(GSM_Modem_t *this)
+{
+  return GSM_GsmGprsCloseTcpPort(&this->gsm);
+}
+
+bool GSM_ModemGprsStop(GSM_Modem_t *this)
+{
+  return GSM_GsmGprsStop(&this->gsm);
+}
+
 /****************************** END OF FILE **********************************/
