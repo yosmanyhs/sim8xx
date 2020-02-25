@@ -9,8 +9,8 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "Modem/Modem.h"
 #include "Modules/GSM/GprsEvent.h"
+#include <stdbool.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -24,11 +24,13 @@
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
 typedef enum {
-  GPRS_STOPPED,
-  GPRS_DISCONNECTED,
-  GPRS_WAIT_FOR_CONNECT,
-  GPRS_CONNECTED,
+  GPRS_STATE_STOPPED,
+  GPRS_STATE_DISCONNECTED,
+  GPRS_STATE_WAIT_FOR_CONNECT,
+  GPRS_STATE_CONNECTED,
 } GPRS_State_t;
+
+typedef struct GSM_Modem_s GSM_Modem_t;
 
 typedef struct Gprs_s {
   GSM_Modem_t *modem;

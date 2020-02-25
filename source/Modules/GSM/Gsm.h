@@ -12,7 +12,6 @@
 #include "Call.h"
 #include "Gprs.h"
 #include "Sms.h"
-#include "source/Modem/Modem.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -32,6 +31,8 @@ typedef enum {
   GSM_STATE_STARTED,
   GSM_STATE_STOPPED,
 } GSM_State_t;
+
+typedef struct GSM_Modem_s GSM_Modem_t;
 
 typedef struct Gsm_s {
   struct {

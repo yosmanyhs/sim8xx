@@ -7,10 +7,12 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Gsm.h"
+#include "Modem/Modem.h"
 #include "Modules/GSM/Commands/cfun.h"
 #include "Modules/GSM/Commands/cpin.h"
 
 #include "Utils/Utils.h"
+#include <string.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */

@@ -6,6 +6,7 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
+#include "Modem/Modem.h"
 #include "Modules/GSM/Gprs.h"
 #include "Modules/GSM/Commands/cstt.h"
 #include "Modules/GSM/Commands/cifsr.h"
@@ -16,6 +17,8 @@
 #include "Modules/GSM/Commands/cipclose.h"
 
 #include "Utils/Utils.h"
+
+#include <string.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -48,7 +51,7 @@ void GprsObjectInit(Gprs_t *this, GSM_Modem_t *modem)
 {
   this->modem = modem;
   this->notify = NULL;
-  this->state = GPRS_STOPPED;
+  this->state = GPRS_STATE_STOPPED;
   memset(this->ipaddr, 0, sizeof(this->ipaddr));
   memset(&this->event, 0, sizeof(this->event));
 }
@@ -67,7 +70,7 @@ bool GprsRegisterEventCallback(Gprs_t *this, GPRS_EventCb_t cb)
 
 bool GprsStart(Gprs_t *this, const char *apn, const char *user, const char *passwd)
 {
-  if (GPRS_STOPPED != this->state)
+  if (GPRS_STATE_STOPPED != this->state)
     return false;
 
   Cstt_t cstt;
@@ -87,7 +90,7 @@ bool GprsStart(Gprs_t *this, const char *apn, const char *user, const char *pass
   GSM_ModemExecuteAtCommand(this->modem, &ciicr.atcmd);
   GSM_ModemUnlock(this->modem);
 
-  if (AT_CMD_OK != CiicrGetResponseStatus(&cstt))
+  if (AT_CMD_OK != CiicrGetResponseStatus(&ciicr))
     return false;
 
   Cifsr_t cifsr;
@@ -100,8 +103,8 @@ bool GprsStart(Gprs_t *this, const char *apn, const char *user, const char *pass
   bool result = false;
   if (AT_CMD_OK == CifsrGetResponseStatus(&cifsr)) {
     memset(this->ipaddr, 0, sizeof(this->ipaddr));
-    strncpy(this->ipaddr, cifsr.response.ipaddr, size0f(this->ipaddr) - 1);
-    this->state = GPRS_DISCONNECTED;
+    strncpy(this->ipaddr, cifsr.response.ipaddr, sizeof(this->ipaddr) - 1);
+    this->state = GPRS_STATE_DISCONNECTED;
     result = true;
   }
 
@@ -110,7 +113,7 @@ bool GprsStart(Gprs_t *this, const char *apn, const char *user, const char *pass
 
 bool GprsOpenTcpPort(Gprs_t *this, const char *host, int32_t port)
 {
-  if (GPRS_DISCONNECTED != this->state)
+  if (GPRS_STATE_DISCONNECTED != this->state)
     return false;
 
   Cipstart_t cipstart;
@@ -122,7 +125,7 @@ bool GprsOpenTcpPort(Gprs_t *this, const char *host, int32_t port)
 
   bool result = false;
   if (AT_CMD_OK == CipstartGetResponseStatus(&cipstart)) {
-    this->state = GPRS_WAIT_FOR_CONNECT;
+    this->state = GPRS_STATE_WAIT_FOR_CONNECT;
     result = true;
   }
 
@@ -131,7 +134,7 @@ bool GprsOpenTcpPort(Gprs_t *this, const char *host, int32_t port)
 
 bool GprsSend(Gprs_t *this, const char *data, size_t dlen)
 {
-  if (GPRS_CONNECTED != this->state)
+  if (GPRS_STATE_CONNECTED != this->state)
     return false;
 
   Cipsend_t cipsend;
@@ -155,7 +158,7 @@ bool GprsSend(Gprs_t *this, const char *data, size_t dlen)
 
 bool GprsCloseTcpPort(Gprs_t *this)
 {
-  if (GPRS_CONNECTED != this->state)
+  if (GPRS_STATE_CONNECTED != this->state)
     return false;
 
   Cipclose_t cipclose;
@@ -168,7 +171,7 @@ bool GprsCloseTcpPort(Gprs_t *this)
   bool result = false;
   if (AT_CMD_OK == CipcloseGetResponseStatus(&cipclose)) {
     memset(this->ipaddr, 0, sizeof(this->ipaddr));
-    this->state = GPRS_DISCONNECTED;
+    this->state = GPRS_STATE_DISCONNECTED;
     result = true;
   }
 
@@ -177,7 +180,7 @@ bool GprsCloseTcpPort(Gprs_t *this)
 
 bool GprsStop(Gprs_t *this)
 {
-  if (GPRS_DISCONNECTED != this->state)
+  if (GPRS_STATE_DISCONNECTED != this->state)
     return false;
 
   Cipshut_t cipshut;
@@ -189,7 +192,7 @@ bool GprsStop(Gprs_t *this)
 
   bool result = false;
   if (AT_CMD_OK == CipshutGetResponseStatus(&cipshut)) {
-    this->state = GPRS_STOPPED;
+    this->state = GPRS_STATE_STOPPED;
     result = true;
   }
 
@@ -257,12 +260,12 @@ size_t GprsURCParse(void *p, const char *ibuf, size_t ilen)
     offset = CipsendParseURC(&urc, ibuf, ilen);
     GprsHandleCipsendURC(pgprs, &urc);
   } else if (GSM_UtilsMatch(ibuf, "\r\n+PDP: DEACT\r\n", ilen)) {
-    pgprs->event.type = GPRS_DISCONNECTED;
-    if (pgprs->notify) {
+    pgprs->event.type = GPRS_STATE_DISCONNECTED;
+    if (pgprs->notify)
       pgprs->notify(&pgprs->event);
   } else if (GSM_UtilsMatch(ibuf, "\r\nCLOSED\r\n", ilen)) {
     pgprs->event.type = GPRS_CONNECTION_CLOSED;
-    if (pgprs->notify) {
+    if (pgprs->notify) 
       pgprs->notify(&pgprs->event);
   } else {
     pgprs->event.type = GPRS_NO_EVENT;
