@@ -237,3 +237,67 @@ void test_GSM_UtilsItoA_BufferTooSmall(void)
     TEST_ASSERT_EQUAL(0, n);
     TEST_ASSERT_EQUAL_STRING("", obuf);
 }
+
+void test_GSM_UtilsBeginsWith_TooShort(void)
+{
+    const char *str = "Too short";
+    const char *pre = "Too short string";
+
+    TEST_ASSERT_FALSE(GSM_UtilsBeginsWith(str, pre));
+}
+
+void test_GSM_UtilsBeginsWith_Match(void)
+{
+    const char *str = "Long enough string";
+    const char *pre = "Long enough";
+
+    TEST_ASSERT(GSM_UtilsBeginsWith(str, pre));
+}
+
+void test_GSM_UtilsBeginsWith_NoMatch(void)
+{
+    const char *str = "Long enough string";
+    const char *pre = "No match";
+
+    TEST_ASSERT_FALSE(GSM_UtilsBeginsWith(str, pre));
+}
+
+void test_GSM_UtilsBeginsWith_MatchWithDifferentCase(void)
+{
+    const char *str = "Long Enough string";
+    const char *pre = "long enough";
+
+    TEST_ASSERT(GSM_UtilsBeginsWith(str, pre));
+}
+
+void test_GSM_UtilsEndsWith_TooShort(void)
+{
+    const char *str = "Too short";
+    const char *post = "Too short string";
+
+    TEST_ASSERT_FALSE(GSM_UtilsEndsWith(str, post));
+}
+
+void test_GSM_UtilsEndsWith_Match(void)
+{
+    const char *str = "Long enough string";
+    const char *post = "enough string";
+
+    TEST_ASSERT(GSM_UtilsEndsWith(str, post));
+}
+
+void test_GSM_UtilsEndsWith_NoMatch(void)
+{
+    const char *str = "Long enough string";
+    const char *post = "different string";
+
+    TEST_ASSERT_FALSE(GSM_UtilsEndsWith(str, post));
+}
+
+void test_GSM_UtilsEndsWith_MatchWithDifferentCase(void)
+{
+    const char *str = "Long enough string";
+    const char *post = "ENOUGH STRING";
+
+    TEST_ASSERT(GSM_UtilsEndsWith(str, post));
+}
