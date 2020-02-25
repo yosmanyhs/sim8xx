@@ -18,6 +18,7 @@
 #include "Commands/btpower.h"
 #include "Commands/btsppget.h"
 #include "Commands/btsppsend.h"
+#include "Commands/btsppurc.h"
 #include "Common/AtCommand.h"
 #include "Modem/Modem.h"
 
@@ -168,6 +169,16 @@ bool GSM_BluetoothRegisterCallback(GSM_Bluetooth_t *this, GSM_BluetoothCb_t cb)
 
 bool GSM_BluetoothSetup(GSM_Bluetooth_t *this, const char *name, const char *pin)
 {
+  Btsppurc_t btsppurc;
+  BtsppurcObjectInit(&btsppurc);
+  BtsppurcSetupRequest(&btsppurc, 1);
+  GSM_ModemLock(this->parent);
+  GSM_ModemExecuteAtCommand(this->parent, &btsppurc.atcmd);
+  GSM_ModemUnlock(this->parent);
+
+  if (AT_CMD_OK != BtsppurcGetResponseStatus(&btsppurc))
+    return false;
+
   BtPaircfg_t btpaircfg = {0};
   BtPaircfgObjectInit(&btpaircfg);
   BtPaircfgSetupRequest(&btpaircfg, 1, pin);

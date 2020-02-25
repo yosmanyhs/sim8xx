@@ -121,6 +121,50 @@ void test_At_Parse_PROCEEDING(void)
   TEST_ASSERT_EQUAL(strlen(input), n);
 }
 
+void test_At_Parse_SEND_OK(void)
+{
+  const char *input         = "\r\nSEND OK\r\n";
+  AT_CommandStatus_t status = AT_CMD_INVALID;
+
+  size_t n = AT_CommandStatusParse(input, strlen(input), &status);
+
+  TEST_ASSERT_EQUAL(AT_CMD_SEND_OK, status);
+  TEST_ASSERT_EQUAL(strlen(input), n);
+}
+
+void test_At_Parse_SEND_FAIL(void)
+{
+  const char *input         = "\r\nSEND FAIL\r\n";
+  AT_CommandStatus_t status = AT_CMD_INVALID;
+
+  size_t n = AT_CommandStatusParse(input, strlen(input), &status);
+
+  TEST_ASSERT_EQUAL(AT_CMD_SEND_FAIL, status);
+  TEST_ASSERT_EQUAL(strlen(input), n);
+}
+
+void test_At_Parse_BT_SEND_OK(void)
+{
+  const char *input         = "\r\nBT SEND OK\r\n";
+  AT_CommandStatus_t status = AT_CMD_INVALID;
+
+  size_t n = AT_CommandStatusParse(input, strlen(input), &status);
+
+  TEST_ASSERT_EQUAL(AT_CMD_BT_SEND_OK, status);
+  TEST_ASSERT_EQUAL(strlen(input), n);
+}
+
+void test_At_Parse_BT_SEND_FAIL(void)
+{
+  const char *input         = "\r\nBT SEND FAIL\r\n";
+  AT_CommandStatus_t status = AT_CMD_INVALID;
+
+  size_t n = AT_CommandStatusParse(input, strlen(input), &status);
+
+  TEST_ASSERT_EQUAL(AT_CMD_BT_SEND_FAIL, status);
+  TEST_ASSERT_EQUAL(strlen(input), n);
+}
+
 void test_At_Parse_WAIT_FOR_USER_DATA(void)
 {
   const char *input         = "\r\n> ";

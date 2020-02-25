@@ -162,13 +162,13 @@ void test_BtSppSendParse_SEND_OK(void)
   BtSppSendObjectInit(&btsppsend);
   BtSppSendSetDataMode(&btsppsend);
 
-  const char *ibuf = "\r\nSEND OK\r\n.";
+  const char *ibuf = "\r\nBT SEND OK\r\n";
   size_t length    = strlen(ibuf);
 
   size_t n = BtSppSendParse(&btsppsend, ibuf, length);
 
-  TEST_ASSERT_EQUAL(AT_CMD_SEND_OK, btsppsend.response.status);
-  TEST_ASSERT_EQUAL(11, n);
+  TEST_ASSERT_EQUAL(AT_CMD_BT_SEND_OK, btsppsend.response.status);
+  TEST_ASSERT_EQUAL(length, n);
 }
 
 void test_BtSppSendParse_SEND_FAIL(void)
@@ -177,13 +177,13 @@ void test_BtSppSendParse_SEND_FAIL(void)
   BtSppSendObjectInit(&btsppsend);
   BtSppSendSetDataMode(&btsppsend);
 
-  const char *ibuf = "\r\nSEND FAIL\r\n.";
+  const char *ibuf = "\r\nBT SEND FAIL\r\n";
   size_t length    = strlen(ibuf);
 
   size_t n = BtSppSendParse(&btsppsend, ibuf, length);
 
-  TEST_ASSERT_EQUAL(AT_CMD_SEND_FAIL, btsppsend.response.status);
-  TEST_ASSERT_EQUAL(13, n);
+  TEST_ASSERT_EQUAL(AT_CMD_BT_SEND_FAIL, btsppsend.response.status);
+  TEST_ASSERT_EQUAL(length, n);
 }
 
 void test_BtSppSendParse_ERROR(void)

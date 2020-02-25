@@ -37,6 +37,8 @@ static const char *StatusStrings[] = {
     [AT_CMD_PROCEEDING]         = "PROCEEDING",
     [AT_CMD_SEND_OK]            = "SEND OK",
     [AT_CMD_SEND_FAIL]          = "SEND FAIL",
+    [AT_CMD_BT_SEND_OK]         = "BT SEND OK",
+    [AT_CMD_BT_SEND_FAIL]       = "BT SEND FAIL",
     [AT_CMD_WAIT_FOR_USER_DATA] = "\r\n> ",
 };
 
@@ -53,6 +55,8 @@ static const size_t StatusStringLength[] = {
     [AT_CMD_PROCEEDING]         = 10,
     [AT_CMD_SEND_OK]            = 7,
     [AT_CMD_SEND_FAIL]          = 9,
+    [AT_CMD_BT_SEND_OK]         = 10,
+    [AT_CMD_BT_SEND_FAIL]       = 12,
     [AT_CMD_WAIT_FOR_USER_DATA] = 4,
 };
 
@@ -137,6 +141,12 @@ size_t AT_CommandStatusParse(const char *ibuf, size_t ilen, AT_CommandStatus_t *
   } else if (AT_isStatus(AT_CMD_SEND_FAIL, ibuf, ilen)) {
     *status = AT_CMD_SEND_FAIL;
     n       = StatusStringLength[AT_CMD_SEND_FAIL] + 2 * CRLFLENGTH;
+  } else if (AT_isStatus(AT_CMD_BT_SEND_OK, ibuf, ilen)) {
+    *status = AT_CMD_BT_SEND_OK;
+    n       = StatusStringLength[AT_CMD_BT_SEND_OK] + 2 * CRLFLENGTH;
+  } else if (AT_isStatus(AT_CMD_BT_SEND_FAIL, ibuf, ilen)) {
+    *status = AT_CMD_BT_SEND_FAIL;
+    n       = StatusStringLength[AT_CMD_BT_SEND_FAIL] + 2 * CRLFLENGTH;
   } else {
     *status = AT_CMD_INVALID;
     n       = StatusStringLength[AT_CMD_INVALID];
