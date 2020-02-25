@@ -177,3 +177,66 @@ void test_CipsendTimeout(void)
   CipsendTimeout(&cipsend);
   TEST_ASSERT_EQUAL(AT_CMD_TIMEOUT, cipsend.response.status);
 }
+
+void test_CipsendIsURC_SEND_OK(void)
+{
+  const char *ibuf = "\r\nSEND OK\r\n";
+  size_t length    = strlen(ibuf);
+
+  TEST_ASSERT(CipsendIsURC(ibuf, length));
+}
+
+void test_CipsendIsURC_SEND_FAIL(void)
+{
+  const char *ibuf = "\r\nSEND FAIL\r\n";
+  size_t length    = strlen(ibuf);
+
+  TEST_ASSERT(CipsendIsURC(ibuf, length));
+}
+
+void test_CipsendIsURC_NoURC(void)
+{
+  const char *ibuf = "\r\nsomething else\r\n";
+  size_t length    = strlen(ibuf);
+
+  TEST_ASSERT_FALSE(CipsendIsURC(ibuf, length));
+}
+
+void test_CipsendParseURC_SEND_OK(void)
+{
+  CipsendURC_t urc = {0};
+
+  const char *ibuf = "\r\nSEND OK\r\n";
+  size_t length    = strlen(ibuf);
+
+  size_t n = CipsendParseURC(&urc, ibuf, length);
+
+  TEST_ASSERT_EQUAL(CIPSEND_SEND_OK, urc.type);
+  TEST_ASSERT_EQUAL(length, n);
+}
+
+void test_CipsendParseURC_SEND_FAIL(void)
+{
+  CipsendURC_t urc = {0};
+
+  const char *ibuf = "\r\nSEND FAIL\r\n";
+  size_t length    = strlen(ibuf);
+
+  size_t n = CipsendParseURC(&urc, ibuf, length);
+
+  TEST_ASSERT_EQUAL(CIPSEND_SEND_FAIL, urc.type);
+  TEST_ASSERT_EQUAL(length, n);
+}
+
+void test_CipsendParseURC_NO_URC(void)
+{
+  CipsendURC_t urc = {0};
+
+  const char *ibuf = "\r\nsomething else\r\n";
+  size_t length    = strlen(ibuf);
+
+  size_t n = CipsendParseURC(&urc, ibuf, length);
+
+  TEST_ASSERT_EQUAL(CIPSEND_NO_URC, urc.type);
+  TEST_ASSERT_EQUAL(0, n);
+}

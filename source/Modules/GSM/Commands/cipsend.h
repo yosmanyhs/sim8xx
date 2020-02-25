@@ -25,6 +25,18 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
+typedef enum {
+  CIPSEND_NO_URC,
+  CIPSEND_SEND_OK,
+  CIPSEND_SEND_FAIL,
+} CipsendURC_Type_t;
+
+typedef struct CipsendURC_s {
+  CipsendURC_Type_t type;
+  union {
+  } payload;
+} CipsendURC_t;
+
 typedef struct Cipsend_Request_s {
   const char *data;
   size_t length;
@@ -66,6 +78,10 @@ AT_Command_t *CipsendGetAtCommand(Cipsend_t *this);
 Cipsend_Response_t CipsendGetResponse(Cipsend_t *this);
 
 AT_CommandStatus_t CipsendGetResponseStatus(Cipsend_t *this);
+
+bool CipsendIsURC(const char *ibuf, size_t ilen);
+
+size_t CipsendParseURC(CipsendURC_t *urc, const char *ibuf, size_t ilen);
 
 #endif /* CIPSEND_H */
 

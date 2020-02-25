@@ -238,6 +238,30 @@ void test_GSM_UtilsItoA_BufferTooSmall(void)
     TEST_ASSERT_EQUAL_STRING("", obuf);
 }
 
+void test_GSM_UtilsMatch_Match(void)
+{
+    const char *stra = "strings do match";
+    const char *strb = "strings do match";
+
+    TEST_ASSERT(GSM_UtilsMatch(stra, strb, strlen(stra)));
+}
+
+void test_GSM_UtilsMatch_NoMatch_1(void)
+{
+    const char *stra = "strings do match";
+    const char *strb = "strings don't match";
+
+    TEST_ASSERT_FALSE(GSM_UtilsMatch(stra, strb, strlen(stra)));
+}
+
+void test_GSM_UtilsMatch_NoMatch_2(void)
+{
+    const char *stra = "strings don't match";
+    const char *strb = "strings do match";
+
+    TEST_ASSERT_FALSE(GSM_UtilsMatch(stra, strb, strlen(stra)));
+}
+
 void test_GSM_UtilsBeginsWith_TooShort(void)
 {
     const char *str = "Too short";

@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 TEST_FILE("AtCommand.c");
+TEST_FILE("Utils.c");
 
 void setUp(void)
 {
@@ -89,7 +90,7 @@ void test_CipshutParse_Incomplete(void)
   Cipshut_t cipshut;
   CipshutObjectInit(&cipshut);
 
-  const char *ibuf = "\r\nOK";
+  const char *ibuf = "\r\nSHUT OK";
   size_t length    = strlen(ibuf);
 
   size_t n = CipshutParse(&cipshut, ibuf, length);

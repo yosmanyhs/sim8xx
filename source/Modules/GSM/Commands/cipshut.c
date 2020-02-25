@@ -8,6 +8,7 @@
 /*****************************************************************************/
 #include "cipshut.h"
 #include "Common/Env.h"
+#include "Utils/Utils.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -57,7 +58,7 @@ GSM_STATIC size_t CipshutParse(void *p, const char *ibuf, size_t ilen)
   if (AT_CMD_ERROR == status) {
     obj->response.status = AT_CMD_ERROR;
     offset = n;
-  } else if (0 == strncasecmp(ibuf, "\r\nSHUT OK\r\n", ilen)) {
+  } else if (GSM_UtilsBeginsWith(ibuf, "\r\nSHUT OK\r\n")) {
     obj->response.status = AT_CMD_OK;
     offset = 11;
   } else {

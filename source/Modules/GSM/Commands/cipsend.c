@@ -152,4 +152,40 @@ AT_CommandStatus_t CipsendGetResponseStatus(Cipsend_t *this)
   return this->response.status;
 }
 
+bool CipsendIsURC(const char *ibuf, size_t ilen)
+{
+  bool result = false;
+
+  if (0 == strncasecmp(ibuf, "\r\nSEND OK\r\n", ilen))
+    result = true;
+  else if (0 == strncasecmp(ibuf, "\r\nSEND FAIL\r\n", ilen))
+    result = true;
+  else
+    result = false;
+
+  return result;
+}
+
+size_t CipsendParseURC(CipsendURC_t *urc, const char *ibuf, size_t ilen)
+{
+  size_t offset = 0;
+
+  memset(urc, 0, sizeof(*urc));
+
+  if (0 == strncasecmp(ibuf, "\r\nSEND OK\r\n", ilen)) {
+    urc->type = CIPSEND_SEND_OK;
+    offset = 11;
+  }
+  else if (0 == strncasecmp(ibuf, "\r\nSEND FAIL\r\n", ilen)) {
+    urc->type = CIPSEND_SEND_FAIL;
+    offset = 13;
+  }
+  else {
+    urc->type = CIPSEND_NO_URC;
+    offset = 0;
+  }
+
+  return offset;
+}
+
 /****************************** END OF FILE **********************************/

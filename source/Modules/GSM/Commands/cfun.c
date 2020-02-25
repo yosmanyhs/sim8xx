@@ -6,7 +6,7 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "atcfun.h"
+#include "cfun.h"
 
 #include "Common/Env.h"
 #include "Utils/Utils.h"
@@ -34,11 +34,11 @@
 /*****************************************************************************/
 /* DECLARATION OF LOCAL FUNCTIONS                                            */
 /*****************************************************************************/
-GSM_STATIC size_t AtCfunSerialize(void *p, char *obuf, size_t olen)
+GSM_STATIC size_t CfunSerialize(void *p, char *obuf, size_t olen)
 {
   memset(obuf, 0, olen);
 
-  AtCfun_t *obj = (AtCfun_t *)p;
+  Cfun_t *obj = (Cfun_t *)p;
 
   strncpy(obuf, "AT+CFUN=", olen - 1);
 
@@ -55,9 +55,9 @@ GSM_STATIC size_t AtCfunSerialize(void *p, char *obuf, size_t olen)
   return strlen(obuf);
 }
 
-GSM_STATIC size_t AtCfunParse(void *p, const char *ibuf, size_t ilen)
+GSM_STATIC size_t CfunParse(void *p, const char *ibuf, size_t ilen)
 {
-  AtCfun_t *obj             = (AtCfun_t *)p;
+  Cfun_t *obj             = (Cfun_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
 
   size_t offset = AT_CommandStatusParse(ibuf, ilen, &status);
@@ -80,9 +80,9 @@ GSM_STATIC size_t AtCfunParse(void *p, const char *ibuf, size_t ilen)
   return offset;
 }
 
-GSM_STATIC void AtCfunTimeout(void *p)
+GSM_STATIC void CfunTimeout(void *p)
 {
-  AtCfun_t *obj        = (AtCfun_t *)p;
+  Cfun_t *obj          = (Cfun_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;
 }
 
@@ -93,38 +93,38 @@ GSM_STATIC void AtCfunTimeout(void *p)
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-void AtCfunObjectInit(AtCfun_t *this)
+void CfunObjectInit(Cfun_t *this)
 {
   memset(this, 0, sizeof(*this));
   this->atcmd.obj               = this;
-  this->atcmd.serialize         = AtCfunSerialize;
-  this->atcmd.parse             = AtCfunParse;
-  this->atcmd.timeout           = AtCfunTimeout;
+  this->atcmd.serialize         = CfunSerialize;
+  this->atcmd.parse             = CfunParse;
+  this->atcmd.timeout           = CfunTimeout;
   this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
-void AtCfunSetupRequest(AtCfun_t *this, int32_t fun, int32_t rst)
+void CfunSetupRequest(Cfun_t *this, int32_t fun, int32_t rst)
 {
   this->request.fun = fun;
   this->request.rst = rst;
 }
 
-AT_Command_t *AtCfunGetAtCommand(AtCfun_t *this)
+AT_Command_t *CfunGetAtCommand(Cfun_t *this)
 {
   return &this->atcmd;
 }
 
-AtCfun_Response_t AtCfunGetResponse(AtCfun_t *this)
+Cfun_Response_t CfunGetResponse(Cfun_t *this)
 {
   return this->response;
 }
 
-AT_CommandStatus_t AtCfunGetResponseStatus(AtCfun_t *this)
+AT_CommandStatus_t CfunGetResponseStatus(Cfun_t *this)
 {
   return this->response.status;
 }
 
-bool AtCfunIsURC(const char *ibuf, size_t ilen)
+bool CfunIsURC(const char *ibuf, size_t ilen)
 {
   const char *tag = "\r\n+CFUN";
   size_t tlen     = strlen(tag);
@@ -137,9 +137,9 @@ bool AtCfunIsURC(const char *ibuf, size_t ilen)
   return result;
 }
 
-size_t AtCfunParseURC(AtCfunURC_t *urc, const char *ibuf, size_t ilen)
+size_t CfunParseURC(CfunURC_t *urc, const char *ibuf, size_t ilen)
 {
-  if (!AtCfunIsURC(ibuf, ilen))
+  if (!CfunIsURC(ibuf, ilen))
     return 0;
 
   size_t offset = 0;
@@ -153,15 +153,15 @@ size_t AtCfunParseURC(AtCfunURC_t *urc, const char *ibuf, size_t ilen)
   if (n) {
     offset += n;
     next += n;
-    urc->type = ATCFUN_INFO;
+    urc->type = CFUN_INFO;
     if (1 == level)
-      urc->payload.info.code = ATCFUN_LEVEL_MINIMUM;
+      urc->payload.info.code = CFUN_LEVEL_MINIMUM;
     else if (2 == level)
-      urc->payload.info.code = ATCFUN_LEVEL_FULL;
+      urc->payload.info.code = CFUN_LEVEL_FULL;
     else if (4 == level)
-      urc->payload.info.code = ATCFUN_LEVEL_DISABLE_PHONE;
+      urc->payload.info.code = CFUN_LEVEL_DISABLE_PHONE;
     else
-      urc->payload.info.code = ATCFUN_LEVEL_INVALID;
+      urc->payload.info.code = CFUN_LEVEL_INVALID;
   } else {
     memset(urc, 0, sizeof(*urc));
     return 0;

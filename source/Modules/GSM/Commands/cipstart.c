@@ -162,7 +162,7 @@ size_t CipstartParseURC(CipstartURC_t *urc, const char *ibuf, size_t ilen)
     urc->type = CIPSTART_CONNECT_OK;
     offset = 14;
   }
-  else if (0 == strncasecmp(ibuf, "\r\nSTATE:", ilen < 7 ? ilen : 7)) {
+  else if (GSM_UtilsBeginsWith(ibuf, "\r\nSTATE:")) {
     urc->type = CIPSTART_CONNECT_FAIL;
     char str[4];
     memset(str, 0, sizeof(str));
@@ -182,6 +182,7 @@ size_t CipstartParseURC(CipstartURC_t *urc, const char *ibuf, size_t ilen)
     }
   }
   else{
+    urc->type = CIPSTART_NO_URC;
     offset = 0;
   }
 

@@ -1,18 +1,16 @@
 /**
- * @file Modem.h
+ * @file GprsEvent.h
  * @brief
  */
 
-#ifndef MODEM_H
-#define MODEM_H
+#ifndef GPRS_EVENT_H
+#define GPRS_EVENT_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "Common/AtCommand.h"
-#include "Modules/Bluetooth/Bluetooth.h"
-#include "Modules/GPS/Gps.h"
-#include "Modules/GSM/Gsm.h"
+#include <stdint.h>
+#include <stddef.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -25,15 +23,30 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef void (*GSM_SerialPut_t)(char c);
+typedef enum {
+  GPRS_NO_EVENT,
+  GPRS_CONNECT_OK,
+  GPRS_CONNECT_FAIL,
+  GPRS_CONNECTION_CLOSED,
+  GPRS_ALREADY_CONNECTED,
+  GPRS_CLOSED,
+  GPRS_SEND_OK,
+  GPRS_SEND_FAIL,
+  GPRS_DISCONNECTED,
+} GPRS_EventType_t;
 
-typedef struct GSM_Modem_s {
-  AT_Command_t *currentAt;
-  GSM_SerialPut_t put;
-  GSM_Bluetooth_t bluetooth;
-  GSM_Gps_t gps;
-  Gsm_t gsm;
-} GSM_Modem_t;
+typedef struct GPRS_ConnectFail_s {
+  int32_t state;
+} GPRS_ConnectFail_t;
+
+typedef struct GPRS_Event_s {
+  GPRS_EventType_t type;
+  union {
+    GPRS_ConnectFail_t fail;
+  } payload;
+} GPRS_Event_t;
+
+typedef void (*GPRS_EventCb_t)(GPRS_Event_t *p);
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -42,40 +55,7 @@ typedef struct GSM_Modem_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this);
 
-bool GSM_ModemRegisterPutFunction(GSM_Modem_t *this, GSM_SerialPut_t put);
-
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb);
-
-bool GSM_ModemIsAlive(GSM_Modem_t *this);
-
-bool GSM_ModemDisableEcho(GSM_Modem_t *this);
-
-void GSM_ModemLock(GSM_Modem_t *this);
-
-void GSM_ModemUnlock(GSM_Modem_t *this);
-
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
-
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
-
-bool GSM_ModemBluetoothSetup(GSM_Modem_t *this, const char *name, const char *pin);
-
-bool GSM_ModemBluetoothStart(GSM_Modem_t *this);
-
-bool GSM_ModemBluetoothStop(GSM_Modem_t *this);
-
-bool GSM_ModemBluetoothAcceptConnection(GSM_Modem_t *this);
-
-bool GSM_ModemBluetoothSendSppData(GSM_Modem_t *this, const char data[], size_t length);
-
-bool GSM_ModemGpsStart(GSM_Modem_t *this);
-
-bool GSM_ModemGpsStop(GSM_Modem_t *this);
-
-bool GSM_ModemGpsRead(GSM_Modem_t *this, GPS_Data_t *data);
-
-#endif /* MODEM_H */
+#endif /* GPRS_EVENT_H */
 
 /****************************** END OF FILE **********************************/

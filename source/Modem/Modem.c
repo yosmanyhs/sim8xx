@@ -8,8 +8,6 @@
 /*****************************************************************************/
 #include "Modem.h"
 #include "Commands/at.h"
-#include "Commands/atcfun.h"
-#include "Commands/atcpin.h"
 #include "Commands/ate.h"
 #include "Interface/Os.h"
 
@@ -48,6 +46,7 @@ void GSM_ModemObjectInit(GSM_Modem_t *this)
   this->put       = NULL;
   GSM_BluetoothObjectInit(&this->bluetooth, this);
   GSM_GpsObjectInit(&this->gps, this);
+  GSM_GsmObjectInit(&this->gsm, this);
 }
 
 bool GSM_ModemRegisterPutFunction(GSM_Modem_t *this, GSM_SerialPut_t put)
@@ -67,7 +66,6 @@ bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb)
   return GSM_BluetoothRegisterCallback(&this->bluetooth, cb);
 }
 
-// TODO Add test for GSM_ModemIsAlive.
 bool GSM_ModemIsAlive(GSM_Modem_t *this)
 {
   At_t at;
@@ -107,7 +105,6 @@ bool GSM_ModemIsAlive(GSM_Modem_t *this)
   return isAlive;
 }
 
-// TODO Add test for GSM_ModemDisableEcho.
 bool GSM_ModemDisableEcho(GSM_Modem_t *this)
 {
   Ate_t ate;
@@ -179,13 +176,7 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
   }
 
   if (0 == offset) {
-    AtCfunURC_t urc = {0};
-    offset          = AtCfunParseURC(&urc, ibuf, ilen);
-  }
-
-  if (0 == offset) {
-    AtCpinURC_t urc = {0};
-    offset          = AtCpinParseURC(&urc, ibuf, ilen);
+    offset = GSM_GsmURCParse(&this->gsm, ibuf, ilen);
   }
 
   if (0 == offset) {

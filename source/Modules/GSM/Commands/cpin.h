@@ -3,8 +3,8 @@
  * @brief
  */
 
-#ifndef ATCPIN_H
-#define ATCPIN_H
+#ifndef CPIN_H
+#define CPIN_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
@@ -27,47 +27,47 @@
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
 typedef enum {
-  ATCPIN_NO_URC,
-  ATCPIN_INFO,
-} AtCpinURC_Type_t;
+  CPIN_NO_URC,
+  CPIN_INFO,
+} CpinURC_Type_t;
 
 typedef enum {
-  ATCPIN_INVALID_CODE,
-  ATCPIN_NOT_INSERTED,
-  ATCPIN_READY,
-  ATCPIN_SIM_PIN,
-  ATCPIN_SIM_PUK,
-  ATCPIN_PH_SIM_PIN,
-  ATCPIN_PH_SIM_PUK,
-  ATCPIN_SIM_PIN2,
-  ATCPIN_SIM_PUK2,
-} AtCpinCode_t;
+  CPIN_INVALID_CODE,
+  CPIN_NOT_INSERTED,
+  CPIN_READY,
+  CPIN_SIM_PIN,
+  CPIN_SIM_PUK,
+  CPIN_PH_SIM_PIN,
+  CPIN_PH_SIM_PUK,
+  CPIN_SIM_PIN2,
+  CPIN_SIM_PUK2,
+} CpinCode_t;
 
-typedef struct AtCpinInfo_s {
-  AtCpinCode_t code;
-} AtCpinInfo_t;
+typedef struct CpinInfo_s {
+  CpinCode_t code;
+} CpinInfo_t;
 
-typedef struct AtCpinURC_s {
-  AtCpinURC_Type_t type;
+typedef struct CpinURC_s {
+  CpinURC_Type_t type;
   union {
-    AtCpinInfo_t info;
+    CpinInfo_t info;
   } payload;
-} AtCpinURC_t;
+} CpinURC_t;
 
-typedef struct AtCpin_Request_s {
+typedef struct Cpin_Request_s {
   const char *pin;
   const char *pin2;
-} AtCpin_Request_t;
+} Cpin_Request_t;
 
-typedef struct AtCpin_Response_s {
+typedef struct Cpin_Response_s {
   AT_CommandStatus_t status;
-} AtCpin_Response_t;
+} Cpin_Response_t;
 
-typedef struct AtCpin_s {
-  AtCpin_Request_t request;
-  AtCpin_Response_t response;
+typedef struct Cpin_s {
+  Cpin_Request_t request;
+  Cpin_Response_t response;
   AT_Command_t atcmd;
-} AtCpin_t;
+} Cpin_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -76,20 +76,20 @@ typedef struct AtCpin_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void AtCpinObjectInit(AtCpin_t *this);
+void CpinObjectInit(Cpin_t *this);
 
-void AtCpinSetupRequest(AtCpin_t *this, const char *pin, const char *pin2);
+void CpinSetupRequest(Cpin_t *this, const char *pin, const char *pin2);
 
-AT_Command_t *AtCpinGetAtCommand(AtCpin_t *this);
+AT_Command_t *CpinGetAtCommand(Cpin_t *this);
 
-AtCpin_Response_t AtCpinGetResponse(AtCpin_t *this);
+Cpin_Response_t CpinGetResponse(Cpin_t *this);
 
-AT_CommandStatus_t AtCpinGetResponseStatus(AtCpin_t *this);
+AT_CommandStatus_t CpinGetResponseStatus(Cpin_t *this);
 
-bool AtCpinIsURC(const char *ibuf, size_t ilen);
+bool CpinIsURC(const char *ibuf, size_t ilen);
 
-size_t AtCpinParseURC(AtCpinURC_t *urc, const char *ibuf, size_t ilen);
+size_t CpinParseURC(CpinURC_t *urc, const char *ibuf, size_t ilen);
 
-#endif /* ATCPIN_H */
+#endif /* CPIN_H */
 
 /****************************** END OF FILE **********************************/

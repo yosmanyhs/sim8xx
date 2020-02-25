@@ -1,18 +1,18 @@
 /**
- * @file Modem.h
+ * @file cipclose.h
  * @brief
  */
 
-#ifndef MODEM_H
-#define MODEM_H
+#ifndef CIPCLOSE_H
+#define CIPCLOSE_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Common/AtCommand.h"
-#include "Modules/Bluetooth/Bluetooth.h"
-#include "Modules/GPS/Gps.h"
-#include "Modules/GSM/Gsm.h"
+
+#include <stddef.h>
+#include <stdint.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -25,15 +25,18 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef void (*GSM_SerialPut_t)(char c);
+typedef struct Cipclose_Request_s {
+} Cipclose_Request_t;
 
-typedef struct GSM_Modem_s {
-  AT_Command_t *currentAt;
-  GSM_SerialPut_t put;
-  GSM_Bluetooth_t bluetooth;
-  GSM_Gps_t gps;
-  Gsm_t gsm;
-} GSM_Modem_t;
+typedef struct Cipclose_Response_s {
+  AT_CommandStatus_t status;
+} Cipclose_Response_t;
+
+typedef struct Cipclose_s {
+  Cipclose_Request_t request;
+  Cipclose_Response_t response;
+  AT_Command_t atcmd;
+} Cipclose_t;
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -42,40 +45,16 @@ typedef struct GSM_Modem_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void GSM_ModemObjectInit(GSM_Modem_t *this);
+void CipcloseObjectInit(Cipclose_t *this);
 
-bool GSM_ModemRegisterPutFunction(GSM_Modem_t *this, GSM_SerialPut_t put);
+void CipcloseSetupRequest(Cipclose_t *this);
 
-bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb);
+AT_Command_t *CipcloseGetAtCommand(Cipclose_t *this);
 
-bool GSM_ModemIsAlive(GSM_Modem_t *this);
+Cipclose_Response_t CipcloseGetResponse(Cipclose_t *this);
 
-bool GSM_ModemDisableEcho(GSM_Modem_t *this);
+AT_CommandStatus_t CipcloseGetResponseStatus(Cipclose_t *this);
 
-void GSM_ModemLock(GSM_Modem_t *this);
-
-void GSM_ModemUnlock(GSM_Modem_t *this);
-
-void GSM_ModemExecuteAtCommand(GSM_Modem_t *this, AT_Command_t *atcmd);
-
-size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen);
-
-bool GSM_ModemBluetoothSetup(GSM_Modem_t *this, const char *name, const char *pin);
-
-bool GSM_ModemBluetoothStart(GSM_Modem_t *this);
-
-bool GSM_ModemBluetoothStop(GSM_Modem_t *this);
-
-bool GSM_ModemBluetoothAcceptConnection(GSM_Modem_t *this);
-
-bool GSM_ModemBluetoothSendSppData(GSM_Modem_t *this, const char data[], size_t length);
-
-bool GSM_ModemGpsStart(GSM_Modem_t *this);
-
-bool GSM_ModemGpsStop(GSM_Modem_t *this);
-
-bool GSM_ModemGpsRead(GSM_Modem_t *this, GPS_Data_t *data);
-
-#endif /* MODEM_H */
+#endif /* CIPCLOSE_H */
 
 /****************************** END OF FILE **********************************/

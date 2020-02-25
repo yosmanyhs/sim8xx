@@ -6,7 +6,7 @@
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "atcpin.h"
+#include "cpin.h"
 
 #include "Common/Env.h"
 #include "Utils/Utils.h"
@@ -38,11 +38,11 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
-GSM_STATIC size_t AtCpinSerialize(void *p, char *obuf, size_t olen)
+GSM_STATIC size_t CpinSerialize(void *p, char *obuf, size_t olen)
 {
   memset(obuf, 0, olen);
 
-  AtCpin_t *obj = (AtCpin_t *)p;
+  Cpin_t *obj = (Cpin_t *)p;
 
   if (obj->request.pin) {
     strncpy(obuf, "AT+CPIN=", olen - 1);
@@ -61,9 +61,9 @@ GSM_STATIC size_t AtCpinSerialize(void *p, char *obuf, size_t olen)
   return strlen(obuf);
 }
 
-GSM_STATIC size_t AtCpinParse(void *p, const char *ibuf, size_t ilen)
+GSM_STATIC size_t CpinParse(void *p, const char *ibuf, size_t ilen)
 {
-  AtCpin_t *obj             = (AtCpin_t *)p;
+  Cpin_t *obj             = (Cpin_t *)p;
   AT_CommandStatus_t status = AT_CMD_INVALID;
 
   size_t offset = AT_CommandStatusParse(ibuf, ilen, &status);
@@ -86,34 +86,34 @@ GSM_STATIC size_t AtCpinParse(void *p, const char *ibuf, size_t ilen)
   return offset;
 }
 
-GSM_STATIC void AtCpinTimeout(void *p)
+GSM_STATIC void CpinTimeout(void *p)
 {
-  AtCpin_t *obj        = (AtCpin_t *)p;
+  Cpin_t *obj        = (Cpin_t *)p;
   obj->response.status = AT_CMD_TIMEOUT;
 }
 
-GSM_STATIC AtCpinCode_t AtCpin_convertStringToCode(const char ibuf[], size_t ilen)
+GSM_STATIC CpinCode_t Cpin_convertStringToCode(const char ibuf[], size_t ilen)
 {
-  AtCpinCode_t code = ATCPIN_INVALID_CODE;
+  CpinCode_t code = CPIN_INVALID_CODE;
 
   if ((5 == ilen) && (0 == strncasecmp(ibuf, "READY", ilen))) {
-    code = ATCPIN_READY;
+    code = CPIN_READY;
   } else if ((7 == ilen) && (0 == strncasecmp(ibuf, "SIM PIN", ilen))) {
-    code = ATCPIN_SIM_PIN;
+    code = CPIN_SIM_PIN;
   } else if ((7 == ilen) && (0 == strncasecmp(ibuf, "SIM PUK", ilen))) {
-    code = ATCPIN_SIM_PUK;
+    code = CPIN_SIM_PUK;
   } else if ((10 == ilen) && (0 == strncasecmp(ibuf, "PH_SIM PIN", ilen))) {
-    code = ATCPIN_PH_SIM_PIN;
+    code = CPIN_PH_SIM_PIN;
   } else if ((10 == ilen) && (0 == strncasecmp(ibuf, "PH_SIM PUK", ilen))) {
-    code = ATCPIN_PH_SIM_PUK;
+    code = CPIN_PH_SIM_PUK;
   } else if ((8 == ilen) && (0 == strncasecmp(ibuf, "SIM PIN2", ilen))) {
-    code = ATCPIN_SIM_PIN2;
+    code = CPIN_SIM_PIN2;
   } else if ((8 == ilen) && (0 == strncasecmp(ibuf, "SIM PUK2", ilen))) {
-    code = ATCPIN_SIM_PUK2;
+    code = CPIN_SIM_PUK2;
   } else if ((12 == ilen) && (0 == strncasecmp(ibuf, "NOT INSERTED", ilen))) {
-    code = ATCPIN_NOT_INSERTED;
+    code = CPIN_NOT_INSERTED;
   } else {
-    code = ATCPIN_INVALID_CODE;
+    code = CPIN_INVALID_CODE;
   }
 
   return code;
@@ -122,38 +122,38 @@ GSM_STATIC AtCpinCode_t AtCpin_convertStringToCode(const char ibuf[], size_t ile
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
-void AtCpinObjectInit(AtCpin_t *this)
+void CpinObjectInit(Cpin_t *this)
 {
   memset(this, 0, sizeof(*this));
   this->atcmd.obj               = this;
-  this->atcmd.serialize         = AtCpinSerialize;
-  this->atcmd.parse             = AtCpinParse;
-  this->atcmd.timeout           = AtCpinTimeout;
+  this->atcmd.serialize         = CpinSerialize;
+  this->atcmd.parse             = CpinParse;
+  this->atcmd.timeout           = CpinTimeout;
   this->atcmd.timeoutInMilliSec = TIMEOUT_IN_MSEC;
 }
 
-void AtCpinSetupRequest(AtCpin_t *this, const char *pin, const char *pin2)
+void CpinSetupRequest(Cpin_t *this, const char *pin, const char *pin2)
 {
   this->request.pin  = pin ? pin : NULL;
   this->request.pin2 = pin2 ? pin2 : NULL;
 }
 
-AT_Command_t *AtCpinGetAtCommand(AtCpin_t *this)
+AT_Command_t *CpinGetAtCommand(Cpin_t *this)
 {
   return &this->atcmd;
 }
 
-AtCpin_Response_t AtCpinGetResponse(AtCpin_t *this)
+Cpin_Response_t CpinGetResponse(Cpin_t *this)
 {
   return this->response;
 }
 
-AT_CommandStatus_t AtCpinGetResponseStatus(AtCpin_t *this)
+AT_CommandStatus_t CpinGetResponseStatus(Cpin_t *this)
 {
   return this->response.status;
 }
 
-bool AtCpinIsURC(const char *ibuf, size_t ilen)
+bool CpinIsURC(const char *ibuf, size_t ilen)
 {
   const char *tag = "\r\n+CPIN";
   size_t tlen     = strlen(tag);
@@ -166,9 +166,9 @@ bool AtCpinIsURC(const char *ibuf, size_t ilen)
   return result;
 }
 
-size_t AtCpinParseURC(AtCpinURC_t *urc, const char *ibuf, size_t ilen)
+size_t CpinParseURC(CpinURC_t *urc, const char *ibuf, size_t ilen)
 {
-  if (!AtCpinIsURC(ibuf, ilen))
+  if (!CpinIsURC(ibuf, ilen))
     return 0;
 
   size_t offset = 0;
@@ -194,8 +194,8 @@ size_t AtCpinParseURC(AtCpinURC_t *urc, const char *ibuf, size_t ilen)
     return 0;
   }
 
-  urc->type              = ATCPIN_INFO;
-  urc->payload.info.code = AtCpin_convertStringToCode(str, strlen(str));
+  urc->type              = CPIN_INFO;
+  urc->payload.info.code = Cpin_convertStringToCode(str, strlen(str));
 
   return offset;
 }
