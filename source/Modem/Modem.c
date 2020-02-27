@@ -48,6 +48,7 @@ void GSM_ModemObjectInit(GSM_Modem_t *this)
   this->put       = NULL;
   GSM_BluetoothObjectInit(&this->bluetooth, this);
   GSM_GpsObjectInit(&this->gps, this);
+  GSM_IpObjectInit(&this->ip, this);
 }
 
 bool GSM_ModemRegisterPutFunction(GSM_Modem_t *this, GSM_SerialPut_t put)
@@ -65,6 +66,11 @@ bool GSM_ModemRegisterPutFunction(GSM_Modem_t *this, GSM_SerialPut_t put)
 bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb)
 {
   return GSM_BluetoothRegisterCallback(&this->bluetooth, cb);
+}
+
+bool GSM_ModemRegisterIpCallback(GSM_Modem_t *this, GSM_IpCb_t cb)
+{
+  return GSM_IpRegisterCallback(&this->ip, cb);
 }
 
 // TODO Add test for GSM_ModemIsAlive.
@@ -238,6 +244,21 @@ bool GSM_ModemGpsStop(GSM_Modem_t *this)
 bool GSM_ModemGpsRead(GSM_Modem_t *this, GPS_Data_t *data)
 {
   return GSM_GpsRead(&this->gps, data);
+}
+
+bool GSM_ModemIpSetup(GSM_Modem_t *this, int32_t id, const char *apn)
+{
+  return GSM_IpSetup(&this->ip, id, apn);
+}
+
+bool GSM_ModemIpOpen(GSM_Modem_t *this, int32_t id)
+{
+  return GSM_IpOpen(&this->ip, id);
+}
+
+bool GSM_ModemIpClose(GSM_Modem_t *this, int32_t id)
+{
+  return GSM_IpClose(&this->ip, id);
 }
 
 /****************************** END OF FILE **********************************/

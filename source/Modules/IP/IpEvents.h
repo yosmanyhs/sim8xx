@@ -1,21 +1,15 @@
 /**
- * @file Sim8xx.h
+ * @file IpEvents.h
  * @brief
  */
 
-#ifndef SIM8XX_H
-#define SIM8XX_H
+#ifndef IP_EVENTS_H
+#define IP_EVENTS_H
 
 /*****************************************************************************/
 /* INCLUDES                                                                  */
 /*****************************************************************************/
-#include "Buffer/Buffer.h"
-#include "Modem/Modem.h"
-#include "Modules/Bluetooth/Bluetooth.h"
-#include "Modules/GPS/Gps.h"
-
-#include <stdbool.h>
-#include <stddef.h>
+#include <stdint.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -28,14 +22,23 @@
 /*****************************************************************************/
 /* TYPE DEFINITIONS                                                          */
 /*****************************************************************************/
-typedef struct Sim8xxConfig_s {
-  GSM_SerialPut_t put;
-} Sim8xxConfig_t;
+typedef enum {
+  IP_EVENT_NO_EVENT,
+  IP_EVENT_NET_DISCONNECTED,
+} IP_EventType_t;
 
-typedef struct Sim8xx_s {
-  GSM_Modem_t modem;
-  GSM_Buffer_t buffer;
-} Sim8xx_t;
+typedef struct IP_EventDisconnected_s {
+  int32_t id;
+} IP_EventDisconnected_t;
+
+typedef struct IP_Event_s {
+  IP_EventType_t type;
+  union {
+      IP_EventDisconnected_t disconnected;
+  } payload;
+} GSM_IpEvent_t;
+
+typedef void (*GSM_IpCb_t)(GSM_IpEvent_t *p);
 
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL VARIABLES                                           */
@@ -44,44 +47,7 @@ typedef struct Sim8xx_s {
 /*****************************************************************************/
 /* DECLARATION OF GLOBAL FUNCTIONS                                           */
 /*****************************************************************************/
-void SIM_Init(Sim8xx_t *this, Sim8xxConfig_t *config);
 
-bool SIM_Start(Sim8xx_t *this);
-
-bool SIM_Stop(Sim8xx_t *this);
-
-bool SIM_RegisterBluetoothCallback(Sim8xx_t *this, GSM_BluetoothCb_t cb);
-
-bool SIM_RegisterIpCallback(Sim8xx_t *this, GSM_IpCb_t cb);
-
-bool SIM_IsAlive(Sim8xx_t *this);
-
-bool SIM_ProcessChar(Sim8xx_t *this, char c);
-
-void SIM_Parse(Sim8xx_t *this);
-
-bool SIM_BluetoothSetup(Sim8xx_t *this, const char *name, const char *pin);
-
-bool SIM_BluetoothStart(Sim8xx_t *this);
-
-bool SIM_BluetoothStop(Sim8xx_t *this);
-
-bool SIM_BluetoothAcceptConnection(Sim8xx_t *this);
-
-bool SIM_BluetoothSendSppData(Sim8xx_t *this, const char data[], size_t length);
-
-bool SIM_GpsStart(Sim8xx_t *this);
-
-bool SIM_GpsStop(Sim8xx_t *this);
-
-bool SIM_GpsReadPosition(Sim8xx_t *this, GPS_Data_t *data);
-
-bool SIM_IpSetup(Sim8xx_t *this, int32_t id, const char *apn);
-
-bool SIM_IpOpen(Sim8xx_t *this, int32_t id);
-
-bool SIM_IpClose(Sim8xx_t *this, int32_t id);
-
-#endif /* SIM8XX_H */
+#endif /* IP_EVENTS_H */
 
 /****************************** END OF FILE **********************************/

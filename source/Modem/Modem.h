@@ -12,6 +12,7 @@
 #include "Common/AtCommand.h"
 #include "Modules/Bluetooth/Bluetooth.h"
 #include "Modules/GPS/Gps.h"
+#include "Modules/IP/Ip.h"
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -31,6 +32,7 @@ typedef struct GSM_Modem_s {
   GSM_SerialPut_t put;
   GSM_Bluetooth_t bluetooth;
   GSM_Gps_t gps;
+  GSM_Ip_t ip;
 } GSM_Modem_t;
 
 /*****************************************************************************/
@@ -45,6 +47,8 @@ void GSM_ModemObjectInit(GSM_Modem_t *this);
 bool GSM_ModemRegisterPutFunction(GSM_Modem_t *this, GSM_SerialPut_t put);
 
 bool GSM_ModemRegisterBluetoothCallback(GSM_Modem_t *this, GSM_BluetoothCb_t cb);
+
+bool GSM_ModemRegisterIpCallback(GSM_Modem_t *this, GSM_IpCb_t cb);
 
 bool GSM_ModemIsAlive(GSM_Modem_t *this);
 
@@ -73,6 +77,12 @@ bool GSM_ModemGpsStart(GSM_Modem_t *this);
 bool GSM_ModemGpsStop(GSM_Modem_t *this);
 
 bool GSM_ModemGpsRead(GSM_Modem_t *this, GPS_Data_t *data);
+
+bool GSM_ModemIpSetup(GSM_Modem_t *this, int32_t id, const char *apn);
+
+bool GSM_ModemIpOpen(GSM_Modem_t *this, int32_t id);
+
+bool GSM_ModemIpClose(GSM_Modem_t *this, int32_t id);
 
 #endif /* MODEM_H */
 
