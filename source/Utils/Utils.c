@@ -219,4 +219,31 @@ size_t GSM_UtilsItoA(char obuf[], size_t olen, int32_t n)
   return i;
 }
 
+bool GSM_UtilsMatch(const char *stra, const char *strb, size_t len)
+{
+  return (0 == strncasecmp(stra, strb, len));
+}
+
+bool GSM_UtilsBeginsWith(const char *str, const char *pre)
+{
+  size_t slen = strlen(str);
+  size_t plen = strlen(pre);
+
+  if (slen < plen)
+    return false;
+
+  return 0 == strncasecmp(str, pre, plen);
+}
+
+bool GSM_UtilsEndsWith(const char *str, const char *post)
+{
+  size_t slen = strlen(str);
+  size_t plen = strlen(post);
+
+  if (slen < plen)
+    return false;
+
+  return 0 == strncasecmp(str + slen - plen, post, plen);
+}
+
 /****************************** END OF FILE **********************************/

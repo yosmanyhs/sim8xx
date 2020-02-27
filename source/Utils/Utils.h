@@ -11,6 +11,7 @@
 /*****************************************************************************/
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /*****************************************************************************/
 /* DEFINED CONSTANTS                                                         */
@@ -40,6 +41,13 @@ size_t GSM_UtilsGetDouble(const char ibuf[], size_t ilen, double *pd, char stok,
 size_t GSM_UtilsSkipReserved(const char ibuf[], size_t ilen, char delim, size_t count);
 
 size_t GSM_UtilsItoA(char obuf[], size_t olen, int32_t n);
+
+bool GSM_UtilsMatch(const char *stra, const char *strb, size_t len);
+
+bool GSM_UtilsBeginsWith(const char *str, const char *pre);
+
+bool GSM_UtilsEndsWith(const char *str, const char *post);
+
 #endif /* UTILS_H */
 
 /****************************** END OF FILE **********************************/
