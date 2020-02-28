@@ -117,6 +117,7 @@ AT_CommandStatus_t HttpactionGetResponseStatus(Httpaction_t *this)
 
 bool HttpactionIsURC(const char *ibuf, size_t ilen)
 {
+  (void)ilen;
   return GSM_UtilsBeginsWith(ibuf, "\r\n+HTTPACTION");
 }
 

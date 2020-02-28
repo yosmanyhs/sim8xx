@@ -319,6 +319,7 @@ AT_CommandStatus_t SapbrGetResponseStatus(Sapbr_t *this)
 
 bool SapbrIsURC(const char *ibuf, size_t ilen)
 {
+  (void)ilen;
   bool result = false;
 
   if (GSM_UtilsBeginsWith(ibuf, "\r\n+SAPBR"))

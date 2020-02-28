@@ -20,6 +20,12 @@ SIMSRC = $(SIM8XX)/source/Sim8xx.c \
          $(SIM8XX)/source/Modules/GPS/Gps.c \
          $(SIM8XX)/source/Modules/GPS/Commands/cgnsinf.c \
          $(SIM8XX)/source/Modules/GPS/Commands/cgnspwr.c \
+         $(SIM8XX)/source/Modules/IP/Commands/httpaction.c \
+         $(SIM8XX)/source/Modules/IP/Commands/httpinit.c \
+         $(SIM8XX)/source/Modules/IP/Commands/httppara.c \
+         $(SIM8XX)/source/Modules/IP/Commands/httpterm.c \
+         $(SIM8XX)/source/Modules/IP/Commands/sapbr.c \
+         $(SIM8XX)/source/Modules/IP/Ip.c \
          $(SIM8XX)/source/Utils/Utils.c \
          $(SIM8XX)/ports/ChibiOS/Os.c
 
