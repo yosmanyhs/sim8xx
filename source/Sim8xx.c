@@ -62,6 +62,11 @@ bool SIM_Stop(Sim8xx_t *this)
   return true;
 }
 
+bool SIM_RegisterModemCallback(Sim8xx_t *this, GSM_ModemCb_t cb)
+{
+  return GSM_ModemRegisterCallback(&this->modem, cb);
+}
+
 bool SIM_RegisterBluetoothCallback(Sim8xx_t *this, GSM_BluetoothCb_t cb)
 {
   return GSM_ModemRegisterBluetoothCallback(&this->modem, cb);
@@ -135,19 +140,34 @@ bool SIM_GpsReadPosition(Sim8xx_t *this, GPS_Data_t *data)
   return GSM_ModemGpsRead(&this->modem, data);
 }
 
-bool SIM_IpSetup(Sim8xx_t *this, int32_t id, const char *apn)
+bool SIM_IpSetup(Sim8xx_t *this, const char *apn)
 {
-  return GSM_ModemIpSetup(&this->modem, id, apn);
+  return GSM_ModemIpSetup(&this->modem, apn);
 }
 
-bool SIM_IpOpen(Sim8xx_t *this, int32_t id)
+bool SIM_IpOpen(Sim8xx_t *this)
 {
-  return GSM_ModemIpOpen(&this->modem, id);
+  return GSM_ModemIpOpen(&this->modem);
 }
 
-bool SIM_IpClose(Sim8xx_t *this, int32_t id)
+bool SIM_IpClose(Sim8xx_t *this)
 {
-  return GSM_ModemIpClose(&this->modem, id);
+  return GSM_ModemIpClose(&this->modem);
+}
+
+bool SIM_IpHttpStart(Sim8xx_t *this)
+{
+  return GSM_ModemIpHttpStart(&this->modem);
+}
+
+bool SIM_IpHttpGet(Sim8xx_t *this, const char *url)
+{
+  return GSM_ModemIpHttpGet(&this->modem, url);
+}
+
+bool SIM_IpHttpStop(Sim8xx_t *this)
+{
+  return GSM_ModemIpHttpStop(&this->modem);
 }
 
 /****************************** END OF FILE **********************************/

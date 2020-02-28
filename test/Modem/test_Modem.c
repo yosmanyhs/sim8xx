@@ -30,6 +30,10 @@ TEST_FILE("Bluetooth.c")
 TEST_FILE("Gps.c")
 TEST_FILE("Ip.c")
 TEST_FILE("sapbr.c")
+TEST_FILE("httpinit.c")
+TEST_FILE("httppara.c")
+TEST_FILE("httpaction.c")
+TEST_FILE("httpterm.c")
 
 void setUp(void)
 {

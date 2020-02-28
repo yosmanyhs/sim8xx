@@ -45,13 +45,19 @@ void GSM_IpObjectInit(GSM_Ip_t *this, GSM_Modem_t *modem);
 
 bool GSM_IpRegisterCallback(GSM_Ip_t *this, GSM_IpCb_t cb);
 
-bool GSM_IpSetup(GSM_Ip_t *this, int32_t id, const char *apn);
+bool GSM_IpSetup(GSM_Ip_t *this, const char *apn);
 
-bool GSM_IpOpen(GSM_Ip_t *this, int32_t id);
+bool GSM_IpOpen(GSM_Ip_t *this);
 
-bool GSM_IpClose(GSM_Ip_t *this, int32_t id);
+bool GSM_IpClose(GSM_Ip_t *this);
 
 size_t GSM_IpURCParse(void *p, const char *ibuf, size_t ilen);
+
+bool GSM_IpHttpStart(GSM_Ip_t *this);
+
+bool GSM_IpHttpGet(GSM_Ip_t *this, const char *url);
+
+bool GSM_IpHttpStop(GSM_Ip_t *this);
 
 #endif /* IP_H */
 

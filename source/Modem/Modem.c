@@ -12,7 +12,7 @@
 #include "Commands/atcpin.h"
 #include "Commands/ate.h"
 #include "Interface/Os.h"
-
+#include "Utils/Utils.h"
 #include <string.h>
 
 /*****************************************************************************/
@@ -38,24 +38,79 @@
 /*****************************************************************************/
 /* DEFINITION OF LOCAL FUNCTIONS                                             */
 /*****************************************************************************/
+size_t GSM_ModemURCParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
+{
+  size_t offset = 0;
+
+  if (AtCfunIsURC(ibuf, ilen)) {
+    AtCfunURC_t urc = {0};
+    offset          = AtCfunParseURC(&urc, ibuf, ilen);
+  } else if (AtCpinIsURC(ibuf, ilen)) {
+    AtCpinURC_t urc = {0};
+    offset          = AtCpinParseURC(&urc, ibuf, ilen);
+  } else if (GSM_UtilsBeginsWith(ibuf, "\r\nCall Ready\r\n")) {
+    this->status.callready = 1;
+    offset                 = 14;
+    if (this->status.callready && this->status.smsready) {
+      if (this->notify) {
+        this->event.type = MODEM_EVENT_SIM_UNLOCKED;
+        this->notify(&this->event);
+      }
+    }
+  } else if (GSM_UtilsBeginsWith(ibuf, "\r\nSms Ready\r\n")) {
+    this->status.smsready = 1;
+    offset                = 13;
+    if (this->status.callready && this->status.smsready) {
+      if (this->notify) {
+        this->event.type = MODEM_EVENT_SIM_UNLOCKED;
+        this->notify(&this->event);
+      }
+    }
+  } else if (GSM_UtilsBeginsWith(ibuf, "\r\nRDY\r\n")) {
+    OS_ModemIsReady();
+    this->status.ready = 1;
+    offset = 7;
+  } else {
+    offset = 0;
+  }
+
+  return offset;
+}
 
 /*****************************************************************************/
 /* DEFINITION OF GLOBAL FUNCTIONS                                            */
 /*****************************************************************************/
 void GSM_ModemObjectInit(GSM_Modem_t *this)
 {
-  this->currentAt = NULL;
-  this->put       = NULL;
+  this->currentAt        = NULL;
+  this->put              = NULL;
+  this->notify           = NULL;
+  this->status.ready     = 0;
+  this->status.callready = 0;
+  this->status.smsready  = 0;
+  memset(&this->event, 9, sizeof(this->event));
   GSM_BluetoothObjectInit(&this->bluetooth, this);
   GSM_GpsObjectInit(&this->gps, this);
   GSM_IpObjectInit(&this->ip, this);
+}
+
+bool GSM_ModemRegisterCallback(GSM_Modem_t *this, GSM_ModemCb_t cb)
+{
+  bool result = false;
+
+  if (!this->notify && cb) {
+    this->notify = cb;
+    result       = true;
+  }
+
+  return result;
 }
 
 bool GSM_ModemRegisterPutFunction(GSM_Modem_t *this, GSM_SerialPut_t put)
 {
   bool result = false;
 
-  if (!this->put) {
+  if (!this->put && put) {
     this->put = put;
     result    = true;
   }
@@ -73,7 +128,6 @@ bool GSM_ModemRegisterIpCallback(GSM_Modem_t *this, GSM_IpCb_t cb)
   return GSM_IpRegisterCallback(&this->ip, cb);
 }
 
-// TODO Add test for GSM_ModemIsAlive.
 bool GSM_ModemIsAlive(GSM_Modem_t *this)
 {
   At_t at;
@@ -113,7 +167,6 @@ bool GSM_ModemIsAlive(GSM_Modem_t *this)
   return isAlive;
 }
 
-// TODO Add test for GSM_ModemDisableEcho.
 bool GSM_ModemDisableEcho(GSM_Modem_t *this)
 {
   Ate_t ate;
@@ -124,6 +177,28 @@ bool GSM_ModemDisableEcho(GSM_Modem_t *this)
   GSM_ModemUnlock(this);
 
   return (AT_CMD_OK == AteGetResponseStatus(&ate));
+}
+
+bool GSM_ModemUnlockSIMCard(GSM_Modem_t *this, const char *pin)
+{
+  AtCfun_t cfun;
+  AtCfunObjectInit(&cfun);
+  AtCfunSetupRequest(&cfun, 1, 0);
+  GSM_ModemLock(this);
+  GSM_ModemExecuteAtCommand(this, &cfun.atcmd);
+  GSM_ModemUnlock(this);
+
+  if (AT_CMD_OK != AtCfunGetResponseStatus(&cfun))
+    return false;
+
+  AtCpin_t cpin;
+  AtCpinObjectInit(&cpin);
+  AtCpinSetupRequest(&cpin, pin, NULL);
+  GSM_ModemLock(this);
+  GSM_ModemExecuteAtCommand(this, &cpin.atcmd);
+  GSM_ModemUnlock(this);
+
+  return (AT_CMD_OK == AtCpinGetResponseStatus(&cpin));
 }
 
 void GSM_ModemLock(GSM_Modem_t *this)
@@ -185,20 +260,11 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
   }
 
   if (0 == offset) {
-    AtCfunURC_t urc = {0};
-    offset          = AtCfunParseURC(&urc, ibuf, ilen);
+    offset = GSM_IpURCParse(&this->ip, ibuf, ilen);
   }
 
   if (0 == offset) {
-    AtCpinURC_t urc = {0};
-    offset          = AtCpinParseURC(&urc, ibuf, ilen);
-  }
-
-  if (0 == offset) {
-    if (0 == strncasecmp(ibuf, "\r\nRDY\r\n", 7)) {
-      offset = strlen("\r\nRDY\r\n");
-      OS_ModemIsReady();
-    }
+    offset = GSM_ModemURCParse(this, ibuf, ilen);
   }
 
   OS_UnlockParser();
@@ -246,19 +312,34 @@ bool GSM_ModemGpsRead(GSM_Modem_t *this, GPS_Data_t *data)
   return GSM_GpsRead(&this->gps, data);
 }
 
-bool GSM_ModemIpSetup(GSM_Modem_t *this, int32_t id, const char *apn)
+bool GSM_ModemIpSetup(GSM_Modem_t *this, const char *apn)
 {
-  return GSM_IpSetup(&this->ip, id, apn);
+  return GSM_IpSetup(&this->ip, apn);
 }
 
-bool GSM_ModemIpOpen(GSM_Modem_t *this, int32_t id)
+bool GSM_ModemIpOpen(GSM_Modem_t *this)
 {
-  return GSM_IpOpen(&this->ip, id);
+  return GSM_IpOpen(&this->ip);
 }
 
-bool GSM_ModemIpClose(GSM_Modem_t *this, int32_t id)
+bool GSM_ModemIpClose(GSM_Modem_t *this)
 {
-  return GSM_IpClose(&this->ip, id);
+  return GSM_IpClose(&this->ip);
+}
+
+bool GSM_ModemIpHttpStart(GSM_Modem_t *this)
+{
+  return GSM_IpHttpStart(&this->ip);
+}
+
+bool GSM_ModemIpHttpGet(GSM_Modem_t *this, const char *url)
+{
+  return GSM_IpHttpGet(&this->ip, url);
+}
+
+bool GSM_ModemIpHttpStop(GSM_Modem_t *this)
+{
+  return GSM_IpHttpStop(&this->ip);
 }
 
 /****************************** END OF FILE **********************************/
