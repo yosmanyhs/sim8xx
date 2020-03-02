@@ -60,6 +60,8 @@ bool SIM_IsAlive(Sim8xx_t *this);
 
 bool SIM_ProcessChar(Sim8xx_t *this, char c);
 
+bool SIM_UnlockSIMCard(Sim8xx_t *this, const char *pin);
+
 void SIM_Parse(Sim8xx_t *this);
 
 bool SIM_BluetoothSetup(Sim8xx_t *this, const char *name, const char *pin);

@@ -87,6 +87,11 @@ bool SIM_ProcessChar(Sim8xx_t *this, char c)
   return GSM_BufferPushChar(&this->buffer, c);
 }
 
+bool SIM_UnlockSIMCard(Sim8xx_t *this, const char *pin)
+{
+  return GSM_ModemUnlockSIMCard(&this->modem, pin);
+}
+
 void SIM_Parse(Sim8xx_t *this)
 {
   size_t msglen = 0;

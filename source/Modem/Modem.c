@@ -181,6 +181,7 @@ bool GSM_ModemDisableEcho(GSM_Modem_t *this)
 
 bool GSM_ModemUnlockSIMCard(GSM_Modem_t *this, const char *pin)
 {
+#if 0  
   AtCfun_t cfun;
   AtCfunObjectInit(&cfun);
   AtCfunSetupRequest(&cfun, 1, 0);
@@ -190,7 +191,7 @@ bool GSM_ModemUnlockSIMCard(GSM_Modem_t *this, const char *pin)
 
   if (AT_CMD_OK != AtCfunGetResponseStatus(&cfun))
     return false;
-
+#endif
   AtCpin_t cpin;
   AtCpinObjectInit(&cpin);
   AtCpinSetupRequest(&cpin, pin, NULL);
