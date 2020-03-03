@@ -48,6 +48,38 @@ size_t GSM_ModemURCParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
   } else if (AtCpinIsURC(ibuf, ilen)) {
     AtCpinURC_t urc = {0};
     offset          = AtCpinParseURC(&urc, ibuf, ilen);
+
+    if (this->notify) {
+      this->event.type = MODEM_EVENT_CPIN;
+      switch (urc.payload.info.code) {
+      case ATCPIN_NOT_INSERTED: {
+        this->event.payload.cpin.status = CPIN_NOT_INSERTED;
+        break;
+      }
+      case ATCPIN_READY: {
+        this->event.payload.cpin.status = CPIN_READY;
+        break;
+      }
+      case ATCPIN_SIM_PIN:
+      case ATCPIN_PH_SIM_PIN:
+      case ATCPIN_SIM_PIN2: {
+        this->event.payload.cpin.status = CPIN_PIN_REQUIRED;
+        break;
+      }
+      case ATCPIN_SIM_PUK:
+      case ATCPIN_PH_SIM_PUK:
+      case ATCPIN_SIM_PUK2: {
+        this->event.payload.cpin.status = CPIN_PUK_REQUIRED;
+        break;
+      }
+      case ATCPIN_INVALID_CODE:
+      default: {
+        this->event.payload.cpin.status = CPIN_INVALID_STATUS;
+        break;
+      }
+      }
+      this->notify(&this->event);
+    }
   } else if (GSM_UtilsBeginsWith(ibuf, "\r\nCall Ready\r\n")) {
     this->status.callready = 1;
     offset                 = 14;
