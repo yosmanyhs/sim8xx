@@ -7,6 +7,7 @@
 /* INCLUDES                                                                  */
 /*****************************************************************************/
 #include "Ip.h"
+#include "Interface/Os.h"
 #include "Commands/sapbr.h"
 #include "Commands/httpinit.h"
 #include "Commands/httppara.h"
@@ -94,6 +95,8 @@ bool GSM_IpSetup(GSM_Ip_t *this, const char *apn)
 
   if (AT_CMD_OK != SapbrGetResponseStatus(&sapbr))
     return false;
+
+  OS_SleepMilliSeconds(2000);
 
   SapbrObjectInit(&sapbr);
   SapbrSetupRequestSetApn(&sapbr, 1, apn);

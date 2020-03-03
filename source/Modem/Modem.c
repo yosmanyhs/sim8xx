@@ -102,6 +102,9 @@ size_t GSM_ModemURCParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
     OS_ModemIsReady();
     this->status.ready = 1;
     offset = 7;
+  } else if (GSM_UtilsBeginsWith(ibuf, "\r\nNORMAL POWER DOWN\r\n")) {
+    OS_ModemIsReady();
+    offset = 21;
   } else {
     offset = 0;
   }

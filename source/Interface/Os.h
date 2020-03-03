@@ -58,6 +58,8 @@ void OS_WaitGuardTimeToPass(void);
 
 void OS_StartGuardTimer(void);
 
+void OS_SleepMilliSeconds(uint32_t msecs);
+
 OS_Error_t OS_WaitForResponseWithTimeout(uint32_t timeoutInMs);
 
 void OS_WakeUpThreadWaitingForResponse(void);

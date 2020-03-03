@@ -125,6 +125,11 @@ void OS_StartGuardTimer(void)
   chVTSet(&guardTimer, TIME_MS2I(GUARD_TIME_IN_MSEC), OS_guardTimerCallback, NULL);
 }
 
+void OS_SleepMilliSeconds(uint32_t msecs)
+{
+  chThdSleepMilliseconds(msecs);
+}
+
 OS_Error_t OS_WaitForResponseWithTimeout(uint32_t timeoutInMsec)
 {
   chSysLock();
