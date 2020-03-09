@@ -43,6 +43,7 @@ typedef struct GPS_Position_s {
   int gpsSatInView;
   int gnssSatInUse;
   int gnssSatInView;
+  int utcOffset;
 } GPS_Data_t;
 
 /*****************************************************************************/

@@ -127,6 +127,7 @@ bool GSM_GpsRead(GSM_Gps_t *this, GPS_Data_t *data)
       data->gpsSatInView = cgnsinf.response.gpsSatInView;
       data->gnssSatInUse = cgnsinf.response.gnssSatInUse;
       data->gnssSatInView = cgnsinf.response.gnssSatInView;   
+      data->utcOffset = 0;
       result = true;
     }
   }
