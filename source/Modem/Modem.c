@@ -303,6 +303,13 @@ size_t GSM_ModemParse(GSM_Modem_t *this, const char *ibuf, size_t ilen)
     offset = GSM_ModemURCParse(this, ibuf, ilen);
   }
 
+  if (0 == offset) {
+    const char *crlf = strstr(ibuf + 2, "\r\n");
+    if (crlf) {
+      offset = crlf - ibuf;
+    }
+  }
+
   OS_UnlockParser();
 
   return offset;

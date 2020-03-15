@@ -181,6 +181,105 @@ void test_GSM_ModemParse_URCReceived(void)
   TEST_ASSERT_EQUAL_STRING("HFP(AG)", modem.bluetooth.event.payload.connected.profile);
 }
 
+void test_GSM_ModemParse_UnknownURCReceived(void)
+{
+  GSM_Modem_t modem;
+  GSM_ModemObjectInit(&modem);
+  GSM_ModemRegisterPutFunction(&modem, put);
+  GSM_ModemRegisterBluetoothCallback(&modem, BTcallback);
+
+  const char *ibuf = "\r\n+Unknown URC\r\n\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n";
+  size_t expected  = strlen("\r\n+Unknown URC");
+
+  OS_LockParser_Expect();
+  OS_UnlockParser_Expect();
+  size_t n = GSM_ModemParse(&modem, ibuf, strlen(ibuf));
+
+  TEST_ASSERT_EQUAL(expected, n);
+}
+
+void test_GSM_ModemParse_UnknownURCAndBluetoothURCReceived(void)
+{
+  GSM_Modem_t modem;
+  GSM_ModemObjectInit(&modem);
+  GSM_ModemRegisterPutFunction(&modem, put);
+  GSM_ModemRegisterBluetoothCallback(&modem, BTcallback);
+
+  const char *ibuf = "\r\n+CRING: call\r\n\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n";
+  size_t ilen = strlen(ibuf);
+
+  size_t offset = 0;
+  OS_LockParser_Expect();
+  OS_UnlockParser_Expect();
+  size_t n = GSM_ModemParse(&modem, ibuf, ilen);
+  TEST_ASSERT_EQUAL(strlen("\r\n+CRING: call"), n);
+  offset += n;
+
+  OS_LockParser_Expect();
+  OS_UnlockParser_Expect();
+  n = GSM_ModemParse(&modem, ibuf + offset, ilen - offset);
+  TEST_ASSERT_EQUAL(strlen("\r\n"), n);
+  offset += n;
+
+  OS_LockParser_Expect();
+  BTcallback_Expect(&modem.bluetooth.event);
+  OS_UnlockParser_Expect();
+  n = GSM_ModemParse(&modem, ibuf + offset, ilen - offset);
+  TEST_ASSERT_EQUAL(strlen("\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n"), n);
+  offset += n;
+
+  TEST_ASSERT_EQUAL(BTCONNECT_CONNECT, modem.bluetooth.event.type);
+  TEST_ASSERT_EQUAL_STRING("MK-ZHANZHIMIN", modem.bluetooth.event.payload.connected.name);
+  TEST_ASSERT_EQUAL_STRING("00:1a:7d:da:71:10", modem.bluetooth.event.payload.connected.address);
+  TEST_ASSERT_EQUAL_STRING("HFP(AG)", modem.bluetooth.event.payload.connected.profile);
+  
+  TEST_ASSERT_EQUAL(ilen, offset);
+}
+
+void test_GSM_ModemParse_UnknownURCWithCRLFAndBluetoothURCReceived(void)
+{
+  GSM_Modem_t modem;
+  GSM_ModemObjectInit(&modem);
+  GSM_ModemRegisterPutFunction(&modem, put);
+  GSM_ModemRegisterBluetoothCallback(&modem, BTcallback);
+
+  const char *ibuf = "\r\n+CBM: 32\r\nCell broadcast message\r\n\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n";
+  size_t ilen = strlen(ibuf);
+
+  size_t offset = 0;
+  OS_LockParser_Expect();
+  OS_UnlockParser_Expect();
+  size_t n = GSM_ModemParse(&modem, ibuf, ilen);
+  TEST_ASSERT_EQUAL(strlen("\r\n+CBM: 32"), n);
+  offset += n;
+
+  OS_LockParser_Expect();
+  OS_UnlockParser_Expect();
+  n = GSM_ModemParse(&modem, ibuf + offset, ilen - offset);
+  TEST_ASSERT_EQUAL(strlen("\r\nCell broadcast message"), n);
+  offset += n;
+
+  OS_LockParser_Expect();
+  OS_UnlockParser_Expect();
+  n = GSM_ModemParse(&modem, ibuf + offset, ilen - offset);
+  TEST_ASSERT_EQUAL(strlen("\r\n"), n);
+  offset += n;
+
+  OS_LockParser_Expect();
+  BTcallback_Expect(&modem.bluetooth.event);
+  OS_UnlockParser_Expect();
+  n = GSM_ModemParse(&modem, ibuf + offset, ilen - offset);
+  TEST_ASSERT_EQUAL(strlen("\r\n+BTCONNECT: 1,\"MK-ZHANZHIMIN\",00:1a:7d:da:71:10,\"HFP(AG)\"\r\n"), n);
+  offset += n;
+
+  TEST_ASSERT_EQUAL(BTCONNECT_CONNECT, modem.bluetooth.event.type);
+  TEST_ASSERT_EQUAL_STRING("MK-ZHANZHIMIN", modem.bluetooth.event.payload.connected.name);
+  TEST_ASSERT_EQUAL_STRING("00:1a:7d:da:71:10", modem.bluetooth.event.payload.connected.address);
+  TEST_ASSERT_EQUAL_STRING("HFP(AG)", modem.bluetooth.event.payload.connected.profile);
+  
+  TEST_ASSERT_EQUAL(ilen, offset);
+}
+
 void test_GSM_ModemParse_ATandURCReceived(void)
 {
   GSM_Modem_t modem;
