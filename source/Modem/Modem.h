@@ -66,6 +66,8 @@ bool GSM_ModemDisableEcho(GSM_Modem_t *this);
 
 bool GSM_ModemUnlockSIMCard(GSM_Modem_t *this, const char *pin);
 
+int32_t GSM_ModemGetSignalStrength(GSM_Modem_t *this);
+
 void GSM_ModemLock(GSM_Modem_t *this);
 
 void GSM_ModemUnlock(GSM_Modem_t *this);

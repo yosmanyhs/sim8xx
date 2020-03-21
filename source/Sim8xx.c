@@ -92,6 +92,12 @@ bool SIM_UnlockSIMCard(Sim8xx_t *this, const char *pin)
   return GSM_ModemUnlockSIMCard(&this->modem, pin);
 }
 
+double SIM_GetSignalStrength(Sim8xx_t *this)
+{
+  int32_t strength = GSM_ModemGetSignalStrength(&this->modem);
+  return (double)strength / 31.0 * 100.0;
+}
+
 void SIM_Parse(Sim8xx_t *this)
 {
   size_t msglen = 0;

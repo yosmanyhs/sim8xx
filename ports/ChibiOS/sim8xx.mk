@@ -7,6 +7,7 @@ SIMSRC = $(SIM8XX)/source/Sim8xx.c \
          $(SIM8XX)/source/Modem/Commands/atcfun.c \
          $(SIM8XX)/source/Modem/Commands/atcpin.c \
          $(SIM8XX)/source/Modem/Commands/ate.c \
+         $(SIM8XX)/source/Modem/Commands/csq.c \
          $(SIM8XX)/source/Modules/Bluetooth/Bluetooth.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btacpt.c \
          $(SIM8XX)/source/Modules/Bluetooth/Commands/btconnect.c \

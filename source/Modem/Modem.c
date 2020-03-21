@@ -11,6 +11,7 @@
 #include "Commands/atcfun.h"
 #include "Commands/atcpin.h"
 #include "Commands/ate.h"
+#include "Commands/csq.h"
 #include "Interface/Os.h"
 #include "Utils/Utils.h"
 #include <string.h>
@@ -235,6 +236,22 @@ bool GSM_ModemUnlockSIMCard(GSM_Modem_t *this, const char *pin)
   GSM_ModemUnlock(this);
 
   return (AT_CMD_OK == AtCpinGetResponseStatus(&cpin));
+}
+
+int32_t GSM_ModemGetSignalStrength(GSM_Modem_t *this)
+{
+  Csq_t csq;
+  CsqObjectInit(&csq);
+  CsqSetupRequest(&csq);
+  GSM_ModemLock(this);
+  GSM_ModemExecuteAtCommand(this, &csq.atcmd);
+  GSM_ModemUnlock(this);
+
+  int32_t strength = 0;
+  if (AT_CMD_OK == CsqGetResponseStatus(&csq)) 
+    strength = csq.response.rssi;
+
+  return strength;  
 }
 
 void GSM_ModemLock(GSM_Modem_t *this)
