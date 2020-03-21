@@ -58,7 +58,7 @@ void OS_Init(void)
   chMtxObjectInit(&parserLock);
   chMtxObjectInit(&bufferLock);
   chSemObjectInit(&modemReady, 1);
-  chSemObjectInit(&guardSync, 1);
+  chSemObjectInit(&guardSync, 0);
   chVTObjectInit(&guardTimer);
   writer = NULL;
 }
@@ -90,7 +90,7 @@ void OS_ModemIsNotReady(void)
   chSysLock();
   chSemResetI(&modemReady, 0);
   chVTResetI(&guardTimer);
-  chSemResetI(&guardSync, 1);
+  chSemResetI(&guardSync, 0);
   chSysUnlock();
 }
 
@@ -122,7 +122,10 @@ void OS_WaitGuardTimeToPass(void)
 
 void OS_StartGuardTimer(void)
 {
-  chVTSet(&guardTimer, TIME_MS2I(GUARD_TIME_IN_MSEC), OS_guardTimerCallback, NULL);
+  chSysLock();
+  chSemResetI(&guardSync, 0);
+  chVTSetI(&guardTimer, TIME_MS2I(GUARD_TIME_IN_MSEC), OS_guardTimerCallback, NULL);
+  chSysUnlock();
 }
 
 void OS_SleepMilliSeconds(uint32_t msecs)
