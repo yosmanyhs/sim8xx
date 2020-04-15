@@ -25,7 +25,7 @@ void test_SapbrObjectInit(void)
   TEST_ASSERT_EQUAL_PTR(SapbrSerialize, sapbr.atcmd.serialize);
   TEST_ASSERT_EQUAL_PTR(SapbrParse, sapbr.atcmd.parse);
   TEST_ASSERT_EQUAL_PTR(SapbrTimeout, sapbr.atcmd.timeout);
-  TEST_ASSERT_EQUAL(85000, sapbr.atcmd.timeoutInMilliSec);
+  TEST_ASSERT_EQUAL(100000, sapbr.atcmd.timeoutInMilliSec);
 }
 
 void test_SapbrGetAtCommand(void)
@@ -39,7 +39,7 @@ void test_SapbrGetAtCommand(void)
   TEST_ASSERT_EQUAL_PTR(SapbrSerialize, atcmd->serialize);
   TEST_ASSERT_EQUAL_PTR(SapbrParse, atcmd->parse);
   TEST_ASSERT_EQUAL_PTR(SapbrTimeout, sapbr.atcmd.timeout);
-  TEST_ASSERT_EQUAL(85000, atcmd->timeoutInMilliSec);
+  TEST_ASSERT_EQUAL(100000, atcmd->timeoutInMilliSec);
 }
 
 void test_SapbrSetupRequestSetConnTypeGprs(void)
